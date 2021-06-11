@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/constants.dart';
 import 'package:nanti_flutter_web/models/device.dart';
-import 'package:nanti_flutter_web/screens/add_device.dart';
+import 'package:nanti_flutter_web/screens/add_edit_device.dart';
 import 'package:nanti_flutter_web/services/device_sevice.dart';
 import 'package:nanti_flutter_web/widgets/main_container.dart';
 
@@ -31,64 +31,61 @@ class _DeviceListState extends State<DeviceList> {
       appBar: AppBar(
         title: Text('Device Lists'),
       ),
-      body: SingleChildScrollView(
-        child: MainContainer(
-            child: FutureBuilder(
-                future: deviceFromServer(),
-                builder: (context, asyncsnapshot) {
-                  if (asyncsnapshot.connectionState ==
-                      ConnectionState.waiting) {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else if (asyncsnapshot.connectionState ==
-                      ConnectionState.done) {
-                    return Column(
-                      children: [
-                        Text(
-                          "Device List",
-                          style: kPageHeaderTextStyle,
-                          textAlign: TextAlign.center,
+      body: MainContainer(
+          child: FutureBuilder(
+              future: deviceFromServer(),
+              builder: (context, asyncsnapshot) {
+                if (asyncsnapshot.connectionState ==
+                    ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (asyncsnapshot.connectionState ==
+                    ConnectionState.done) {
+                  return Column(
+                    children: [
+                      Text(
+                        "Device List",
+                        style: kPageHeaderTextStyle,
+                        textAlign: TextAlign.center,
+                      ),
+                      Divider(),
+                      Align(
+                          alignment: Alignment.bottomLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 20.0),
+                            child: ElevatedButton(
+                                onPressed: () {
+                                  Navigator.pushNamed(
+                                      context, AddEditDevice.routeName);
+                                },
+                                child: Text('Add a Device')),
+                          )),
+                      Divider(),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        width: double.infinity,
+                        child: SingleChildScrollView(
+                          // scroll direction reduces the width
+                          // that's why i am using media query
+                          scrollDirection:
+                              MediaQuery.of(context).size.width > 600
+                                  ? Axis.vertical
+                                  : Axis.horizontal,
+                          child: _buildTable(data: asyncsnapshot.data),
                         ),
-                        Divider(),
-                        Align(
-                            alignment: Alignment.bottomLeft,
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 20.0),
-                              child: ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.pushNamed(
-                                        context, AddDevice.routeName);
-                                  },
-                                  child: Text('Add a Device')),
-                            )),
-                        Divider(),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Container(
-                          width: double.infinity,
-                          child: SingleChildScrollView(
-                            // scroll direction reduces the width
-                            // thats why i am using media query
-                            scrollDirection:
-                                MediaQuery.of(context).size.width > 600
-                                    ? Axis.vertical
-                                    : Axis.horizontal,
-                            child: _buildTable(data: asyncsnapshot.data),
-                          ),
-                        )
-                      ],
-                    );
-                  }
-                  return Text('nothing');
-                })),
-      ),
+                      )
+                    ],
+                  );
+                }
+                return Text('nothing');
+              })),
     );
   }
 
   _buildTable({data}) {
-    print(data);
     return data == null
         ? Center(
             child: Text('No data found'),
@@ -108,16 +105,14 @@ class _DeviceListState extends State<DeviceList> {
                         children: [
                           ElevatedButton(
                             onPressed: () {
-                              Navigator.pushNamed(context, AddDevice.routeName,
+                              Navigator.pushNamed(context, AddEditDevice.routeName,
                                   arguments: {
                                     'action': 'edit',
                                     'id': item.id,
                                     'name': item.name,
                                     'manufacturer': item.manufactuer,
                                     'serialNumber': item.serialNumber
-                                  }).then((_) {
-                                setState(() {});
-                              });
+                                  });
                             },
                             child: Icon(Icons.edit),
                           ),

@@ -9,15 +9,32 @@ class AppDrawer extends StatelessWidget {
         children: <Widget>[
           _createHeader(),
           divider(),
-          _createDrawerItem(context, icon: Icons.home, text: 'Dashboard',
-              onTap: () {
-            Navigator.pushReplacementNamed(context, '/');
-          }),
+          _createDrawerItem(
+            context,
+            icon: Icons.home,
+            text: 'Dashboard',
+            onTap: () {
+              Navigator.pushReplacementNamed(context, '/');
+            },
+          ),
           divider(),
-          _createDrawerItem(context, icon: Icons.phone_android, text: 'Devices',
-              onTap: () {
-            Navigator.pushNamed(context, '/device-list');
-          }),
+          _createDrawerItem(
+            context,
+            icon: Icons.phone_android,
+            text: 'Devices',
+            onTap: () {
+              Navigator.pushNamed(context, '/device-list');
+            },
+          ),
+          divider(),
+          _createDrawerItem(
+            context,
+            icon: Icons.house,
+            text: 'Companies',
+            onTap: () {
+              Navigator.pushNamed(context, '/company-list');
+            },
+          ),
         ],
       ),
     );

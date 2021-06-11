@@ -2,11 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:nanti_flutter_web/constants.dart';
 import 'package:nanti_flutter_web/models/device.dart';
 
 class DeviceService {
-  static String baseUrl =
-      'http://10.0.2.2/nanti_flutter_web_api/endpoint/devices';
+  static String baseUrl = kBaseUrl + '/devices';
   // var baseUrl = 'https://www.google.com';
 
   static Future<List<Device>> allDevices() async {
@@ -16,14 +16,26 @@ class DeviceService {
     });
     List<Device> temp = [];
     if (response.statusCode == 200) {
-      // print('body: ${response.body}');
       List<dynamic> body = jsonDecode(response.body);
       for (Map<String, dynamic> device in body) {
-        print(device);
         temp.add(Device.fromJson(device));
       }
     }
     return temp;
+  }
+
+  static Future<Device?> find(String id) async {
+    var url = Uri.parse(baseUrl + '/single.php?id=' + id);
+    var response = await http.get(url, headers: {
+      HttpHeaders.contentTypeHeader: "application/json",
+    });
+    Device? device;
+    if (response.statusCode == 200) {
+      List<Map<String, String>> body = jsonDecode(response.body);
+      device = Device.fromJson(body[0]);
+    }
+
+    return device;
   }
 
   static Future<http.Response> store(Device device) async {

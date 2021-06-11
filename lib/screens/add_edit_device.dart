@@ -9,14 +9,14 @@ import 'package:nanti_flutter_web/widgets/main_container.dart';
 import 'package:nanti_flutter_web/widgets/text_input_widget.dart';
 
 // ignore: must_be_immutable
-class AddDevice extends StatefulWidget {
-  static const routeName = '/add-device';
+class AddEditDevice extends StatefulWidget {
+  static const routeName = '/add-edit-device';
 
   @override
-  _AddDeviceState createState() => _AddDeviceState();
+  _AddEditDeviceState createState() => _AddEditDeviceState();
 }
 
-class _AddDeviceState extends State<AddDevice> {
+class _AddEditDeviceState extends State<AddEditDevice> {
   final _formKey = GlobalKey<FormState>();
 
   String? deviceName;
