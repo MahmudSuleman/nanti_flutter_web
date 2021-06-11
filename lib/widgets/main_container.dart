@@ -11,7 +11,7 @@ class MainContainer extends StatelessWidget {
           child: Container(
             color: Colors.white,
             width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
+            // height: MediaQuery.of(context).size.height,
             child: child,
           ),
         );
@@ -23,7 +23,7 @@ class MainContainer extends StatelessWidget {
                 vertical: 10),
             color: Colors.white,
             width: MediaQuery.of(context).size.width * 0.6,
-            height: MediaQuery.of(context).size.height,
+            // height: MediaQuery.of(context).size.height,
             child: child,
           ),
         );

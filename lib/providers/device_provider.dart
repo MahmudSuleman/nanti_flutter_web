@@ -1,26 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/models/device.dart';
+import 'package:nanti_flutter_web/services/device_sevice.dart';
 
 class DeviceProvider extends ChangeNotifier {
-  List<Device> _devices = [
-    Device(
-        id: '1',
-        manufactuer: 'manufactuer 1',
-        name: 'name 1',
-        serialNumber: 'serialNumber 1'),
-    Device(
-        id: '2',
-        manufactuer: 'manufactuer 2',
-        name: 'name 2',
-        serialNumber: 'serialNumber 2'),
-    Device(
-        id: '3',
-        manufactuer: 'manufactuer 3',
-        name: 'name 3',
-        serialNumber: 'serialNumber 3'),
-  ];
+  List<Device> _devices = [];
 
   List<Device> get devices {
+    DeviceService.allDevices().then((value) {
+      _devices = value;
+    });
     return [..._devices];
   }
 

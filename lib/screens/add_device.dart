@@ -1,10 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/constants.dart';
 import 'package:nanti_flutter_web/models/device.dart';
-import 'package:nanti_flutter_web/providers/device_provider.dart';
+import 'package:nanti_flutter_web/services/device_sevice.dart';
 import 'package:nanti_flutter_web/widgets/main_container.dart';
 import 'package:nanti_flutter_web/widgets/text_input_widget.dart';
-import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class AddDevice extends StatefulWidget {
@@ -23,19 +24,27 @@ class _AddDeviceState extends State<AddDevice> {
 
   String? deviceManiufacturer;
 
+  bool isLoading = false;
+
+  var id;
+  var name;
+  var serialNumber;
+  var manufacturer;
+  var header = 'Add New Device';
+  var action = 'add';
+
+  Device? device;
   @override
   Widget build(BuildContext context) {
     var args = ModalRoute.of(context)!.settings.arguments;
-    var id;
-    var header = 'Add New Device';
-    Device? device;
     if (args != null) {
       args = args as Map<String, String>;
       id = args['id'];
-      device = Provider.of<DeviceProvider>(context)
-          .devices
-          .firstWhere((Device element) => element.id == id);
+      name = args['name'];
+      manufacturer = args['manufacturer'];
+      serialNumber = args['serialNumber'];
       header = 'Edit Device Details';
+      action = args['action']!;
     }
 
     return Scaffold(
@@ -43,94 +52,99 @@ class _AddDeviceState extends State<AddDevice> {
         title: Text(header),
       ),
       body: MainContainer(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              header.toUpperCase(),
-              style: kPageHeaderTextStyle,
-            ),
-            Divider(),
-            Form(
-              key: _formKey,
-              autovalidateMode: AutovalidateMode.disabled,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
+        child: isLoading
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  TextInputWidget(
-                    initValue: device != null ? device.name : null,
-                    labelText: 'Device Name',
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Device name is required';
-                      } else {
-                        deviceName = value;
-                      }
-                      return null;
-                    },
+                  Text(
+                    header.toUpperCase(),
+                    style: kPageHeaderTextStyle,
                   ),
-                  SizedBox(
-                    height: 50,
-                  ),
-                  TextInputWidget(
-                    initValue: device != null ? device.serialNumber : null,
-                    labelText: 'Device Serail Number',
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Device Serial Number is required';
-                      } else {
-                        deviceSerialNumber = value;
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(
-                    height: 50,
-                  ),
-                  TextInputWidget(
-                    initValue: device != null ? device.manufactuer : null,
-                    labelText: 'Device Manufacturer Name',
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Device Manufacturer is required';
-                      } else {
-                        deviceManiufacturer = value;
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(
-                    height: 25,
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 20),
-                    child: MaterialButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      onPressed: () {
-                        _save();
-                        Navigator.of(context).pop(context);
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                          top: 10,
-                          bottom: 10,
+                  Divider(),
+                  Form(
+                    key: _formKey,
+                    autovalidateMode: AutovalidateMode.disabled,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TextInputWidget(
+                          initValue: name != null ? name : null,
+                          labelText: 'Device Name',
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Device name is required';
+                            } else {
+                              deviceName = value;
+                            }
+                            return null;
+                          },
                         ),
-                        child: Text(
-                          'Submit',
-                          style: TextStyle(fontSize: 25, color: Colors.white),
+                        SizedBox(
+                          height: 50,
                         ),
-                      ),
-                      color: Theme.of(context).primaryColor,
-                      minWidth: double.infinity,
+                        TextInputWidget(
+                          initValue: serialNumber != null ? serialNumber : null,
+                          labelText: 'Device Serail Number',
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Device Serial Number is required';
+                            } else {
+                              deviceSerialNumber = value;
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(
+                          height: 50,
+                        ),
+                        TextInputWidget(
+                          initValue: manufacturer != null ? manufacturer : null,
+                          labelText: 'Device Manufacturer Name',
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Device Manufacturer is required';
+                            } else {
+                              deviceManiufacturer = value;
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(
+                          height: 25,
+                        ),
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: 20),
+                          child: MaterialButton(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            onPressed: () {
+                              action == 'add' ? _save() : _edit();
+                              // Navigator.of(context).pop(context);
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                top: 10,
+                                bottom: 10,
+                              ),
+                              child: Text(
+                                'Submit',
+                                style: TextStyle(
+                                    fontSize: 25, color: Colors.white),
+                              ),
+                            ),
+                            color: Theme.of(context).primaryColor,
+                            minWidth: double.infinity,
+                          ),
+                        )
+                      ],
                     ),
                   )
                 ],
               ),
-            )
-          ],
-        ),
       ),
     );
   }
@@ -138,15 +152,56 @@ class _AddDeviceState extends State<AddDevice> {
   _save() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      var _device = DeviceProvider();
-      // _device.addListener(() {});
-      _device
-          .store(Device(
+      setState(() {
+        isLoading = true;
+      });
+      DeviceService.store(Device(
               id: '${DateTime.now()}',
               manufactuer: deviceManiufacturer!,
               name: deviceName!,
               serialNumber: deviceSerialNumber!))
-          .then((_) => print('data saved'));
+          .then((value) {
+        setState(() {
+          isLoading = false;
+        });
+        var body = jsonDecode(value.body);
+        if (body['success']) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text('Data saved')));
+        } else {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text('Data not saved')));
+        }
+      });
+    }
+  }
+
+  _edit() {
+    // print('Edit');
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      setState(() {
+        isLoading = true;
+      });
+      DeviceService.update(Device(
+              id: id,
+              manufactuer: deviceManiufacturer!,
+              name: deviceName!,
+              serialNumber: deviceSerialNumber!))
+          .then((value) {
+        setState(() {
+          isLoading = false;
+        });
+        var body = jsonDecode(value.body);
+        print('edit response body: ${body['success'].runtimeType}');
+        if (body['success'] == 'true') {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text('Data Updated')));
+        } else {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text('Data not Updated')));
+        }
+      });
     }
   }
 }

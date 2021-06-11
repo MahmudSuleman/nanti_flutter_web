@@ -12,7 +12,7 @@ class Device {
   });
 
   Device.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
+      : id = json['id'].toString(),
         serialNumber = json['serialNumber'],
         name = json['name'],
         manufactuer = json['manufacturer'];
