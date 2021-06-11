@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/constants.dart';
+import 'package:nanti_flutter_web/models/device.dart';
+import 'package:nanti_flutter_web/providers/device_provider.dart';
 import 'package:nanti_flutter_web/widgets/main_container.dart';
 import 'package:nanti_flutter_web/widgets/text_input_widget.dart';
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
-class AddDevice extends StatelessWidget {
+class AddDevice extends StatefulWidget {
   static const routeName = '/add-device';
 
+  @override
+  _AddDeviceState createState() => _AddDeviceState();
+}
+
+class _AddDeviceState extends State<AddDevice> {
   final _formKey = GlobalKey<FormState>();
 
   String? deviceName;
@@ -17,16 +25,29 @@ class AddDevice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var args = ModalRoute.of(context)!.settings.arguments;
+    var id;
+    var header = 'Add New Device';
+    Device? device;
+    if (args != null) {
+      args = args as Map<String, String>;
+      id = args['id'];
+      device = Provider.of<DeviceProvider>(context)
+          .devices
+          .firstWhere((Device element) => element.id == id);
+      header = 'Edit Device Details';
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add New Device'),
+        title: Text(header),
       ),
       body: MainContainer(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Add New Device'.toUpperCase(),
+              header.toUpperCase(),
               style: kPageHeaderTextStyle,
             ),
             Divider(),
@@ -37,6 +58,7 @@ class AddDevice extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextInputWidget(
+                    initValue: device != null ? device.name : null,
                     labelText: 'Device Name',
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -51,6 +73,7 @@ class AddDevice extends StatelessWidget {
                     height: 50,
                   ),
                   TextInputWidget(
+                    initValue: device != null ? device.serialNumber : null,
                     labelText: 'Device Serail Number',
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -65,6 +88,7 @@ class AddDevice extends StatelessWidget {
                     height: 50,
                   ),
                   TextInputWidget(
+                    initValue: device != null ? device.manufactuer : null,
                     labelText: 'Device Manufacturer Name',
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -86,6 +110,7 @@ class AddDevice extends StatelessWidget {
                       ),
                       onPressed: () {
                         _save();
+                        Navigator.of(context).pop(context);
                       },
                       child: Padding(
                         padding: EdgeInsets.only(
@@ -113,7 +138,15 @@ class AddDevice extends StatelessWidget {
   _save() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      print('data valid');
+      var _device = DeviceProvider();
+      // _device.addListener(() {});
+      _device
+          .store(Device(
+              id: '${DateTime.now()}',
+              manufactuer: deviceManiufacturer!,
+              name: deviceName!,
+              serialNumber: deviceSerialNumber!))
+          .then((_) => print('data saved'));
     }
   }
 }

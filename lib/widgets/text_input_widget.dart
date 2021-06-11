@@ -6,7 +6,9 @@ class TextInputWidget extends StatelessWidget {
     this.controller,
     this.onChanged,
     this.validator,
+    this.initValue,
   });
+  final String? initValue;
   final String? Function(String?)? validator;
   final String labelText;
   final TextEditingController? controller;
@@ -16,29 +18,11 @@ class TextInputWidget extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20),
       child: TextFormField(
+        initialValue: initValue,
         validator: validator,
         onChanged: onChanged,
         controller: controller,
-        decoration: InputDecoration(
-          labelText: labelText,
-          contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: Theme.of(context).primaryColor),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: Theme.of(context).primaryColor),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: Theme.of(context).errorColor),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: Theme.of(context).errorColor),
-          ),
-        ),
+        decoration: InputDecoration(labelText: labelText),
       ),
     );
   }

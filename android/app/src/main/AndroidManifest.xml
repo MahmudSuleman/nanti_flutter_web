@@ -2,6 +2,7 @@
     package="com.example.nanti_flutter_web">
    <application
         android:label="nanti_flutter_web"
+        android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
