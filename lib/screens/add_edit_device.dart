@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/constants.dart';
 import 'package:nanti_flutter_web/models/device.dart';
+import 'package:nanti_flutter_web/screens/device_list.dart';
 import 'package:nanti_flutter_web/services/device_sevice.dart';
 import 'package:nanti_flutter_web/widgets/main_container.dart';
 import 'package:nanti_flutter_web/widgets/text_input_widget.dart';
@@ -22,7 +23,7 @@ class _AddDeviceState extends State<AddDevice> {
 
   String? deviceSerialNumber;
 
-  String? deviceManiufacturer;
+  String? deviceManufacturer;
 
   bool isLoading = false;
 
@@ -107,7 +108,7 @@ class _AddDeviceState extends State<AddDevice> {
                             if (value!.isEmpty) {
                               return 'Device Manufacturer is required';
                             } else {
-                              deviceManiufacturer = value;
+                              deviceManufacturer = value;
                             }
                             return null;
                           },
@@ -116,6 +117,7 @@ class _AddDeviceState extends State<AddDevice> {
                           height: 25,
                         ),
                         Container(
+
                           margin: EdgeInsets.symmetric(horizontal: 20),
                           child: MaterialButton(
                             shape: RoundedRectangleBorder(
@@ -123,7 +125,7 @@ class _AddDeviceState extends State<AddDevice> {
                             ),
                             onPressed: () {
                               action == 'add' ? _save() : _edit();
-                              // Navigator.of(context).pop(context);
+                               Navigator.pushNamed(context, DeviceList.routeName);
                             },
                             child: Padding(
                               padding: EdgeInsets.only(
@@ -157,7 +159,7 @@ class _AddDeviceState extends State<AddDevice> {
       });
       DeviceService.store(Device(
               id: '${DateTime.now()}',
-              manufactuer: deviceManiufacturer!,
+              manufactuer: deviceManufacturer!,
               name: deviceName!,
               serialNumber: deviceSerialNumber!))
           .then((value) {
@@ -165,7 +167,7 @@ class _AddDeviceState extends State<AddDevice> {
           isLoading = false;
         });
         var body = jsonDecode(value.body);
-        if (body['success']) {
+        if (body['success'] == 'true') {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text('Data saved')));
         } else {
@@ -177,7 +179,6 @@ class _AddDeviceState extends State<AddDevice> {
   }
 
   _edit() {
-    // print('Edit');
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       setState(() {
@@ -185,7 +186,7 @@ class _AddDeviceState extends State<AddDevice> {
       });
       DeviceService.update(Device(
               id: id,
-              manufactuer: deviceManiufacturer!,
+              manufactuer: deviceManufacturer!,
               name: deviceName!,
               serialNumber: deviceSerialNumber!))
           .then((value) {
@@ -193,7 +194,6 @@ class _AddDeviceState extends State<AddDevice> {
           isLoading = false;
         });
         var body = jsonDecode(value.body);
-        print('edit response body: ${body['success'].runtimeType}');
         if (body['success'] == 'true') {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text('Data Updated')));
