@@ -29,14 +29,13 @@ class _DeviceListState extends State<DeviceList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Device Lists'),
+        title: Text('Devices List'),
       ),
       body: MainContainer(
           child: FutureBuilder(
               future: deviceFromServer(),
               builder: (context, asyncsnapshot) {
-                if (asyncsnapshot.connectionState ==
-                    ConnectionState.waiting) {
+                if (asyncsnapshot.connectionState == ConnectionState.waiting) {
                   return Center(
                     child: CircularProgressIndicator(),
                   );
@@ -45,7 +44,7 @@ class _DeviceListState extends State<DeviceList> {
                   return Column(
                     children: [
                       Text(
-                        "Device List",
+                        "Devices List",
                         style: kPageHeaderTextStyle,
                         textAlign: TextAlign.center,
                       ),
@@ -105,7 +104,8 @@ class _DeviceListState extends State<DeviceList> {
                         children: [
                           ElevatedButton(
                             onPressed: () {
-                              Navigator.pushNamed(context, AddEditDevice.routeName,
+                              Navigator.pushNamed(
+                                  context, AddEditDevice.routeName,
                                   arguments: {
                                     'action': 'edit',
                                     'id': item.id,
@@ -128,12 +128,25 @@ class _DeviceListState extends State<DeviceList> {
                                             'Are you sure you want to delete this item?'),
                                         actions: [
                                           MaterialButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
+                                            onPressed: () async {
+                                              var res =
+                                                  await DeviceService.destroy(
+                                                      item.id);
+
+                                                      if(res){
+                                                         Navigator.pop(context);
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(SnackBar(
                                                       content: Text(
                                                           'Data deleted!')));
+                                                      }else{
+                                                        Navigator.pop(context);
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(SnackBar(
+                                                      content: Text(
+                                                          'Failed to delete device data!')));
+                                                      }
+                                             
                                             },
                                             // color: Colors.red,
                                             child: Text('Yes'),
@@ -146,7 +159,12 @@ class _DeviceListState extends State<DeviceList> {
                                             child: Text('No'),
                                           )
                                         ],
-                                      ));
+                                      ),
+                                      ).then((value){
+setState(() {
+  
+});
+                                      });
                             },
                             child: Icon(Icons.delete),
                           ),

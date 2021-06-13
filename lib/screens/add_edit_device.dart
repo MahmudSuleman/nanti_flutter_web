@@ -19,11 +19,16 @@ class AddEditDevice extends StatefulWidget {
 class _AddEditDeviceState extends State<AddEditDevice> {
   final _formKey = GlobalKey<FormState>();
 
-  String? deviceName;
+  // text input fields controllers
+  final _deviceNameController = TextEditingController();
+  final _deviceSerialNumberController = TextEditingController();
+  final _deviceManufacturerController = TextEditingController();
 
-  String? deviceSerialNumber;
+  String deviceName = '';
 
-  String? deviceManufacturer;
+  String deviceSerialNumber = '';
+
+  String deviceManufacturer = '';
 
   bool isLoading = false;
 
@@ -46,6 +51,11 @@ class _AddEditDeviceState extends State<AddEditDevice> {
       serialNumber = args['serialNumber'];
       header = 'Edit Device Details';
       action = args['action']!;
+
+      
+          _deviceManufacturerController.text = manufacturer;
+          _deviceNameController.text = name;
+          _deviceSerialNumberController.text = serialNumber;
     }
 
     return Scaffold(
@@ -72,7 +82,7 @@ class _AddEditDeviceState extends State<AddEditDevice> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         TextInputWidget(
-                          initValue: name != null ? name : null,
+                          controller: _deviceNameController,
                           labelText: 'Device Name',
                           validator: (value) {
                             if (value!.isEmpty) {
@@ -87,7 +97,7 @@ class _AddEditDeviceState extends State<AddEditDevice> {
                           height: 50,
                         ),
                         TextInputWidget(
-                          initValue: serialNumber != null ? serialNumber : null,
+                          controller: _deviceSerialNumberController,
                           labelText: 'Device Serail Number',
                           validator: (value) {
                             if (value!.isEmpty) {
@@ -102,7 +112,7 @@ class _AddEditDeviceState extends State<AddEditDevice> {
                           height: 50,
                         ),
                         TextInputWidget(
-                          initValue: manufacturer != null ? manufacturer : null,
+                          controller: _deviceManufacturerController,
                           labelText: 'Device Manufacturer Name',
                           validator: (value) {
                             if (value!.isEmpty) {
@@ -117,7 +127,6 @@ class _AddEditDeviceState extends State<AddEditDevice> {
                           height: 25,
                         ),
                         Container(
-
                           margin: EdgeInsets.symmetric(horizontal: 20),
                           child: MaterialButton(
                             shape: RoundedRectangleBorder(
@@ -125,7 +134,6 @@ class _AddEditDeviceState extends State<AddEditDevice> {
                             ),
                             onPressed: () {
                               action == 'add' ? _save() : _edit();
-                               Navigator.pushNamed(context, DeviceList.routeName);
                             },
                             child: Padding(
                               padding: EdgeInsets.only(
@@ -159,9 +167,9 @@ class _AddEditDeviceState extends State<AddEditDevice> {
       });
       DeviceService.store(Device(
               id: '${DateTime.now()}',
-              manufactuer: deviceManufacturer!,
-              name: deviceName!,
-              serialNumber: deviceSerialNumber!))
+              manufactuer: deviceManufacturer,
+              name: deviceName,
+              serialNumber: deviceSerialNumber))
           .then((value) {
         setState(() {
           isLoading = false;
@@ -170,9 +178,14 @@ class _AddEditDeviceState extends State<AddEditDevice> {
         if (body['success'] == 'true') {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text('Data saved')));
+          Navigator.pushNamed(context, DeviceList.routeName);
         } else {
+          
           ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text('Data not saved')));
+              .showSnackBar(SnackBar(content: Text(body['message'])));
+          _deviceManufacturerController.text = deviceManufacturer;
+          _deviceNameController.text = deviceName;
+          _deviceSerialNumberController.text = serialNumber;
         }
       });
     }
@@ -186,9 +199,9 @@ class _AddEditDeviceState extends State<AddEditDevice> {
       });
       DeviceService.update(Device(
               id: id,
-              manufactuer: deviceManufacturer!,
-              name: deviceName!,
-              serialNumber: deviceSerialNumber!))
+              manufactuer: deviceManufacturer,
+              name: deviceName,
+              serialNumber: deviceSerialNumber))
           .then((value) {
         setState(() {
           isLoading = false;
@@ -197,6 +210,8 @@ class _AddEditDeviceState extends State<AddEditDevice> {
         if (body['success'] == 'true') {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text('Data Updated')));
+                        Navigator.pushNamed(context, DeviceList.routeName);
+
         } else {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text('Data not Updated')));

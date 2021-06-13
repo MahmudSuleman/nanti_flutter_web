@@ -7,7 +7,6 @@ import 'package:nanti_flutter_web/models/device.dart';
 
 class DeviceService {
   static String baseUrl = kBaseUrl + '/devices';
-  // var baseUrl = 'https://www.google.com';
 
   static Future<List<Device>> allDevices() async {
     var url = Uri.parse(baseUrl + '/index.php');
@@ -22,6 +21,17 @@ class DeviceService {
       }
     }
     return temp;
+  }
+
+  static Future<bool> destroy(String id) async {
+    var url = Uri.parse(baseUrl + '/destroy.php?id=' + id);
+    var response = await http
+        .get(url, headers: {HttpHeaders.contentTypeHeader: "application/json"});
+    if (response.statusCode == 200) {
+      var body = jsonDecode(response.body);
+      return body['success'];
+    }
+    return false;
   }
 
   static Future<Device?> find(String id) async {
