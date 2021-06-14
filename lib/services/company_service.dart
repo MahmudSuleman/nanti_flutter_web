@@ -46,4 +46,14 @@ class CompanyService {
 
     return response;
   }
+
+  static Future<bool> destroy(String id) async {
+    var url = Uri.parse(baseUrl + '/destroy.php');
+    var response = await http.post(url, body: {'id': id});
+    if (response.statusCode == 200) {
+      var body = jsonDecode(response.body);
+      return body['success'];
+    }
+    return false;
+  }
 }

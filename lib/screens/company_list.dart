@@ -123,23 +123,23 @@ class _CompanyListState extends State<CompanyList> {
                                   actions: [
                                     MaterialButton(
                                       onPressed: () async {
-                                        // var res =
-                                        //     await DeviceService.destroy(
-                                        //         item.id);
+                                        var res =
+                                            await CompanyService.destroy(
+                                                item.id);
 
-                                        //         if(res){
-                                        //            Navigator.pop(context);
-                                        // ScaffoldMessenger.of(context)
-                                        //     .showSnackBar(SnackBar(
-                                        //         content: Text(
-                                        //             'Data deleted!')));
-                                        //         }else{
-                                        //           Navigator.pop(context);
-                                        // ScaffoldMessenger.of(context)
-                                        //     .showSnackBar(SnackBar(
-                                        //         content: Text(
-                                        //             'Failed to delete device data!')));
-                                        //         }
+                                                if(res){
+                                                   Navigator.pop(context);
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                                content: Text(
+                                                    'Data deleted!')));
+                                                }else{
+                                                  Navigator.pop(context);
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                                content: Text(
+                                                    'Failed to delete device data!')));
+                                                }
                                       },
                                       // color: Colors.red,
                                       child: Text('Yes'),

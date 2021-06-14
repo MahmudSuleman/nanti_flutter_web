@@ -24,9 +24,9 @@ class DeviceService {
   }
 
   static Future<bool> destroy(String id) async {
-    var url = Uri.parse(baseUrl + '/destroy.php?id=' + id);
+    var url = Uri.parse(baseUrl + '/destroy.php');
     var response = await http
-        .get(url, headers: {HttpHeaders.contentTypeHeader: "application/json"});
+        .post(url, body: {'id': id});
     if (response.statusCode == 200) {
       var body = jsonDecode(response.body);
       return body['success'];

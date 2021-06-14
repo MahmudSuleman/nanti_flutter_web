@@ -122,49 +122,46 @@ class _DeviceListState extends State<DeviceList> {
                           ElevatedButton(
                             onPressed: () {
                               showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                        content: Text(
-                                            'Are you sure you want to delete this item?'),
-                                        actions: [
-                                          MaterialButton(
-                                            onPressed: () async {
-                                              var res =
-                                                  await DeviceService.destroy(
-                                                      item.id);
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  content: Text(
+                                      'Are you sure you want to delete this item?'),
+                                  actions: [
+                                    MaterialButton(
+                                      onPressed: () async {
+                                        var res = await DeviceService.destroy(
+                                            item.id);
 
-                                                      if(res){
-                                                         Navigator.pop(context);
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(SnackBar(
-                                                      content: Text(
-                                                          'Data deleted!')));
-                                                      }else{
-                                                        Navigator.pop(context);
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(SnackBar(
-                                                      content: Text(
-                                                          'Failed to delete device data!')));
-                                                      }
-                                             
-                                            },
-                                            // color: Colors.red,
-                                            child: Text('Yes'),
-                                          ),
-                                          MaterialButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            // color: Colors.red,
-                                            child: Text('No'),
-                                          )
-                                        ],
-                                      ),
-                                      ).then((value){
-setState(() {
-  
-});
-                                      });
+                                        if (res) {
+                                          Navigator.pop(context);
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                                  content:
+                                                      Text('Data deleted!')));
+                                        } else {
+                                          Navigator.pop(context);
+                                          // print(res);
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                                  content: Text(
+                                                      'Failed to delete device data!')));
+                                        }
+                                      },
+                                      // color: Colors.red,
+                                      child: Text('Yes'),
+                                    ),
+                                    MaterialButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      // color: Colors.red,
+                                      child: Text('No'),
+                                    )
+                                  ],
+                                ),
+                              ).then((value) {
+                                setState(() {});
+                              });
                             },
                             child: Icon(Icons.delete),
                           ),
