@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/constants.dart';
 import 'package:nanti_flutter_web/models/company.dart';
+import 'package:nanti_flutter_web/screens/add_edit_company.dart';
 import 'package:nanti_flutter_web/services/company_service.dart';
 import 'package:nanti_flutter_web/widgets/main_container.dart';
 
@@ -42,22 +43,27 @@ class _CompanyListState extends State<CompanyList> {
                     child: Padding(
                       padding: EdgeInsets.only(left: 20),
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushNamed(
+                              context, AddEditCompany.routeName);
+                        },
                         child: Text('Add Company'),
                       ),
                     ),
                   ),
                   Divider(),
-                  SizedBox(height: 20,),
+                  SizedBox(
+                    height: 20,
+                  ),
                   Container(
                     width: double.infinity,
                     child: SingleChildScrollView(
-                          // scroll direction reduces the width
-                          // that's why i am using media query
-                          scrollDirection: MediaQuery.of(context).size.width > 600
-                                  ? Axis.vertical
-                                  : Axis.horizontal,
-                                  child: _buildTable(data: snapShot.data),
+                      // scroll direction reduces the width
+                      // that's why i am using media query
+                      scrollDirection: MediaQuery.of(context).size.width > 600
+                          ? Axis.vertical
+                          : Axis.horizontal,
+                      child: _buildTable(data: snapShot.data),
                     ),
                   )
                 ],
@@ -92,15 +98,15 @@ class _CompanyListState extends State<CompanyList> {
                         children: [
                           ElevatedButton(
                             onPressed: () {
-                              // Navigator.pushNamed(
-                              //     context, AddEditDevice.routeName,
-                              //     arguments: {
-                              //       'action': 'edit',
-                              //       'id': item.id,
-                              //       'name': item.name,
-                              //       'manufacturer': item.manufactuer,
-                              //       'serialNumber': item.serialNumber
-                              //     });
+                              Navigator.pushNamed(
+                                  context, AddEditCompany.routeName,
+                                  arguments: {
+                                    'action': 'edit',
+                                    'id': item.id,
+                                    'name': item.name,
+                                    'type': item.type,
+                                    'contact': item.contact,
+                                  });
                             },
                             child: Icon(Icons.edit),
                           ),
@@ -110,49 +116,46 @@ class _CompanyListState extends State<CompanyList> {
                           ElevatedButton(
                             onPressed: () {
                               showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                        content: Text(
-                                            'Are you sure you want to delete this item?'),
-                                        actions: [
-                                          MaterialButton(
-                                            onPressed: () async {
-                                              // var res =
-                                              //     await DeviceService.destroy(
-                                              //         item.id);
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  content: Text(
+                                      'Are you sure you want to delete this item?'),
+                                  actions: [
+                                    MaterialButton(
+                                      onPressed: () async {
+                                        // var res =
+                                        //     await DeviceService.destroy(
+                                        //         item.id);
 
-                                              //         if(res){
-                                              //            Navigator.pop(context);
-                                              // ScaffoldMessenger.of(context)
-                                              //     .showSnackBar(SnackBar(
-                                              //         content: Text(
-                                              //             'Data deleted!')));
-                                              //         }else{
-                                              //           Navigator.pop(context);
-                                              // ScaffoldMessenger.of(context)
-                                              //     .showSnackBar(SnackBar(
-                                              //         content: Text(
-                                              //             'Failed to delete device data!')));
-                                              //         }
-                                             
-                                            },
-                                            // color: Colors.red,
-                                            child: Text('Yes'),
-                                          ),
-                                          MaterialButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            // color: Colors.red,
-                                            child: Text('No'),
-                                          )
-                                        ],
-                                      ),
-                                      ).then((value){
-setState(() {
-  
-});
-                                      });
+                                        //         if(res){
+                                        //            Navigator.pop(context);
+                                        // ScaffoldMessenger.of(context)
+                                        //     .showSnackBar(SnackBar(
+                                        //         content: Text(
+                                        //             'Data deleted!')));
+                                        //         }else{
+                                        //           Navigator.pop(context);
+                                        // ScaffoldMessenger.of(context)
+                                        //     .showSnackBar(SnackBar(
+                                        //         content: Text(
+                                        //             'Failed to delete device data!')));
+                                        //         }
+                                      },
+                                      // color: Colors.red,
+                                      child: Text('Yes'),
+                                    ),
+                                    MaterialButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      // color: Colors.red,
+                                      child: Text('No'),
+                                    )
+                                  ],
+                                ),
+                              ).then((value) {
+                                setState(() {});
+                              });
                             },
                             child: Icon(Icons.delete),
                           ),

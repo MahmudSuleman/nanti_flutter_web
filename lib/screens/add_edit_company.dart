@@ -2,44 +2,40 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/constants.dart';
-import 'package:nanti_flutter_web/models/device.dart';
-import 'package:nanti_flutter_web/screens/device_list.dart';
-import 'package:nanti_flutter_web/services/device_sevice.dart';
+import 'package:nanti_flutter_web/models/company.dart';
+import 'package:nanti_flutter_web/screens/company_list.dart';
+import 'package:nanti_flutter_web/services/company_service.dart';
 import 'package:nanti_flutter_web/widgets/main_container.dart';
 import 'package:nanti_flutter_web/widgets/text_input_widget.dart';
 
-// ignore: must_be_immutable
-class AddEditDevice extends StatefulWidget {
-  static const routeName = '/add-edit-device';
+class AddEditCompany extends StatefulWidget {
+  static const routeName = '/add-edit-company';
 
   @override
-  _AddEditDeviceState createState() => _AddEditDeviceState();
+  _AddEditCompanyState createState() => _AddEditCompanyState();
 }
 
-class _AddEditDeviceState extends State<AddEditDevice> {
-  final _formKey = GlobalKey<FormState>();
+class _AddEditCompanyState extends State<AddEditCompany> {
+  // set up controllers
+  final _nameController = TextEditingController();
+  final _typeController = TextEditingController();
+  final _contactController = TextEditingController();
 
-  // text input fields controllers
-  final _deviceNameController = TextEditingController();
-  final _deviceSerialNumberController = TextEditingController();
-  final _deviceManufacturerController = TextEditingController();
+  // form key
+  var _formKey = GlobalKey<FormState>();
 
-  String deviceName = '';
-
-  String deviceSerialNumber = '';
-
-  String deviceManufacturer = '';
+// temp variables
+  var name;
+  var type;
+  var contact;
+  var id;
 
   bool isLoading = false;
 
-  var id;
-  var name;
-  var serialNumber;
-  var manufacturer;
-  var header = 'Add New Device';
-  var action = 'add';
+// config data
+  String header = 'Add New Company';
+  String action = 'add';
 
-  Device? device;
   @override
   Widget build(BuildContext context) {
     var args = ModalRoute.of(context)!.settings.arguments;
@@ -47,17 +43,16 @@ class _AddEditDeviceState extends State<AddEditDevice> {
       args = args as Map<String, String>;
       id = args['id'];
       name = args['name'];
-      manufacturer = args['manufacturer'];
-      serialNumber = args['serialNumber'];
-      header = 'Edit Device Details';
-      action = args['action']!;
+      type = args['type'];
+      contact = args['contact'];
 
-      
-          _deviceManufacturerController.text = manufacturer;
-          _deviceNameController.text = name;
-          _deviceSerialNumberController.text = serialNumber;
+      header = 'Edit Company Details';
+      action = 'edit';
+
+      _nameController.text = name;
+      _typeController.text = type;
+      _contactController.text = contact;
     }
-
     return Scaffold(
       appBar: AppBar(
         title: Text(header),
@@ -77,18 +72,16 @@ class _AddEditDeviceState extends State<AddEditDevice> {
                   Divider(),
                   Form(
                     key: _formKey,
-                    autovalidateMode: AutovalidateMode.disabled,
                     child: Column(
-                      // mainAxisSize: MainAxisSize.min,
                       children: [
                         TextInputWidget(
-                          controller: _deviceNameController,
-                          labelText: 'Device Name',
+                          controller: _nameController,
+                          labelText: 'Company Name',
                           validator: (value) {
                             if (value!.isEmpty) {
-                              return 'Device name is required';
+                              return 'Company Name is Required';
                             } else {
-                              deviceName = value;
+                              name = value;
                             }
                             return null;
                           },
@@ -97,13 +90,13 @@ class _AddEditDeviceState extends State<AddEditDevice> {
                           height: 50,
                         ),
                         TextInputWidget(
-                          controller: _deviceSerialNumberController,
-                          labelText: 'Device Serail Number',
+                          controller: _typeController,
+                          labelText: 'Company Type',
                           validator: (value) {
                             if (value!.isEmpty) {
-                              return 'Device Serial Number is required';
+                              return 'Company Type is Required';
                             } else {
-                              deviceSerialNumber = value;
+                              type = value;
                             }
                             return null;
                           },
@@ -112,13 +105,13 @@ class _AddEditDeviceState extends State<AddEditDevice> {
                           height: 50,
                         ),
                         TextInputWidget(
-                          controller: _deviceManufacturerController,
-                          labelText: 'Device Manufacturer Name',
+                          controller: _contactController,
+                          labelText: 'COmpany Contact',
                           validator: (value) {
                             if (value!.isEmpty) {
-                              return 'Device Manufacturer is required';
+                              return 'Company Contact is Required';
                             } else {
-                              deviceManufacturer = value;
+                              contact = value;
                             }
                             return null;
                           },
@@ -136,14 +129,13 @@ class _AddEditDeviceState extends State<AddEditDevice> {
                               action == 'add' ? _save() : _edit();
                             },
                             child: Padding(
-                              padding: EdgeInsets.only(
-                                top: 10,
-                                bottom: 10,
-                              ),
+                              padding: EdgeInsets.only(top: 10, bottom: 10),
                               child: Text(
                                 'Submit',
                                 style: TextStyle(
-                                    fontSize: 25, color: Colors.white),
+                                  fontSize: 25,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                             color: Theme.of(context).primaryColor,
@@ -162,30 +154,30 @@ class _AddEditDeviceState extends State<AddEditDevice> {
   _save() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+
       setState(() {
         isLoading = true;
       });
-      DeviceService.store(Device(
+
+      CompanyService.store(Company(
               id: '${DateTime.now()}',
-              manufactuer: deviceManufacturer,
-              name: deviceName,
-              serialNumber: deviceSerialNumber))
+              name: name,
+              type: type,
+              contact: contact))
           .then((value) {
         setState(() {
           isLoading = false;
         });
-        var body = jsonDecode(value.body);
-        if (body['success']) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text('Data saved')));
-          Navigator.pushNamed(context, DeviceList.routeName);
-        } else {
-          
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text(body['message'])));
-          _deviceManufacturerController.text = deviceManufacturer;
-          _deviceNameController.text = deviceName;
-          _deviceSerialNumberController.text = serialNumber;
+        if (value.statusCode == 200) {
+          var body = jsonDecode(value.body);
+          if (body['success']) {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text('Data Saved')));
+            Navigator.pushNamed(context, CompanyList.routeName);
+          } else {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(body['message'])));
+          }
         }
       });
     }
@@ -194,27 +186,30 @@ class _AddEditDeviceState extends State<AddEditDevice> {
   _edit() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+
       setState(() {
         isLoading = true;
       });
-      DeviceService.update(Device(
+
+      CompanyService.update(Company(
               id: id,
-              manufactuer: deviceManufacturer,
-              name: deviceName,
-              serialNumber: deviceSerialNumber))
+              name: name,
+              type: type,
+              contact: contact))
           .then((value) {
         setState(() {
           isLoading = false;
         });
-        var body = jsonDecode(value.body);
-        if (body['success']) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text('Data Updated')));
-                        Navigator.pushNamed(context, DeviceList.routeName);
-
-        } else {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text('Data not Updated')));
+        if (value.statusCode == 200) {
+          var body = jsonDecode(value.body);
+          if (body['success']) {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text('Data Updated')));
+            Navigator.pushNamed(context, CompanyList.routeName);
+          } else {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text('Data not Updated')));
+          }
         }
       });
     }

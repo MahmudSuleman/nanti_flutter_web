@@ -23,4 +23,27 @@ class CompanyService {
     }
     return temp;
   }
+
+  static Future<http.Response> store(Company company) async {
+    var url = Uri.parse(baseUrl + '/store.php');
+    var response = await http.post(url, body: {
+      'name': company.name,
+      'type': company.type,
+      'contact': company.contact
+    });
+
+    return response;
+  }
+
+  static Future<http.Response> update(Company company) async {
+    var url = Uri.parse(baseUrl + '/update.php');
+    var response = await http.post(url, body: {
+      'id': company.id,
+      'name': company.name,
+      'type': company.type,
+      'contact': company.contact,
+    });
+
+    return response;
+  }
 }
