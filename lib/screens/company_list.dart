@@ -26,53 +26,55 @@ class _CompanyListState extends State<CompanyList> {
         title: Text('Companies List'),
       ),
       body: MainContainer(
-        child: FutureBuilder(
-          future: CompanyService.allCompanies(),
-          builder: (context, snapShot) {
-            if (snapShot.connectionState == ConnectionState.done) {
-              return Column(
-                children: [
-                  Text(
-                    'Companies List',
-                    style: kPageHeaderTextStyle,
-                    textAlign: TextAlign.center,
-                  ),
-                  Divider(),
-                  Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 20),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushNamed(
-                              context, AddEditCompany.routeName);
-                        },
-                        child: Text('Add Company'),
+        child: SingleChildScrollView(
+          child: FutureBuilder(
+            future: CompanyService.allCompanies(),
+            builder: (context, snapShot) {
+              if (snapShot.connectionState == ConnectionState.done) {
+                return Column(
+                  children: [
+                    Text(
+                      'Companies List',
+                      style: kPageHeaderTextStyle,
+                      textAlign: TextAlign.center,
+                    ),
+                    Divider(),
+                    Align(
+                      alignment: Alignment.bottomLeft,
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 20),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushNamed(
+                                context, AddEditCompany.routeName);
+                          },
+                          child: Text('Add Company'),
+                        ),
                       ),
                     ),
-                  ),
-                  Divider(),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    width: double.infinity,
-                    child: SingleChildScrollView(
-                      // scroll direction reduces the width
-                      // that's why i am using media query
-                      scrollDirection: MediaQuery.of(context).size.width > 600
-                          ? Axis.vertical
-                          : Axis.horizontal,
-                      child: _buildTable(data: snapShot.data),
+                    Divider(),
+                    SizedBox(
+                      height: 20,
                     ),
-                  )
-                ],
+                    Container(
+                      width: double.infinity,
+                      child: SingleChildScrollView(
+                        // scroll direction reduces the width
+                        // that's why i am using media query
+                        scrollDirection: MediaQuery.of(context).size.width > 600
+                            ? Axis.vertical
+                            : Axis.horizontal,
+                        child: _buildTable(data: snapShot.data),
+                      ),
+                    )
+                  ],
+                );
+              }
+              return Center(
+                child: CircularProgressIndicator(),
               );
-            }
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          },
+            },
+          ),
         ),
       ),
     );
@@ -123,23 +125,22 @@ class _CompanyListState extends State<CompanyList> {
                                   actions: [
                                     MaterialButton(
                                       onPressed: () async {
-                                        var res =
-                                            await CompanyService.destroy(
-                                                item.id);
+                                        var res = await CompanyService.destroy(
+                                            item.id);
 
-                                                if(res){
-                                                   Navigator.pop(context);
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                                content: Text(
-                                                    'Data deleted!')));
-                                                }else{
-                                                  Navigator.pop(context);
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                                content: Text(
-                                                    'Failed to delete device data!')));
-                                                }
+                                        if (res) {
+                                          Navigator.pop(context);
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                                  content:
+                                                      Text('Data deleted!')));
+                                        } else {
+                                          Navigator.pop(context);
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                                  content: Text(
+                                                      'Failed to delete device data!')));
+                                        }
                                       },
                                       // color: Colors.red,
                                       child: Text('Yes'),

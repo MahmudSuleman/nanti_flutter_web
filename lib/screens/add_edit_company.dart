@@ -62,90 +62,94 @@ class _AddEditCompanyState extends State<AddEditCompany> {
             ? Center(
                 child: CircularProgressIndicator(),
               )
-            : Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    header.toUpperCase(),
-                    style: kPageHeaderTextStyle,
-                  ),
-                  Divider(),
-                  Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        TextInputWidget(
-                          controller: _nameController,
-                          labelText: 'Company Name',
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Company Name is Required';
-                            } else {
-                              name = value;
-                            }
-                            return null;
-                          },
-                        ),
-                        SizedBox(
-                          height: 50,
-                        ),
-                        TextInputWidget(
-                          controller: _typeController,
-                          labelText: 'Company Type',
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Company Type is Required';
-                            } else {
-                              type = value;
-                            }
-                            return null;
-                          },
-                        ),
-                        SizedBox(
-                          height: 50,
-                        ),
-                        TextInputWidget(
-                          controller: _contactController,
-                          labelText: 'COmpany Contact',
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Company Contact is Required';
-                            } else {
-                              contact = value;
-                            }
-                            return null;
-                          },
-                        ),
-                        SizedBox(
-                          height: 25,
-                        ),
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 20),
-                          child: MaterialButton(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+            : Center(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        header.toUpperCase(),
+                        style: kPageHeaderTextStyle,
+                      ),
+                      Divider(),
+                      Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            TextInputWidget(
+                              controller: _nameController,
+                              labelText: 'Company Name',
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Company Name is Required';
+                                } else {
+                                  name = value;
+                                }
+                                return null;
+                              },
                             ),
-                            onPressed: () {
-                              action == 'add' ? _save() : _edit();
-                            },
-                            child: Padding(
-                              padding: EdgeInsets.only(top: 10, bottom: 10),
-                              child: Text(
-                                'Submit',
-                                style: TextStyle(
-                                  fontSize: 25,
-                                  color: Colors.white,
+                            SizedBox(
+                              height: 50,
+                            ),
+                            TextInputWidget(
+                              controller: _typeController,
+                              labelText: 'Company Type',
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Company Type is Required';
+                                } else {
+                                  type = value;
+                                }
+                                return null;
+                              },
+                            ),
+                            SizedBox(
+                              height: 50,
+                            ),
+                            TextInputWidget(
+                              controller: _contactController,
+                              labelText: 'COmpany Contact',
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Company Contact is Required';
+                                } else {
+                                  contact = value;
+                                }
+                                return null;
+                              },
+                            ),
+                            SizedBox(
+                              height: 25,
+                            ),
+                            Container(
+                              margin: EdgeInsets.symmetric(horizontal: 20),
+                              child: MaterialButton(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
+                                onPressed: () {
+                                  action == 'add' ? _save() : _edit();
+                                },
+                                child: Padding(
+                                  padding: EdgeInsets.only(top: 10, bottom: 10),
+                                  child: Text(
+                                    'Submit',
+                                    style: TextStyle(
+                                      fontSize: 25,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                color: Theme.of(context).primaryColor,
+                                minWidth: double.infinity,
                               ),
-                            ),
-                            color: Theme.of(context).primaryColor,
-                            minWidth: double.infinity,
-                          ),
-                        )
-                      ],
-                    ),
-                  )
-                ],
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
               ),
       ),
     );
@@ -191,11 +195,8 @@ class _AddEditCompanyState extends State<AddEditCompany> {
         isLoading = true;
       });
 
-      CompanyService.update(Company(
-              id: id,
-              name: name,
-              type: type,
-              contact: contact))
+      CompanyService.update(
+              Company(id: id, name: name, type: type, contact: contact))
           .then((value) {
         setState(() {
           isLoading = false;
