@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:nanti_flutter_web/screens/company_list.dart';
+import 'package:nanti_flutter_web/screens/device_list.dart';
+import 'package:nanti_flutter_web/screens/dispatch_list.dart';
 
 class AppDrawer extends StatelessWidget {
   @override
@@ -23,7 +26,7 @@ class AppDrawer extends StatelessWidget {
             icon: Icons.phone_android,
             text: 'Devices',
             onTap: () {
-              Navigator.pushNamed(context, '/device-list');
+              Navigator.pushNamed(context, DeviceList.routeName);
             },
           ),
           divider(),
@@ -32,7 +35,16 @@ class AppDrawer extends StatelessWidget {
             icon: Icons.house,
             text: 'Companies',
             onTap: () {
-              Navigator.pushNamed(context, '/company-list');
+              Navigator.pushNamed(context, CompanyList.routeName);
+            },
+          ),
+          divider(),
+          _createDrawerItem(
+            context,
+            icon: Icons.send,
+            text: 'Dispatch',
+            onTap: () {
+              Navigator.pushNamed(context, DispatchList.routeName);
             },
           ),
         ],
