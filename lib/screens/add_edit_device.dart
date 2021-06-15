@@ -52,10 +52,9 @@ class _AddEditDeviceState extends State<AddEditDevice> {
       header = 'Edit Device Details';
       action = args['action']!;
 
-      
-          _deviceManufacturerController.text = manufacturer;
-          _deviceNameController.text = name;
-          _deviceSerialNumberController.text = serialNumber;
+      _deviceManufacturerController.text = manufacturer;
+      _deviceNameController.text = name;
+      _deviceSerialNumberController.text = serialNumber;
     }
 
     return Scaffold(
@@ -67,93 +66,97 @@ class _AddEditDeviceState extends State<AddEditDevice> {
             ? Center(
                 child: CircularProgressIndicator(),
               )
-            : Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    header.toUpperCase(),
-                    style: kPageHeaderTextStyle,
+            : Center(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        header.toUpperCase(),
+                        style: kPageHeaderTextStyle,
+                      ),
+                      Divider(),
+                      Form(
+                        key: _formKey,
+                        autovalidateMode: AutovalidateMode.disabled,
+                        child: Column(
+                          // mainAxisSize: MainAxisSize.min,
+                          children: [
+                            TextInputWidget(
+                              controller: _deviceNameController,
+                              labelText: 'Device Name',
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Device name is required';
+                                } else {
+                                  deviceName = value;
+                                }
+                                return null;
+                              },
+                            ),
+                            SizedBox(
+                              height: 50,
+                            ),
+                            TextInputWidget(
+                              controller: _deviceSerialNumberController,
+                              labelText: 'Device Serail Number',
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Device Serial Number is required';
+                                } else {
+                                  deviceSerialNumber = value;
+                                }
+                                return null;
+                              },
+                            ),
+                            SizedBox(
+                              height: 50,
+                            ),
+                            TextInputWidget(
+                              controller: _deviceManufacturerController,
+                              labelText: 'Device Manufacturer Name',
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Device Manufacturer is required';
+                                } else {
+                                  deviceManufacturer = value;
+                                }
+                                return null;
+                              },
+                            ),
+                            SizedBox(
+                              height: 25,
+                            ),
+                            Container(
+                              margin: EdgeInsets.symmetric(horizontal: 20),
+                              child: MaterialButton(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                onPressed: () {
+                                  action == 'add' ? _save() : _edit();
+                                },
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                    top: 10,
+                                    bottom: 10,
+                                  ),
+                                  child: Text(
+                                    'Submit',
+                                    style: TextStyle(
+                                        fontSize: 25, color: Colors.white),
+                                  ),
+                                ),
+                                color: Theme.of(context).primaryColor,
+                                minWidth: double.infinity,
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
                   ),
-                  Divider(),
-                  Form(
-                    key: _formKey,
-                    autovalidateMode: AutovalidateMode.disabled,
-                    child: Column(
-                      // mainAxisSize: MainAxisSize.min,
-                      children: [
-                        TextInputWidget(
-                          controller: _deviceNameController,
-                          labelText: 'Device Name',
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Device name is required';
-                            } else {
-                              deviceName = value;
-                            }
-                            return null;
-                          },
-                        ),
-                        SizedBox(
-                          height: 50,
-                        ),
-                        TextInputWidget(
-                          controller: _deviceSerialNumberController,
-                          labelText: 'Device Serail Number',
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Device Serial Number is required';
-                            } else {
-                              deviceSerialNumber = value;
-                            }
-                            return null;
-                          },
-                        ),
-                        SizedBox(
-                          height: 50,
-                        ),
-                        TextInputWidget(
-                          controller: _deviceManufacturerController,
-                          labelText: 'Device Manufacturer Name',
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Device Manufacturer is required';
-                            } else {
-                              deviceManufacturer = value;
-                            }
-                            return null;
-                          },
-                        ),
-                        SizedBox(
-                          height: 25,
-                        ),
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 20),
-                          child: MaterialButton(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            onPressed: () {
-                              action == 'add' ? _save() : _edit();
-                            },
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                top: 10,
-                                bottom: 10,
-                              ),
-                              child: Text(
-                                'Submit',
-                                style: TextStyle(
-                                    fontSize: 25, color: Colors.white),
-                              ),
-                            ),
-                            color: Theme.of(context).primaryColor,
-                            minWidth: double.infinity,
-                          ),
-                        )
-                      ],
-                    ),
-                  )
-                ],
+                ),
               ),
       ),
     );
@@ -180,7 +183,6 @@ class _AddEditDeviceState extends State<AddEditDevice> {
               .showSnackBar(SnackBar(content: Text('Data saved')));
           Navigator.pushNamed(context, DeviceList.routeName);
         } else {
-          
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text(body['message'])));
           _deviceManufacturerController.text = deviceManufacturer;
@@ -210,8 +212,7 @@ class _AddEditDeviceState extends State<AddEditDevice> {
         if (body['success']) {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text('Data Updated')));
-                        Navigator.pushNamed(context, DeviceList.routeName);
-
+          Navigator.pushNamed(context, DeviceList.routeName);
         } else {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text('Data not Updated')));

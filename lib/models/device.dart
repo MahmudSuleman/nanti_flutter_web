@@ -3,17 +3,20 @@ class Device {
   final String serialNumber;
   final String manufactuer;
   final String name;
+  final String? isAvailable;
 
   Device({
     required this.id,
     required this.manufactuer,
     required this.name,
     required this.serialNumber,
+    this.isAvailable,
   });
 
   Device.fromJson(Map<String, dynamic> json)
       : id = json['id'].toString(),
         serialNumber = json['serialNumber'],
         name = json['name'],
-        manufactuer = json['manufacturer'];
+        manufactuer = json['manufacturer'],
+        isAvailable = json['isAvailable'];
 }

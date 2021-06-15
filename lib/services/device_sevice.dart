@@ -16,6 +16,8 @@ class DeviceService {
     List<Device> temp = [];
     if (response.statusCode == 200) {
       List<dynamic> body = jsonDecode(response.body);
+      // print(body);
+
       for (Map<String, dynamic> device in body) {
         temp.add(Device.fromJson(device));
       }
@@ -25,8 +27,7 @@ class DeviceService {
 
   static Future<bool> destroy(String id) async {
     var url = Uri.parse(baseUrl + '/destroy.php');
-    var response = await http
-        .post(url, body: {'id': id});
+    var response = await http.post(url, body: {'id': id});
     if (response.statusCode == 200) {
       var body = jsonDecode(response.body);
       return body['success'];

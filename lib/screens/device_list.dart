@@ -18,6 +18,7 @@ class _DeviceListState extends State<DeviceList> {
     'Serial Number',
     'Name',
     'Manufacturer',
+    'Available',
     'Action'
   ];
 
@@ -32,55 +33,56 @@ class _DeviceListState extends State<DeviceList> {
         title: Text('Devices List'),
       ),
       body: MainContainer(
-          child: FutureBuilder(
-              future: deviceFromServer(),
-              builder: (context, asyncsnapshot) {
-                if (asyncsnapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (asyncsnapshot.connectionState ==
-                    ConnectionState.done) {
-                  return Column(
-                    children: [
-                      Text(
-                        "Devices List",
-                        style: kPageHeaderTextStyle,
-                        textAlign: TextAlign.center,
+          child: SingleChildScrollView(
+        child: FutureBuilder(
+            future: DeviceService.allDevices(),
+            builder: (context, asyncsnapshot) {
+              if (asyncsnapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (asyncsnapshot.connectionState ==
+                  ConnectionState.done) {
+                return Column(
+                  children: [
+                    Text(
+                      "Devices List",
+                      style: kPageHeaderTextStyle,
+                      textAlign: TextAlign.center,
+                    ),
+                    Divider(),
+                    Align(
+                        alignment: Alignment.bottomLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 20.0),
+                          child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                    context, AddEditDevice.routeName);
+                              },
+                              child: Text('Add a Device')),
+                        )),
+                    Divider(),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      width: double.infinity,
+                      child: SingleChildScrollView(
+                        // scroll direction reduces the width
+                        // that's why i am using media query
+                        scrollDirection: MediaQuery.of(context).size.width > 600
+                            ? Axis.vertical
+                            : Axis.horizontal,
+                        child: _buildTable(data: asyncsnapshot.data),
                       ),
-                      Divider(),
-                      Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 20.0),
-                            child: ElevatedButton(
-                                onPressed: () {
-                                  Navigator.pushNamed(
-                                      context, AddEditDevice.routeName);
-                                },
-                                child: Text('Add a Device')),
-                          )),
-                      Divider(),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Container(
-                        width: double.infinity,
-                        child: SingleChildScrollView(
-                          // scroll direction reduces the width
-                          // that's why i am using media query
-                          scrollDirection:
-                              MediaQuery.of(context).size.width > 600
-                                  ? Axis.vertical
-                                  : Axis.horizontal,
-                          child: _buildTable(data: asyncsnapshot.data),
-                        ),
-                      )
-                    ],
-                  );
-                }
-                return Text('nothing');
-              })),
+                    )
+                  ],
+                );
+              }
+              return Text('nothing');
+            }),
+      )),
     );
   }
 
@@ -100,6 +102,15 @@ class _DeviceListState extends State<DeviceList> {
                       DataCell(Text(item.serialNumber)),
                       DataCell(Text(item.name)),
                       DataCell(Text(item.manufactuer)),
+                      DataCell(item.isAvailable == '1'
+                          ? Chip(
+                              label: Text('Yes'),
+                              backgroundColor: Colors.green,
+                            )
+                          : Chip(
+                              label: Text('No '),
+                              backgroundColor: Colors.redAccent,
+                            )),
                       DataCell(Row(
                         children: [
                           ElevatedButton(
