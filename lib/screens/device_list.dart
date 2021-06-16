@@ -3,6 +3,7 @@ import 'package:nanti_flutter_web/constants.dart';
 import 'package:nanti_flutter_web/models/device.dart';
 import 'package:nanti_flutter_web/screens/add_edit_device.dart';
 import 'package:nanti_flutter_web/services/device_sevice.dart';
+import 'package:nanti_flutter_web/widgets/data_table_widget.dart';
 import 'package:nanti_flutter_web/widgets/main_container.dart';
 
 class DeviceList extends StatefulWidget {
@@ -43,6 +44,7 @@ class _DeviceListState extends State<DeviceList> {
                 );
               } else if (asyncsnapshot.connectionState ==
                   ConnectionState.done) {
+                var data = asyncsnapshot.data as List<Device>;
                 return Column(
                   children: [
                     Text(
@@ -70,11 +72,113 @@ class _DeviceListState extends State<DeviceList> {
                       width: double.infinity,
                       child: SingleChildScrollView(
                         // scroll direction reduces the width
-                        // that's why i am using media query
+                        // that's why media query is used instead
                         scrollDirection: MediaQuery.of(context).size.width > 600
                             ? Axis.vertical
                             : Axis.horizontal,
-                        child: _buildTable(data: asyncsnapshot.data),
+                        child: DataTableWidget(
+                          header: _tableHeader,
+                          data: data
+                              .map(
+                                (Device item) => DataRow(
+                                  cells: [
+                                    DataCell(Text(item.serialNumber)),
+                                    DataCell(Text(item.name)),
+                                    DataCell(Text(item.manufactuer)),
+                                    DataCell(
+                                      item.isAvailable == '1'
+                                          ? Chip(
+                                              label: Text('Yes'),
+                                              backgroundColor: Colors.green,
+                                            )
+                                          : Chip(
+                                              label: Text('No '),
+                                              backgroundColor: Colors.redAccent,
+                                            ),
+                                    ),
+                                    DataCell(
+                                      Row(
+                                        children: [
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              Navigator.pushNamed(context,
+                                                  AddEditDevice.routeName,
+                                                  arguments: {
+                                                    'action': 'edit',
+                                                    'id': item.id,
+                                                    'name': item.name,
+                                                    'manufacturer':
+                                                        item.manufactuer,
+                                                    'serialNumber':
+                                                        item.serialNumber
+                                                  });
+                                            },
+                                            child: Icon(Icons.edit),
+                                          ),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) =>
+                                                    AlertDialog(
+                                                  content: Text(
+                                                      'Are you sure you want to delete this item?'),
+                                                  actions: [
+                                                    MaterialButton(
+                                                      onPressed: () async {
+                                                        var res =
+                                                            await DeviceService
+                                                                .destroy(
+                                                                    item.id);
+
+                                                        if (res) {
+                                                          Navigator.pop(
+                                                              context);
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(SnackBar(
+                                                                  content: Text(
+                                                                      'Data deleted!')));
+                                                        } else {
+                                                          Navigator.pop(
+                                                              context);
+                                                          // print(res);
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(SnackBar(
+                                                                  content: Text(
+                                                                      'Failed to delete device data!')));
+                                                        }
+                                                      },
+                                                      // color: Colors.red,
+                                                      child: Text('Yes'),
+                                                    ),
+                                                    MaterialButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      // color: Colors.red,
+                                                      child: Text('No'),
+                                                    )
+                                                  ],
+                                                ),
+                                              ).then((value) {
+                                                setState(() {});
+                                              });
+                                            },
+                                            child: Icon(Icons.delete),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                              .toList(),
+                        ),
                       ),
                     )
                   ],
@@ -84,102 +188,5 @@ class _DeviceListState extends State<DeviceList> {
             }),
       )),
     );
-  }
-
-  _buildTable({data}) {
-    return data == null
-        ? Center(
-            child: Text('No data found'),
-          )
-        : SingleChildScrollView(
-            child: DataTable(
-                columns: _tableHeader
-                    .map((e) => DataColumn(label: Text(e)))
-                    .toList(),
-                rows: [
-                  for (Device item in data)
-                    DataRow(cells: [
-                      DataCell(Text(item.serialNumber)),
-                      DataCell(Text(item.name)),
-                      DataCell(Text(item.manufactuer)),
-                      DataCell(item.isAvailable == '1'
-                          ? Chip(
-                              label: Text('Yes'),
-                              backgroundColor: Colors.green,
-                            )
-                          : Chip(
-                              label: Text('No '),
-                              backgroundColor: Colors.redAccent,
-                            )),
-                      DataCell(Row(
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.pushNamed(
-                                  context, AddEditDevice.routeName,
-                                  arguments: {
-                                    'action': 'edit',
-                                    'id': item.id,
-                                    'name': item.name,
-                                    'manufacturer': item.manufactuer,
-                                    'serialNumber': item.serialNumber
-                                  });
-                            },
-                            child: Icon(Icons.edit),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  content: Text(
-                                      'Are you sure you want to delete this item?'),
-                                  actions: [
-                                    MaterialButton(
-                                      onPressed: () async {
-                                        var res = await DeviceService.destroy(
-                                            item.id);
-
-                                        if (res) {
-                                          Navigator.pop(context);
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(
-                                                  content:
-                                                      Text('Data deleted!')));
-                                        } else {
-                                          Navigator.pop(context);
-                                          // print(res);
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(
-                                                  content: Text(
-                                                      'Failed to delete device data!')));
-                                        }
-                                      },
-                                      // color: Colors.red,
-                                      child: Text('Yes'),
-                                    ),
-                                    MaterialButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      // color: Colors.red,
-                                      child: Text('No'),
-                                    )
-                                  ],
-                                ),
-                              ).then((value) {
-                                setState(() {});
-                              });
-                            },
-                            child: Icon(Icons.delete),
-                          ),
-                        ],
-                      )),
-                    ])
-                ]),
-          );
   }
 }
