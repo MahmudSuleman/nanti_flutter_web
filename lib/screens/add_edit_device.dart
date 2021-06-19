@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/constants.dart';
 import 'package:nanti_flutter_web/models/device.dart';
-import 'package:nanti_flutter_web/screens/device_list.dart';
 import 'package:nanti_flutter_web/services/device_sevice.dart';
 import 'package:nanti_flutter_web/widgets/main_container.dart';
 import 'package:nanti_flutter_web/widgets/text_input_widget.dart';
@@ -181,7 +180,7 @@ class _AddEditDeviceState extends State<AddEditDevice> {
         if (body['success']) {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text('Data saved')));
-          Navigator.pushNamed(context, DeviceList.routeName);
+          Navigator.pop(context);
         } else {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text(body['message'])));
@@ -212,7 +211,7 @@ class _AddEditDeviceState extends State<AddEditDevice> {
         if (body['success']) {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text('Data Updated')));
-          Navigator.pushNamed(context, DeviceList.routeName);
+          Navigator.pop(context);
         } else {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text('Data not Updated')));
