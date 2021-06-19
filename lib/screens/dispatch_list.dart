@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:nanti_flutter_web/models/dispatch.dart';
+import 'package:nanti_flutter_web/models/device.dart';
+import 'package:nanti_flutter_web/models/select_item.dart';
+import 'package:nanti_flutter_web/services/device_sevice.dart';
 import 'package:nanti_flutter_web/services/dispatch_service.dart';
+import 'package:nanti_flutter_web/widgets/data_table_widget.dart';
 import 'package:nanti_flutter_web/widgets/main_container.dart';
 
 class DispatchList extends StatefulWidget {
@@ -10,128 +15,277 @@ class DispatchList extends StatefulWidget {
 }
 
 class _DispatchListState extends State<DispatchList> {
-  // ignore: unused_field
+  var _formKey = GlobalKey<FormState>();
+  var _selectedCompany;
+  var _chosenValue;
+
+  List<SelectItem> companyItems = [];
+  Future<List<Device>> _availableDevices() async {
+    List<Device> allDevices = await DeviceService.allDevices();
+
+    List<Device> data = [];
+    if (allDevices.isNotEmpty) {
+      for (var item in allDevices) {
+        companyItems.add(SelectItem(id: item.id, name: item.name));
+        if (item.isAvailable == '1') data.add(item);
+      }
+    }
+
+    return data;
+  }
+
+  Future<List<Device>> _dispatchedDevices() async {
+    List<Device> allDevices = await DeviceService.allDevices();
+    List<Device> data = [];
+    if (allDevices.isNotEmpty) {
+      for (var item in allDevices) {
+        if (item.isAvailable == '0') data.add(item);
+      }
+    }
+
+    return data;
+  }
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        appBar: AppBar(
-          title: Text('Dispatched Devices'),
-          bottom: TabBar(
-            tabs: [
-              Text(
-                'Available Devices',
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-              ),
-              Text(
-                'Dispatched Devices',
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-              ),
-            ],
+          appBar: AppBar(
+            title: Text('Dispatched Devices'),
+            bottom: TabBar(
+              tabs: [
+                tabHeader('Available Devices'),
+                tabHeader('Dispatched Devices'),
+              ],
+            ),
           ),
-        ),
-        body: FutureBuilder(
-            future: DispatchService.allDispatches(),
-            builder: (_, snapShot) {
-              if (snapShot.connectionState == ConnectionState.done) {
-                if (snapShot.data != null) {
-                  List<Dispatch> data = snapShot.data as List<Dispatch>;
-                  List<Dispatch> available = [];
-                  List<Dispatch> dispatched = [];
+          body: MainContainer(
+              child: TabBarView(
+            children: [
+              FutureBuilder(
+                future: _availableDevices(),
+                builder: (context, snapShot) {
+                  if (snapShot.connectionState == ConnectionState.done) {
+                    if (snapShot.hasData) {
+                      var data = snapShot.data as List<Device>;
+                      var _tableHeader = [
+                        'Serial Number',
+                        'Device Name',
+                        'Device Manufacturer',
+                        'Action'
+                      ];
 
-                  List<String> _availableTableHeader = [
-                    'Device Name',
-                    'Company Name',
-                    'Action',
-                  ];
+                      return DataTableWidget(
+                        header: _tableHeader,
+                        data: [
+                          for (Device item in data)
+                            DataRow(
+                              cells: [
+                                DataCell(Text(item.serialNumber)),
+                                DataCell(Text(item.name)),
+                                DataCell(Text(item.manufactuer)),
+                                DataCell(
+                                  ElevatedButton(
+                                    child: Icon(Icons.send),
+                                    onPressed: () async {
+                                      var res = await showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          title: Text(
+                                              'Please Select Company To Dispatch Device'),
+                                          content: Form(
+                                            key: _formKey,
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                DropdownButtonFormField<String>(
+                                                  value: _chosenValue,
+                                                  //elevation: 5,
+                                                  style: TextStyle(
+                                                      color: Colors.black),
+                                                  items: companyItems
+                                                      .map(
+                                                        (selectItem) =>
+                                                            DropdownMenuItem<
+                                                                String>(
+                                                          value:
+                                                              '${selectItem.id}',
+                                                          child: Text(
+                                                              '${selectItem.name}'),
+                                                        ),
+                                                      )
+                                                      .toList(),
 
-                  List<String> _dispachedTableHeader = [
-                    'Device Name',
-                    'Company Name',
-                    'Action',
-                  ];
+                                                  hint: Text(
+                                                    'Select Company',
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w600),
+                                                  ),
+                                                  onChanged: (String? value) {
+                                                    setState(() {
+                                                      _chosenValue = value!;
+                                                      companyItems = [];
+                                                    });
+                                                  },
+                                                  validator: (value) {
+                                                    if (value == null) {
+                                                      return 'Please select company';
+                                                    } else {
+                                                      _selectedCompany = value;
+                                                    }
+                                                    return null;
+                                                  },
+                                                ),
+                                                ElevatedButton(
+                                                  onPressed: () async {
+                                                    if (_formKey.currentState!
+                                                        .validate()) {
+                                                      _formKey.currentState!
+                                                          .save();
+                                                      var res =
+                                                          await showDialog(
+                                                        context: context,
+                                                        builder: (context) =>
+                                                            AlertDialog(
+                                                          content: Text(
+                                                              'Are you sure you want to dispatch this device?'),
+                                                          actions: [
+                                                            MaterialButton(
+                                                              onPressed:
+                                                                  () async {
+                                                                var res =
+                                                                    await DispatchService
+                                                                        .store({
+                                                                  'deviceId':
+                                                                      item.id,
+                                                                  'companyId':
+                                                                      _selectedCompany
+                                                                });
 
-                  for (Dispatch item in data) {
-                    if (item.isAvailable == '1') {
-                      print('available data found');
-                      available.add(Dispatch(
-                        companyName: item.companyName,
-                        deviceName: item.deviceName,
-                        isAvailable: item.isAvailable,
-                        id: item.id,
-                      ));
+                                                                if (res.statusCode ==
+                                                                    200) {
+                                                                  print(
+                                                                      res.body);
+                                                                  var body = jsonDecode(
+                                                                          res.body)
+                                                                      as Map<
+                                                                          String,
+                                                                          dynamic>;
+                                                                  if (body[
+                                                                      'success']) {
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                    // setState(
+                                                                    //     () {});
+                                                                  }
+                                                                }
+                                                              },
+                                                              child:
+                                                                  Text('Yes'),
+                                                            ),
+                                                            MaterialButton(
+                                                              onPressed: () {
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              child: Text('No'),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      );
+
+                                                      if (res != null) {
+                                                        Navigator.pop(context);
+                                                        // setState(() {});
+                                                      }
+                                                    }
+                                                  },
+                                                  child: Text('Dispatch'),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      );
+
+                                      if (res != null) {
+                                        Navigator.pop(context);
+                                        // setState(() {});
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ],
+                            )
+                        ],
+                      );
                     } else {
-                      print('dispatched data found');
-
-                      dispatched.add(Dispatch(
-                        companyName: item.companyName,
-                        deviceName: item.deviceName,
-                        isAvailable: item.isAvailable,
-                        id: item.id,
-                      ));
+                      return Center(
+                        child: Text('No data found'),
+                      );
                     }
                   }
 
-                  return MainContainer(
-                    child: TabBarView(
-                      children: [
-                        _buildTable(
-                            header: _availableTableHeader, data: available),
-                        _buildTable2(
-                            header: _dispachedTableHeader, data: dispatched),
-                      ],
-                    ),
+                  return Center(
+                    child: CircularProgressIndicator(),
                   );
-                } else
-                  return Text('no data');
-              }
-              return Center(child: CircularProgressIndicator());
-            }),
-      ),
+                },
+              ),
+              FutureBuilder(
+                future: _dispatchedDevices(),
+                builder: (context, snapShot) {
+                  if (snapShot.connectionState == ConnectionState.done) {
+                    if (snapShot.hasData) {
+                      var data = snapShot.data as List<Device>;
+                      var _tableHeader = [
+                        'Serial Number',
+                        'Device Name',
+                        'Device Manufacturer',
+                        'Action'
+                      ];
+
+                      return DataTableWidget(
+                        header: _tableHeader,
+                        data: [
+                          for (Device item in data)
+                            DataRow(cells: [
+                              DataCell(Text(item.serialNumber)),
+                              DataCell(Text(item.name)),
+                              DataCell(Text(item.manufactuer)),
+                              DataCell(ElevatedButton(
+                                child: Icon(
+                                  Icons.cancel_schedule_send_outlined,
+                                ),
+                                onPressed: () {},
+                              )),
+                            ])
+                        ],
+                      );
+                    } else {
+                      return Center(
+                        child: Text('No data found'),
+                      );
+                    }
+                  }
+
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
+              ),
+            ],
+          ))),
     );
   }
 
-  _buildTable({List<String>? header, data}) {
-    return data == null
-        ? Center(
-            child: Text('No data found'),
-          )
-        : SingleChildScrollView(
-            child: DataTable(
-                columns:
-                    header!.map((e) => DataColumn(label: Text(e))).toList(),
-                rows: [
-                  for (Dispatch item in data)
-                    DataRow(cells: [
-                      DataCell(Text(item.companyName)),
-                      DataCell(Text(item.deviceName)),
-                      DataCell(
-                        Text('data'),
-                      ),
-                    ])
-                ]),
-          );
-  }
-
-  _buildTable2({List<String>? header, data}) {
-    return data == null
-        ? Center(
-            child: Text('No data found'),
-          )
-        : SingleChildScrollView(
-            child: DataTable(
-                columns:
-                    header!.map((e) => DataColumn(label: Text(e))).toList(),
-                rows: [
-                  for (Dispatch item in data)
-                    DataRow(cells: [
-                      DataCell(Text(item.companyName)),
-                      DataCell(Text(item.deviceName)),
-                      DataCell(Text('')),
-                    ])
-                ]),
-          );
+  Text tabHeader(String title) {
+    return Text(
+      title,
+      style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+    );
   }
 }

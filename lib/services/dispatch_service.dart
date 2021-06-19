@@ -27,4 +27,10 @@ class DispatchService {
 
     return temp;
   }
+
+  static Future<http.Response> store(Map<String, String> dispatch) async {
+    var url = Uri.parse(baseUrl + '/store.php');
+    var response = await http.post(url, body: dispatch);
+    return response;
+  }
 }
