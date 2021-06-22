@@ -5,12 +5,16 @@ import 'package:nanti_flutter_web/screens/add_edit_dispatch.dart';
 import 'package:nanti_flutter_web/screens/company_list.dart';
 import 'package:nanti_flutter_web/screens/device_list.dart';
 import 'package:nanti_flutter_web/screens/dispatch_list.dart';
+import 'package:nanti_flutter_web/screens/maintenance_list.dart';
 
 final Map<String, WidgetBuilder> routes = {
+  // list pages
   DeviceList.routeName: (_) => DeviceList(),
-  AddEditDevice.routeName: (_) => AddEditDevice(),
   CompanyList.routeName: (_) => CompanyList(),
-  AddEditCompany.routeName: (_) => AddEditCompany(),
   DispatchList.routeName: (_) => DispatchList(),
+  MaintenanceList.routeName: (_) => MaintenanceList(),
+  // add update pages
+  AddEditDevice.routeName: (_) => AddEditDevice(),
+  AddEditCompany.routeName: (_) => AddEditCompany(),
   AddEditDispatch.routeName: (_) => AddEditDispatch(),
 };
