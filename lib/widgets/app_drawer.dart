@@ -3,6 +3,7 @@ import 'package:nanti_flutter_web/screens/company_list.dart';
 import 'package:nanti_flutter_web/screens/device_list.dart';
 import 'package:nanti_flutter_web/screens/dispatch_list.dart';
 import 'package:nanti_flutter_web/screens/maintenance_list.dart';
+import 'package:nanti_flutter_web/screens/user_list.dart';
 
 class AppDrawer extends StatelessWidget {
   @override
@@ -55,6 +56,15 @@ class AppDrawer extends StatelessWidget {
             text: 'Maintenance',
             onTap: () {
               Navigator.pushNamed(context, MaintenanceList.routeName);
+            },
+          ),
+          divider(),
+          _createDrawerItem(
+            context,
+            icon: Icons.person_add,
+            text: 'Users',
+            onTap: () {
+              Navigator.pushNamed(context, UserList.routeName);
             },
           ),
         ],
