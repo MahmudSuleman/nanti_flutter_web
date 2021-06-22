@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:nanti_flutter_web/constants.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -10,9 +8,7 @@ class CompanyService {
 
   static Future<List<Company>> allCompanies() async {
     var url = Uri.parse(baseUrl + 'index.php');
-    var response = await http.get(url, headers: {
-      HttpHeaders.contentTypeHeader: 'application/json',
-    });
+    var response = await http.get(url, headers: kHeaders);
     List<Company> temp = [];
 
     if (response.statusCode == 200) {

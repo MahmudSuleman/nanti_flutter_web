@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/models/device.dart';
+import 'package:nanti_flutter_web/models/dispatch.dart';
 import 'package:nanti_flutter_web/models/select_item.dart';
 import 'package:nanti_flutter_web/services/company_service.dart';
 import 'package:nanti_flutter_web/services/device_sevice.dart';
@@ -34,12 +35,12 @@ class _DispatchListState extends State<DispatchList> {
     return data;
   }
 
-  Future<List<Device>> _dispatchedDevices() async {
-    List<Device> allDevices = await DeviceService.allDevices();
-    List<Device> data = [];
-    if (allDevices.isNotEmpty) {
-      for (var item in allDevices) {
-        if (item.isAvailable == '0') data.add(item);
+  Future<List<Dispatch>> _dispatchedDevices() async {
+    List<Dispatch> allDispatches = await DispatchService.allDispatches();
+    List<Dispatch> data = [];
+    if (allDispatches.isNotEmpty) {
+      for (var item in allDispatches) {
+        data.add(item);
       }
     }
 
@@ -138,22 +139,20 @@ class _DispatchListState extends State<DispatchList> {
                 builder: (context, snapShot) {
                   if (snapShot.connectionState == ConnectionState.done) {
                     if (snapShot.hasData) {
-                      var data = snapShot.data as List<Device>;
+                      var data = snapShot.data as List<Dispatch>;
                       var _tableHeader = [
-                        'Serial Number',
+                        'Company Name',
                         'Device Name',
-                        'Device Manufacturer',
                         'Action'
                       ];
 
                       return DataTableWidget(
                         header: _tableHeader,
                         data: [
-                          for (Device item in data)
+                          for (Dispatch item in data)
                             DataRow(cells: [
-                              DataCell(Text(item.serialNumber)),
-                              DataCell(Text(item.name)),
-                              DataCell(Text(item.manufactuer)),
+                              DataCell(Text(item.companyName)),
+                              DataCell(Text(item.deviceName)),
                               DataCell(ElevatedButton(
                                 child: Icon(
                                   Icons.cancel_schedule_send_outlined,
@@ -221,6 +220,9 @@ class _DispatchListState extends State<DispatchList> {
               return null;
             },
           ),
+          SizedBox(
+            height: 20,
+          ),
           ElevatedButton(
             onPressed: () async {
               if (_formKey.currentState!.validate()) {
@@ -273,7 +275,10 @@ class _DispatchListState extends State<DispatchList> {
                 }
               }
             },
-            child: Text('Dispatch'),
+            child: Text(
+              'Dispatch',
+              style: TextStyle(fontSize: 20),
+            ),
           )
         ],
       ),

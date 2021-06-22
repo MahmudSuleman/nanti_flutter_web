@@ -61,11 +61,18 @@ class _DeviceListState extends State<DeviceList> {
                         child: Padding(
                           padding: const EdgeInsets.only(left: 20.0),
                           child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.pushNamed(
-                                    context, AddEditDevice.routeName);
-                              },
-                              child: Text('Add a Device')),
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                      context, AddEditDevice.routeName)
+                                  .then((value) {
+                                if (value != null) {
+                                  print('widget poped');
+                                  setState(() {});
+                                }
+                              });
+                            },
+                            child: Text('Add a Device'),
+                          ),
                         )),
                     Divider(),
                     SizedBox(
@@ -120,7 +127,13 @@ class _DeviceListState extends State<DeviceList> {
                                                               item.manufactuer,
                                                           'serialNumber':
                                                               item.serialNumber
-                                                        });
+                                                        }).then((value) {
+                                                      if (value != null) {
+                                                        print(
+                                                            'edit widget poped');
+                                                        setState(() {});
+                                                      }
+                                                    });
                                                   },
                                                   child: Icon(Icons.edit),
                                                 ),

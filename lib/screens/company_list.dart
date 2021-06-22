@@ -46,7 +46,12 @@ class _CompanyListState extends State<CompanyList> {
                         child: ElevatedButton(
                           onPressed: () {
                             Navigator.pushNamed(
-                                context, AddEditCompany.routeName);
+                                    context, AddEditCompany.routeName)
+                                .then((value) {
+                              if (value != null) {
+                                setState(() {});
+                              }
+                            });
                           },
                           child: Text('Add Company'),
                         ),
@@ -108,7 +113,11 @@ class _CompanyListState extends State<CompanyList> {
                                     'name': item.name,
                                     'type': item.type,
                                     'contact': item.contact,
-                                  });
+                                  }).then((value) {
+                                if (value != null) {
+                                  setState(() {});
+                                }
+                              });
                             },
                             child: Icon(Icons.edit),
                           ),

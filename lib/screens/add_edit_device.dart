@@ -180,7 +180,7 @@ class _AddEditDeviceState extends State<AddEditDevice> {
         if (body['success']) {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text('Data saved')));
-          Navigator.pop(context);
+          Navigator.pop(context, true);
         } else {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text(body['message'])));
@@ -211,7 +211,7 @@ class _AddEditDeviceState extends State<AddEditDevice> {
         if (body['success']) {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text('Data Updated')));
-          Navigator.pop(context);
+          Navigator.pop(context, true);
         } else {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text('Data not Updated')));

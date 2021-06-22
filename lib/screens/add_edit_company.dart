@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/constants.dart';
 import 'package:nanti_flutter_web/models/company.dart';
-import 'package:nanti_flutter_web/screens/company_list.dart';
 import 'package:nanti_flutter_web/services/company_service.dart';
 import 'package:nanti_flutter_web/widgets/main_container.dart';
 import 'package:nanti_flutter_web/widgets/text_input_widget.dart';
@@ -177,7 +176,7 @@ class _AddEditCompanyState extends State<AddEditCompany> {
           if (body['success']) {
             ScaffoldMessenger.of(context)
                 .showSnackBar(SnackBar(content: Text('Data Saved')));
-            Navigator.pushNamed(context, CompanyList.routeName);
+            Navigator.pop(context, true);
           } else {
             ScaffoldMessenger.of(context)
                 .showSnackBar(SnackBar(content: Text(body['message'])));
@@ -206,7 +205,7 @@ class _AddEditCompanyState extends State<AddEditCompany> {
           if (body['success']) {
             ScaffoldMessenger.of(context)
                 .showSnackBar(SnackBar(content: Text('Data Updated')));
-            Navigator.pushNamed(context, CompanyList.routeName);
+            Navigator.pop(context, true);
           } else {
             ScaffoldMessenger.of(context)
                 .showSnackBar(SnackBar(content: Text('Data not Updated')));
