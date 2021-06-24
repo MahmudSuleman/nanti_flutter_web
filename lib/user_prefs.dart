@@ -15,10 +15,21 @@ class UserPrefs {
     pref.setString('user', userData);
   }
 
-  static Future<User> getUserPrefs() async {
+  static Future<User?> getUserPrefs() async {
     var pref = await SharedPreferences.getInstance();
-    var user = pref.getString('user');
-    return User.fromJson(jsonDecode(user!));
+    var logged = await isLoggedIn();
+    if (logged) {
+      Map<String, dynamic> user =
+          pref.getString('user') as Map<String, dynamic>;
+      return User.fromJson(user);
+    } else {
+      return null;
+    }
+  }
+
+  static Future<void> clearUser() async {
+    var pref = await SharedPreferences.getInstance();
+    pref.remove('user');
   }
 
   static Future<bool> isLoggedIn() async {
