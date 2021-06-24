@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/constants.dart';
 import 'package:nanti_flutter_web/models/company.dart';
+import 'package:nanti_flutter_web/services/auth_service.dart';
 import 'package:nanti_flutter_web/services/company_service.dart';
 import 'package:nanti_flutter_web/widgets/main_container.dart';
 import 'package:nanti_flutter_web/widgets/text_input_widget.dart';
@@ -37,6 +38,8 @@ class _AddEditCompanyState extends State<AddEditCompany> {
 
   @override
   Widget build(BuildContext context) {
+    AuthService.autoLogout(context);
+
     var args = ModalRoute.of(context)!.settings.arguments;
     if (args != null) {
       args = args as Map<String, String>;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/constants.dart';
 import 'package:nanti_flutter_web/models/maintenance.dart';
+import 'package:nanti_flutter_web/services/auth_service.dart';
 import 'package:nanti_flutter_web/services/maintenance_service.dart';
 import 'package:nanti_flutter_web/widgets/data_table_widget.dart';
 import 'package:nanti_flutter_web/widgets/main_container.dart';
@@ -9,6 +10,8 @@ class MaintenanceList extends StatelessWidget {
   static String routeName = '/maintenance-list';
   @override
   Widget build(BuildContext context) {
+    AuthService.autoLogout(context);
+
     List<String> _tableHeader = [
       'Date',
       'Device Name',

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/constants.dart';
 import 'package:nanti_flutter_web/models/device.dart';
 import 'package:nanti_flutter_web/screens/add_edit_device.dart';
+import 'package:nanti_flutter_web/services/auth_service.dart';
 import 'package:nanti_flutter_web/services/device_sevice.dart';
 import 'package:nanti_flutter_web/widgets/data_table_widget.dart';
 import 'package:nanti_flutter_web/widgets/main_container.dart';
@@ -29,6 +30,8 @@ class _DeviceListState extends State<DeviceList> {
 
   @override
   Widget build(BuildContext context) {
+    AuthService.autoLogout(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Devices List'),

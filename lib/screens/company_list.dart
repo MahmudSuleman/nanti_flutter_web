@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/constants.dart';
 import 'package:nanti_flutter_web/models/company.dart';
 import 'package:nanti_flutter_web/screens/add_edit_company.dart';
+import 'package:nanti_flutter_web/services/auth_service.dart';
 import 'package:nanti_flutter_web/services/company_service.dart';
 import 'package:nanti_flutter_web/widgets/main_container.dart';
 
@@ -21,6 +22,8 @@ class _CompanyListState extends State<CompanyList> {
   ];
   @override
   Widget build(BuildContext context) {
+    AuthService.autoLogout(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Companies List'),
