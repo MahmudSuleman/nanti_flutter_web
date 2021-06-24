@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/constants.dart';
+import 'package:nanti_flutter_web/main.dart';
 import 'package:nanti_flutter_web/models/user.dart';
 import 'package:nanti_flutter_web/services/auth_service.dart';
 import 'package:nanti_flutter_web/user_prefs.dart';
@@ -86,7 +87,9 @@ class Login extends StatelessWidget {
                                   if (body['success']) {
                                     UserPrefs.setUserPrefs(
                                         User.fromJson(body['data']));
-                                    print('user data set');
+
+                                    Navigator.pushReplacementNamed(
+                                        context, '/');
                                   } else {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(
