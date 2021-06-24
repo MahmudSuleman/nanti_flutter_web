@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/screens/company_list.dart';
 import 'package:nanti_flutter_web/screens/device_list.dart';
 import 'package:nanti_flutter_web/screens/dispatch_list.dart';
+import 'package:nanti_flutter_web/screens/login.dart';
 import 'package:nanti_flutter_web/screens/maintenance_list.dart';
 import 'package:nanti_flutter_web/screens/user_list.dart';
+import 'package:nanti_flutter_web/services/auth_service.dart';
+import 'package:nanti_flutter_web/user_prefs.dart';
 
 class AppDrawer extends StatelessWidget {
   @override
@@ -65,6 +68,17 @@ class AppDrawer extends StatelessWidget {
             text: 'Users',
             onTap: () {
               Navigator.pushNamed(context, UserList.routeName);
+            },
+          ),
+          divider(),
+          _createDrawerItem(
+            context,
+            icon: Icons.logout,
+            text: 'Logout',
+            onTap: () {
+              UserPrefs.clearUser().then((_) {
+                Navigator.pushReplacementNamed(context, Login.routeName);
+              });
             },
           ),
         ],
