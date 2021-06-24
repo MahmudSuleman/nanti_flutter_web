@@ -5,6 +5,7 @@ import 'package:nanti_flutter_web/screens/add_edit_dispatch.dart';
 import 'package:nanti_flutter_web/screens/company_list.dart';
 import 'package:nanti_flutter_web/screens/device_list.dart';
 import 'package:nanti_flutter_web/screens/dispatch_list.dart';
+import 'package:nanti_flutter_web/screens/login.dart';
 import 'package:nanti_flutter_web/screens/maintenance_list.dart';
 import 'package:nanti_flutter_web/screens/user_list.dart';
 
@@ -20,4 +21,7 @@ final Map<String, WidgetBuilder> routes = {
   AddEditDevice.routeName: (_) => AddEditDevice(),
   AddEditCompany.routeName: (_) => AddEditCompany(),
   AddEditDispatch.routeName: (_) => AddEditDispatch(),
+
+  // auth routes
+  Login.routeName: (_) => Login(),
 };
