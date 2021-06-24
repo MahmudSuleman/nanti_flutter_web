@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/providers/device_provider.dart';
 import 'package:nanti_flutter_web/routes.dart';
+import 'package:nanti_flutter_web/services/auth_service.dart';
 import 'package:nanti_flutter_web/widgets/app_drawer.dart';
 import 'package:nanti_flutter_web/widgets/main_container.dart';
 import 'package:provider/provider.dart';
@@ -32,8 +33,10 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
+
   @override
   Widget build(BuildContext context) {
+    AuthService.autoLogout(context);
     return Scaffold(
       // backgroundColor: Colors.black12,
       appBar: AppBar(
