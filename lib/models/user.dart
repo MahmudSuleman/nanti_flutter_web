@@ -17,6 +17,6 @@ class User {
   User.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         username = json['username'],
-        userType = json['userType'],
+        userType = json['userTypeId'],
         companyId = json['companyId'];
 }
