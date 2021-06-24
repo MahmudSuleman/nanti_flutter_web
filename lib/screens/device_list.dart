@@ -66,7 +66,6 @@ class _DeviceListState extends State<DeviceList> {
                                       context, AddEditDevice.routeName)
                                   .then((value) {
                                 if (value != null) {
-                                  print('widget poped');
                                   setState(() {});
                                 }
                               });
@@ -129,8 +128,6 @@ class _DeviceListState extends State<DeviceList> {
                                                               item.serialNumber
                                                         }).then((value) {
                                                       if (value != null) {
-                                                        print(
-                                                            'edit widget poped');
                                                         setState(() {});
                                                       }
                                                     });
@@ -168,7 +165,6 @@ class _DeviceListState extends State<DeviceList> {
                                                               } else {
                                                                 Navigator.pop(
                                                                     context);
-                                                                // print(res);
                                                                 ScaffoldMessenger.of(
                                                                         context)
                                                                     .showSnackBar(SnackBar(
