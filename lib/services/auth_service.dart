@@ -3,8 +3,7 @@ import 'package:nanti_flutter_web/common.dart';
 import 'package:nanti_flutter_web/constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:nanti_flutter_web/screens/login.dart';
-
-import '../user_prefs.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   static String baseUrl = kBaseUrl + '/auth/';
@@ -22,10 +21,20 @@ class AuthService {
   }
 
   static Future<void> autoLogout(context) async {
-    UserPrefs.isLoggedIn().then((value) {
+    isLoggedIn().then((value) {
       if (!value) {
         Navigator.of(context).pushReplacementNamed(Login.routeName);
       }
     });
+  }
+
+  static Future<bool> isLoggedIn() async {
+    var pref = await SharedPreferences.getInstance();
+    var user = pref.getString('user');
+    if (user != null) {
+      return true;
+    }
+
+    return false;
   }
 }
