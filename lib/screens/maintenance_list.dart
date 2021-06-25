@@ -16,7 +16,7 @@ class MaintenanceList extends StatelessWidget {
       'Date',
       'Device Name',
       'Company Name',
-      'Proble Description',
+      'Problem Description',
       'Action',
     ];
     return Scaffold(
