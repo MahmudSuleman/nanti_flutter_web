@@ -5,6 +5,7 @@ import 'package:nanti_flutter_web/screens/dispatch_list.dart';
 import 'package:nanti_flutter_web/screens/login.dart';
 import 'package:nanti_flutter_web/screens/maintenance_list.dart';
 import 'package:nanti_flutter_web/screens/user/user_device_list.dart';
+import 'package:nanti_flutter_web/screens/user/user_maintenance_list.dart';
 import 'package:nanti_flutter_web/screens/user_list.dart';
 import 'package:nanti_flutter_web/services/auth_service.dart';
 import 'package:nanti_flutter_web/user_prefs.dart';
@@ -28,10 +29,10 @@ class _AppDrawerState extends State<AppDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    AuthService.isAdmin().then((value) {
-      setState(() {});
-      isAdmin = value;
-    });
+    // AuthService.isAdmin().then((value) {
+    //   setState(() {});
+    //   isAdmin = value;
+    // });
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -54,9 +55,18 @@ class _AppDrawerState extends State<AppDrawer> {
         _createDrawerItem(
           context,
           icon: Icons.list,
-          text: 'Device List',
+          text: 'Devices',
           onTap: () {
             Navigator.pushNamed(context, UserDeviceList.routeName);
+          },
+        ),
+        divider(),
+        _createDrawerItem(
+          context,
+          icon: Icons.settings,
+          text: 'Maintenances',
+          onTap: () {
+            Navigator.pushNamed(context, UserMaintenanceList.routeName);
           },
         ),
         divider(),
