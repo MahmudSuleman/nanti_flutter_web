@@ -3,6 +3,7 @@ import 'package:nanti_flutter_web/common.dart';
 import 'package:nanti_flutter_web/constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:nanti_flutter_web/screens/login.dart';
+import 'package:nanti_flutter_web/user_prefs.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
@@ -35,6 +36,17 @@ class AuthService {
       return true;
     }
 
+    return false;
+  }
+
+  static Future<bool> isAdmin() async {
+    var res = await isLoggedIn();
+    if (res) {
+      var user = await UserPrefs.getUserPrefs();
+      if (user?.companyId == '0') {
+        return true;
+      }
+    }
     return false;
   }
 }
