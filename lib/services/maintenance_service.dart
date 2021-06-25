@@ -1,8 +1,12 @@
 import 'dart:convert';
 
+import 'package:http/http.dart' as http;
 import 'package:nanti_flutter_web/constants.dart';
 import 'package:nanti_flutter_web/models/maintenance.dart';
-import 'package:http/http.dart' as http;
+import 'package:nanti_flutter_web/services/auth_service.dart';
+
+import '../common.dart';
+import '../user_prefs.dart';
 
 class MaintenanceService {
   static String baseUrl = kBaseUrl + '/maintenances/';
@@ -20,6 +24,30 @@ class MaintenanceService {
       }
     } catch (e) {
       print('exception in maintenance service; all maintenance' + e.toString());
+    }
+    return temp;
+  }
+
+  static Future<List<Maintenance>> allUserMaintenance() async {
+    var url = Uri.parse(baseUrl + 'index.php');
+    List<Maintenance> temp = [];
+    try {
+      var response = await http.get(url, headers: kHeaders);
+      var isAdmin = await AuthService.isAdmin();
+      if (response.statusCode == 200) {
+        List<dynamic> body = jsonDecode(response.body);
+        if (!isAdmin) {
+          var pref = await UserPrefs.getUserPrefs();
+          if (pref != null) {
+            for (var maintenance in body) {
+              if (pref.companyId == maintenance['companyId'])
+                temp.add(Maintenance.fromJson(maintenance));
+            }
+          }
+        }
+      }
+    } catch (e) {
+      print(Common.exceptionMessage('maintenance service', e.toString()));
     }
     return temp;
   }
