@@ -1,9 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:nanti_flutter_web/constants.dart';
 import 'package:http/http.dart' as http;
+import 'package:nanti_flutter_web/constants.dart';
 import 'package:nanti_flutter_web/models/dispatch.dart';
+
+import '../user_prefs.dart';
+import 'auth_service.dart';
 
 class DispatchService {
   static String baseUrl = kBaseUrl + '/dispatches';
@@ -22,6 +25,32 @@ class DispatchService {
       var body = jsonDecode(response.body);
       for (Map<String, dynamic> dispatch in body) {
         temp.add(Dispatch.fromJson(dispatch));
+      }
+    }
+
+    return temp;
+  }
+
+  static Future<List<Map<String, dynamic>>> userDispatches() async {
+    var url = Uri.parse(baseUrl + '/index.php');
+    var response = await http.get(
+      url,
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+      },
+    );
+    List<Map<String, dynamic>> temp = [];
+    var isAdmin = await AuthService.isAdmin();
+
+    if (response.statusCode == 200) {
+      var body = jsonDecode(response.body);
+      if (!isAdmin) {
+        var pref = await UserPrefs.getUserPrefs();
+        if (pref != null) {
+          for (Map<String, dynamic> dispatch in body) {
+            if (pref.companyId == dispatch['companyId']) temp.add(dispatch);
+          }
+        }
       }
     }
 
