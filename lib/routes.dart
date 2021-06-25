@@ -8,6 +8,7 @@ import 'package:nanti_flutter_web/screens/dispatch_list.dart';
 import 'package:nanti_flutter_web/screens/login.dart';
 import 'package:nanti_flutter_web/screens/maintenance_list.dart';
 import 'package:nanti_flutter_web/screens/user/user_device_list.dart';
+import 'package:nanti_flutter_web/screens/user/user_maintenance_list.dart';
 import 'package:nanti_flutter_web/screens/user_list.dart';
 
 final Map<String, WidgetBuilder> routes = {
@@ -20,6 +21,7 @@ final Map<String, WidgetBuilder> routes = {
 
   // user list pages
   UserDeviceList.routeName: (_) => UserDeviceList(),
+  UserMaintenanceList.routeName: (_) => UserMaintenanceList(),
 
   // add update pages
   AddEditDevice.routeName: (_) => AddEditDevice(),
