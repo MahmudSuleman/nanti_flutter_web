@@ -11,7 +11,7 @@ class UserPrefs {
       'id': user.id,
       'username': user.username,
       'companyId': user.companyId,
-      'userType': user.userType,
+      'userTypeId': user.userType,
     });
     pref.setString('user', userData);
   }
@@ -20,9 +20,11 @@ class UserPrefs {
     var pref = await SharedPreferences.getInstance();
     var logged = await AuthService.isLoggedIn();
     if (logged) {
-      Map<String, dynamic> user =
-          pref.getString('user') as Map<String, dynamic>;
-      return User.fromJson(user);
+      var user = pref.getString('user');
+      if (user != null) {
+        print(jsonDecode(user));
+        return User.fromJson(jsonDecode(user));
+      }
     } else {
       return null;
     }
