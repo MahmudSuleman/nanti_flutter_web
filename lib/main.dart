@@ -33,10 +33,14 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
+  var isAdmin = false;
 
   @override
   Widget build(BuildContext context) {
     AuthService.autoLogout(context);
+    AuthService.isAdmin().then((value) {
+      if (value) isAdmin = true;
+    });
     return Scaffold(
       // backgroundColor: Colors.black12,
       appBar: AppBar(
