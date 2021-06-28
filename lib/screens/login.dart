@@ -46,101 +46,7 @@ class _LoginState extends State<Login> {
                       SizedBox(
                         height: 20,
                       ),
-                      Form(
-                          key: _formKey,
-                          child: Column(
-                            children: [
-                              TextFormField(
-                                decoration: InputDecoration(
-                                    labelText: 'Enter username'),
-                                controller: _usernameController,
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return 'Please provide username';
-                                  }
-
-                                  return null;
-                                },
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              TextFormField(
-                                decoration: InputDecoration(
-                                    labelText: 'Enter password'),
-                                controller: _passwordController,
-                                obscureText: true,
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return 'Please provide password';
-                                  }
-
-                                  return null;
-                                },
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              MaterialButton(
-                                child: Text('Submit'),
-                                onPressed: () {
-                                  if (_formKey.currentState!.validate()) {
-                                    _formKey.currentState!.save();
-                                    setState(() {
-                                      isLoading = true;
-                                    });
-                                    var username = _usernameController.text;
-                                    var password = _passwordController.text;
-                                    print('username: $username');
-
-                                    AuthService.login(username, password)
-                                        .then((value) {
-                                      print('response ${value.body}');
-                                      setState(() {
-                                        isLoading = false;
-                                      });
-                                      if (value.statusCode == 200) {
-                                        var body = jsonDecode(value.body)
-                                            as Map<String, dynamic>;
-                                        print('body: ${value.body}');
-                                        if (body['success']) {
-                                          UserPrefs.setUserPrefs(
-                                              User.fromJson(body['data']));
-
-                                          Navigator.pushReplacementNamed(
-                                              context, '/');
-                                        } else {
-                                          // setState(() {
-                                          //   isLoading = false;
-                                          // });
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(
-                                                  content: Text(
-                                                      'Failed to login, please try again.')));
-                                        }
-                                      } else {
-                                        setState(() {
-                                          isLoading = false;
-                                        });
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                                content: Text(
-                                                    'Failed to login, please try again.')));
-                                      }
-                                    }).catchError((error) {
-                                      setState(() {
-                                        isLoading = false;
-                                      });
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(SnackBar(
-                                              content: Text(
-                                                  'Failed to login, prlease tyr again.')));
-                                    });
-                                  }
-                                },
-                              ),
-                            ],
-                          ))
+                      _form(),
                     ],
                   ),
                 ),
@@ -148,4 +54,99 @@ class _LoginState extends State<Login> {
             ),
     );
   }
+
+  Form _form() => Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          TextFormField(
+            decoration: InputDecoration(labelText: 'Enter username'),
+            controller: _usernameController,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'Please provide username';
+              }
+              return null;
+            },
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          TextFormField(
+            decoration: InputDecoration(labelText: 'Enter password'),
+            controller: _passwordController,
+            obscureText: true,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'Please provide password';
+              }
+
+              return null;
+            },
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          _submitButton(),
+        ],
+      ));
+
+  MaterialButton _submitButton() => MaterialButton(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 15,
+          ),
+          child: Text(
+            'Submit',
+            style: TextStyle(fontSize: 25, color: Colors.white),
+          ),
+        ),
+        minWidth: double.infinity,
+        color: Theme.of(context).primaryColor,
+        onPressed: () {
+          if (_formKey.currentState!.validate()) {
+            _formKey.currentState!.save();
+            setState(() {
+              isLoading = true;
+            });
+            var username = _usernameController.text;
+            var password = _passwordController.text;
+            print('username: $username');
+
+            AuthService.login(username, password).then((value) {
+              print('response ${value.body}');
+              setState(() {
+                isLoading = false;
+              });
+              if (value.statusCode == 200) {
+                var body = jsonDecode(value.body) as Map<String, dynamic>;
+                print('body: ${value.body}');
+                if (body['success']) {
+                  UserPrefs.setUserPrefs(User.fromJson(body['data']));
+
+                  Navigator.pushReplacementNamed(context, '/');
+                } else {
+                  // setState(() {
+                  //   isLoading = false;
+                  // });
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text('Failed to login, please try again.')));
+                }
+              } else {
+                setState(() {
+                  isLoading = false;
+                });
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text('Failed to login, please try again.')));
+              }
+            }).catchError((error) {
+              setState(() {
+                isLoading = false;
+              });
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text('Failed to login, please tyr again.')));
+            });
+          }
+        },
+      );
 }
