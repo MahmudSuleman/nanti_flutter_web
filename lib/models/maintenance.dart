@@ -5,6 +5,7 @@ class Maintenance {
   String deviceName;
   String problemDescription;
   String? companyId;
+  String? dateDone;
 
   Maintenance({
     required this.id,
@@ -13,6 +14,7 @@ class Maintenance {
     required this.dateSent,
     required this.problemDescription,
     this.companyId,
+    this.dateDone,
   });
 
   Maintenance.fromJson(Map<String, dynamic> json)
@@ -21,5 +23,6 @@ class Maintenance {
         companyName = json['companyName'],
         dateSent = json['dateSent'],
         companyId = json['companyId'],
+        dateDone = json['dateDone'],
         problemDescription = json['problemDescription'];
 }
