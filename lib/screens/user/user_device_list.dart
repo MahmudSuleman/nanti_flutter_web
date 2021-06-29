@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/constants.dart';
 import 'package:nanti_flutter_web/services/auth_service.dart';
 import 'package:nanti_flutter_web/services/dispatch_service.dart';
+import 'package:nanti_flutter_web/services/maintenance_service.dart';
 import 'package:nanti_flutter_web/widgets/data_table_widget.dart';
 import 'package:nanti_flutter_web/widgets/main_container.dart';
 
@@ -18,6 +19,7 @@ class _UserDeviceListState extends State<UserDeviceList> {
     'Serial Number',
     'Name',
     'Manufacturer',
+    'Action',
   ];
 
   @override
@@ -75,6 +77,22 @@ class _UserDeviceListState extends State<UserDeviceList> {
                                           DataCell(Text(item['serialNumber'])),
                                           DataCell(Text(item['deviceName'])),
                                           DataCell(Text(item['manufacturer'])),
+                                          DataCell(ElevatedButton(
+                                            child: Icon(Icons.send),
+                                            onPressed: () {
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return AlertDialog(
+                                                      title:
+                                                          Text('Send Device'),
+                                                      content: _popUpForm(
+                                                          item['companyId'],
+                                                          item['deviceId']),
+                                                    );
+                                                  });
+                                            },
+                                          )),
                                         ],
                                       ),
                                     )
@@ -90,4 +108,56 @@ class _UserDeviceListState extends State<UserDeviceList> {
       )),
     );
   }
+
+  final _problemDescCtrl = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+  Form _popUpForm(companyId, deviceId) => Form(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextFormField(
+              decoration: InputDecoration(hintText: 'Problem Description'),
+              controller: _problemDescCtrl,
+              validator: (value) {
+                if (value == null) {
+                  return 'Problem description is required';
+                }
+                return null;
+              },
+            ),
+            SizedBox(height: 20),
+            Container(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    _formKey.currentState!.save();
+                    final problemDescription = _problemDescCtrl.text;
+                    MaintenanceService.store(
+                            companyId, deviceId, problemDescription)
+                        .then((value) {
+                      if (value['success']) {
+                        Navigator.pop(context);
+                        _problemDescCtrl.text = '';
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('Device sent successfully')));
+                      } else {
+                        _problemDescCtrl.text = '';
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(value['message'])));
+                      }
+                    }).catchError((onError) {
+                      print(onError.toString());
+                    });
+                  }
+                },
+                child: Text('Submit'),
+              ),
+            )
+          ],
+        ),
+      );
 }

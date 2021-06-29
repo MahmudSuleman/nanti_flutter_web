@@ -29,9 +29,10 @@ class UserMaintenanceList extends StatelessWidget {
               future: MaintenanceService.allUserMaintenance(),
               builder: (context, snapShot) {
                 if (snapShot.connectionState == ConnectionState.done) {
-                  List<Maintenance>? maintenance;
+                  late List<Maintenance> maintenance;
                   if (snapShot.hasData) {
                     maintenance = snapShot.data as List<Maintenance>;
+                    print('maintenance: ${maintenance.runtimeType}');
                   }
                   return Column(
                     children: [
@@ -52,7 +53,7 @@ class UserMaintenanceList extends StatelessWidget {
                               MediaQuery.of(context).size.width > 600
                                   ? Axis.vertical
                                   : Axis.horizontal,
-                          child: maintenance == null
+                          child: maintenance.isEmpty
                               ? Align(
                                   alignment: Alignment.center,
                                   child: Text('No data found'),

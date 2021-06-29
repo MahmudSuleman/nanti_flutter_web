@@ -31,7 +31,6 @@ class _DeviceListState extends State<DeviceList> {
   @override
   Widget build(BuildContext context) {
     AuthService.autoLogout(context);
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Devices List'),

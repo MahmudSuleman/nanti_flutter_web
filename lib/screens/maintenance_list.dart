@@ -6,8 +6,14 @@ import 'package:nanti_flutter_web/services/maintenance_service.dart';
 import 'package:nanti_flutter_web/widgets/data_table_widget.dart';
 import 'package:nanti_flutter_web/widgets/main_container.dart';
 
-class MaintenanceList extends StatelessWidget {
+class MaintenanceList extends StatefulWidget {
   static String routeName = '/maintenance-list';
+
+  @override
+  _MaintenanceListState createState() => _MaintenanceListState();
+}
+
+class _MaintenanceListState extends State<MaintenanceList> {
   @override
   Widget build(BuildContext context) {
     AuthService.autoLogout(context);
@@ -17,6 +23,7 @@ class MaintenanceList extends StatelessWidget {
       'Device Name',
       'Company Name',
       'Problem Description',
+      'Status',
       'Action',
     ];
     return Scaffold(
@@ -70,7 +77,47 @@ class MaintenanceList extends StatelessWidget {
                                                 '${maintenance.companyName}')),
                                             DataCell(Text(
                                                 '${maintenance.problemDescription}')),
-                                            DataCell(Text('actions')),
+                                            maintenance.isDone == '1'
+                                                ? DataCell(Chip(
+                                                    label: Text('Done'),
+                                                    backgroundColor:
+                                                        Colors.green,
+                                                  ))
+                                                : DataCell(Chip(
+                                                    label: Text('Pending'),
+                                                    backgroundColor:
+                                                        Colors.yellow,
+                                                  )),
+                                            DataCell(ElevatedButton(
+                                              child: Icon(Icons.send),
+                                              onPressed: maintenance.isDone ==
+                                                      '1'
+                                                  ? null //disable the button
+                                                  : () {
+                                                      //mark device as done
+                                                      MaintenanceService
+                                                              .markAsDone(
+                                                                  maintenance
+                                                                      .id)
+                                                          .then((value) {
+                                                        if (value) {
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(SnackBar(
+                                                                  content: Text(
+                                                                      'Device marked as done')));
+                                                        } else {
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(SnackBar(
+                                                                  content: Text(
+                                                                      'Failed to marked Device as done')));
+                                                        }
+
+                                                        setState(() {});
+                                                      });
+                                                    },
+                                            )),
                                           ]))
                                       .toList(),
                                 ),

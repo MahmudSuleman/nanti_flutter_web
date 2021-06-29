@@ -51,4 +51,57 @@ class MaintenanceService {
     }
     return temp;
   }
+
+  static Future<Map<String, dynamic>> store(
+      companyId, deviceId, problemDescription) async {
+    late Map<String, dynamic> temp;
+    try {
+      var url = Uri.parse(baseUrl + 'store.php');
+      var response = await http.post(url, body: {
+        'companyId': companyId,
+        'deviceId': deviceId,
+        'problemDescription': problemDescription
+      });
+
+      if (response.statusCode == 200) {
+        var body = jsonDecode(response.body) as Map<String, dynamic>;
+        if (body['success']) {
+          temp = body;
+        } else {
+          temp = body;
+        }
+      } else {
+        print('error: ${response.body}');
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+
+    return temp;
+  }
+
+  static Future<bool> markAsDone(maintenanceId) async {
+    late bool isDone;
+    try {
+      var url = Uri.parse(baseUrl + '/mark_done.php');
+      var response = await http.post(url, body: {'id': maintenanceId});
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        if (data['success']) {
+          isDone = true;
+        } else {
+          isDone = false;
+        }
+      } else {
+        isDone = false;
+
+        print('server error, error: ${response.body}');
+      }
+    } catch (e) {
+      isDone = false;
+
+      print(StackTrace.current);
+    }
+    return isDone;
+  }
 }

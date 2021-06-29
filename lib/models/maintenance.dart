@@ -6,6 +6,7 @@ class Maintenance {
   String problemDescription;
   String? companyId;
   String? dateDone;
+  String isDone;
 
   Maintenance({
     required this.id,
@@ -13,6 +14,7 @@ class Maintenance {
     required this.companyName,
     required this.dateSent,
     required this.problemDescription,
+    required this.isDone,
     this.companyId,
     this.dateDone,
   });
@@ -24,5 +26,6 @@ class Maintenance {
         dateSent = json['dateSent'],
         companyId = json['companyId'],
         dateDone = json['dateDone'],
+        isDone = json['isDone'],
         problemDescription = json['problemDescription'];
 }
