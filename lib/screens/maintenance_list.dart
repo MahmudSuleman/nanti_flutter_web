@@ -95,27 +95,39 @@ class _MaintenanceListState extends State<MaintenanceList> {
                                                   ? null //disable the button
                                                   : () {
                                                       //mark device as done
-                                                      MaintenanceService
-                                                              .markAsDone(
-                                                                  maintenance
-                                                                      .id)
-                                                          .then((value) {
-                                                        if (value) {
-                                                          ScaffoldMessenger.of(
-                                                                  context)
-                                                              .showSnackBar(SnackBar(
-                                                                  content: Text(
-                                                                      'Device marked as done')));
-                                                        } else {
-                                                          ScaffoldMessenger.of(
-                                                                  context)
-                                                              .showSnackBar(SnackBar(
-                                                                  content: Text(
-                                                                      'Failed to marked Device as done')));
-                                                        }
-
-                                                        setState(() {});
-                                                      });
+                                                      showDialog(
+                                                          context: context,
+                                                          builder: (context) {
+                                                            return AlertDialog(
+                                                              title: Text(
+                                                                  'Mark as done'),
+                                                              content: Text(
+                                                                  'Are you sure you want to mark this device as done?'),
+                                                              actions: [
+                                                                MaterialButton(
+                                                                  onPressed:
+                                                                      () {
+                                                                    _markAsDone(
+                                                                        maintenance
+                                                                            .id);
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                  },
+                                                                  child: Text(
+                                                                      'Yes'),
+                                                                ),
+                                                                MaterialButton(
+                                                                  onPressed:
+                                                                      () {
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                  },
+                                                                  child: Text(
+                                                                      'No'),
+                                                                )
+                                                              ],
+                                                            );
+                                                          });
                                                     },
                                             )),
                                           ]))
@@ -134,4 +146,16 @@ class _MaintenanceListState extends State<MaintenanceList> {
       ),
     );
   }
+
+  void _markAsDone(id) => MaintenanceService.markAsDone(id).then((value) {
+        if (value) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text('Device marked as done')));
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Failed to marked Device as done')));
+        }
+
+        setState(() {});
+      });
 }

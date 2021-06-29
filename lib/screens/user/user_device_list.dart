@@ -64,7 +64,7 @@ class _UserDeviceListState extends State<UserDeviceList> {
                         scrollDirection: MediaQuery.of(context).size.width > 600
                             ? Axis.vertical
                             : Axis.horizontal,
-                        child: data == null
+                        child: data == []
                             ? Align(
                                 alignment: Alignment.center,
                                 child: Text('No data found'))

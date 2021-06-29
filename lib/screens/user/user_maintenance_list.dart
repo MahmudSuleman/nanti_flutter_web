@@ -37,7 +37,7 @@ class UserMaintenanceList extends StatelessWidget {
                   return Column(
                     children: [
                       Text(
-                        'Maintenance List',
+                        'Maintenance History',
                         style: kPageHeaderTextStyle,
                       ),
                       Divider(),
@@ -71,17 +71,17 @@ class UserMaintenanceList extends StatelessWidget {
                                                 '${maintenance.companyName}')),
                                             DataCell(Text(
                                                 '${maintenance.problemDescription}')),
-                                            DataCell(IconButton(
-                                              icon: Icon(Icons.send),
-                                              onPressed: () {
-                                                showDialog(
-                                                    context: context,
-                                                    builder: (_) => AlertDialog(
-                                                          content: Text(
-                                                              'Are you sure to send for maintenance?'),
-                                                        ));
-                                              },
-                                            )),
+                                            maintenance.isDone == '1'
+                                                ? DataCell(Chip(
+                                                    label: Text('Done'),
+                                                    backgroundColor:
+                                                        Colors.green,
+                                                  ))
+                                                : DataCell(Chip(
+                                                    label: Text('Pending'),
+                                                    backgroundColor:
+                                                        Colors.yellow,
+                                                  )),
                                           ]))
                                       .toList(),
                                 ),
