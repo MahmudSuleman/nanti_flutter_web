@@ -6,17 +6,25 @@ class MainContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraint) {
-      if (constraint.maxWidth < 1000) {
+      if (constraint.maxWidth < 400) {
         return Container(
           color: Colors.white,
           width: MediaQuery.of(context).size.width,
+          margin: EdgeInsets.only(top: 10),
           // height: MediaQuery.of(context).size.height,
           child: child,
         );
-      } else if (constraint.maxWidth >= 1000 && constraint.maxWidth < 1200) {
+      } else if (constraint.maxWidth <= 1200) {
+        return Container(
+          color: Colors.white,
+          width: MediaQuery.of(context).size.width,
+          margin: EdgeInsets.only(top: 10),
+          child: child,
+        );
+      } else if (constraint.maxWidth < 1500) {
         return Container(
           margin: EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width * 0.1,
+              horizontal: MediaQuery.of(context).size.width * 0.05,
               vertical: 10),
           color: Colors.white,
           width: MediaQuery.of(context).size.width * 0.9,
@@ -26,10 +34,10 @@ class MainContainer extends StatelessWidget {
       } else {
         return Container(
           margin: EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width * 0.15,
+              horizontal: MediaQuery.of(context).size.width * 0.05,
               vertical: 10),
           color: Colors.white,
-          width: MediaQuery.of(context).size.width * 0.85,
+          width: MediaQuery.of(context).size.width * 0.9,
           // height: MediaQuery.of(context).size.height,
           child: child,
         );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/providers/device_provider.dart';
 import 'package:nanti_flutter_web/routes.dart';
+import 'package:nanti_flutter_web/screens/admin/admin_dashboard.dart';
 import 'package:nanti_flutter_web/services/auth_service.dart';
 import 'package:nanti_flutter_web/widgets/app_drawer.dart';
 import 'package:nanti_flutter_web/widgets/main_container.dart';
@@ -58,7 +59,8 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Scaffold(
         key: _scaffoldKey,
         body: MainContainer(
-          child: Text('hello main app'),
+          // child: MyHomePage(),
+          child: AdminDashBoard(),
         ),
         drawer: AppDrawer(),
       ),
