@@ -144,7 +144,7 @@ class _LoginState extends State<Login> {
                 isLoading = false;
               });
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text('Failed to login, please tyr again.')));
+                  content: Text('Failed to login, please try again.')));
             });
           }
         },

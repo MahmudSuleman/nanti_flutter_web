@@ -5,12 +5,12 @@ import 'package:nanti_flutter_web/services/dashboard_summary_service.dart';
 import 'package:nanti_flutter_web/widgets/dashboard_chip.dart';
 import 'package:nanti_flutter_web/widgets/main_container.dart';
 
-class AdminDashBoard extends StatelessWidget {
+class UserDashBoard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AuthService.autoLogout(context);
     return FutureBuilder(
-      future: DashboardSummaryService.adminDashboardSummary(),
+      future: DashboardSummaryService.userDashboardSummary(),
       builder: (context, snapShot) {
         if (snapShot.connectionState == ConnectionState.done) {
           if (snapShot.hasData) {
@@ -27,25 +27,13 @@ class AdminDashBoard extends StatelessWidget {
                       color: Colors.yellow,
                       title: 'Devices',
                       icon: Icons.phone_android,
-                      summary: '${dashboardData['devices']}',
+                      summary: '${dashboardData['dispatches']}',
                     ),
                     DashboardChip(
                       color: Colors.green,
                       title: 'Maintenance',
                       icon: Icons.settings,
                       summary: '${dashboardData['maintenances']}',
-                    ),
-                    DashboardChip(
-                      color: Color.fromRGBO(20, 20, 20, 1),
-                      title: 'Companies',
-                      icon: Icons.house,
-                      summary: '${dashboardData['companies']}',
-                    ),
-                    DashboardChip(
-                      color: Colors.pink,
-                      title: 'Dispatches',
-                      icon: Icons.send,
-                      summary: '${dashboardData['dispatches']}',
                     ),
                   ],
                 ),

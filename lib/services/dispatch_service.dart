@@ -9,7 +9,7 @@ import '../user_prefs.dart';
 import 'auth_service.dart';
 
 class DispatchService {
-  static String baseUrl = kBaseUrl + '/dispatches';
+  static String baseUrl = kBaseUrl + 'dispatches';
 
   static Future<List<Dispatch>> allDispatches() async {
     var url = Uri.parse(baseUrl + '/index.php');

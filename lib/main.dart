@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/providers/device_provider.dart';
 import 'package:nanti_flutter_web/routes.dart';
 import 'package:nanti_flutter_web/screens/admin/admin_dashboard.dart';
+import 'package:nanti_flutter_web/screens/user/user_dashboard.dart';
 import 'package:nanti_flutter_web/services/auth_service.dart';
 import 'package:nanti_flutter_web/widgets/app_drawer.dart';
 import 'package:nanti_flutter_web/widgets/main_container.dart';
@@ -34,14 +35,29 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
-  var isAdmin = false;
+
+  bool dashBoardLoading = true;
+  bool isAdmin = false;
+  @override
+  void initState() {
+    super.initState();
+    AuthService.isAdmin().then((value) {
+      setState(() {
+        dashBoardLoading = false;
+        print('setting loading to false');
+      });
+      if (value) {
+        setState(() {
+          isAdmin = true;
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     AuthService.autoLogout(context);
-    AuthService.isAdmin().then((value) {
-      if (value) isAdmin = true;
-    });
+
     return Scaffold(
       // backgroundColor: Colors.black12,
       appBar: AppBar(
@@ -60,7 +76,11 @@ class _MyHomePageState extends State<MyHomePage> {
         key: _scaffoldKey,
         body: MainContainer(
           // child: MyHomePage(),
-          child: AdminDashBoard(),
+          child: dashBoardLoading
+              ? Center(child: CircularProgressIndicator())
+              : isAdmin
+                  ? AdminDashBoard()
+                  : UserDashBoard(),
         ),
         drawer: AppDrawer(),
       ),

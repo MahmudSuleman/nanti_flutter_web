@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:nanti_flutter_web/common.dart';
 import 'package:nanti_flutter_web/constants.dart';
-import 'package:http/http.dart' as http;
 import 'package:nanti_flutter_web/screens/login.dart';
 import 'package:nanti_flutter_web/user_prefs.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
-  static String baseUrl = kBaseUrl + '/auth/';
+  static String baseUrl = kBaseUrl + 'auth/';
 
   static Future<http.Response> login(username, password) async {
     late var response;

@@ -9,7 +9,7 @@ import '../common.dart';
 import '../user_prefs.dart';
 
 class MaintenanceService {
-  static String baseUrl = kBaseUrl + '/maintenances/';
+  static String baseUrl = kBaseUrl + 'maintenances/';
 
   static Future<List<Maintenance>> allMaintenance() async {
     var url = Uri.parse(baseUrl + 'index.php');

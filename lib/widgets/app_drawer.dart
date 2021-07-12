@@ -57,7 +57,12 @@ class _AppDrawerState extends State<AppDrawer> {
           icon: Icons.list,
           text: 'Devices',
           onTap: () {
-            Navigator.pushNamed(context, UserDeviceList.routeName);
+            Navigator.pushNamed(context, UserDeviceList.routeName)
+                .then((value) {
+              if (value != null) {
+                setState(() {});
+              }
+            });
           },
         ),
         divider(),

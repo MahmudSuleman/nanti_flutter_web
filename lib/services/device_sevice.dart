@@ -6,7 +6,7 @@ import 'package:nanti_flutter_web/constants.dart';
 import 'package:nanti_flutter_web/models/device.dart';
 
 class DeviceService {
-  static String baseUrl = kBaseUrl + '/devices';
+  static String baseUrl = kBaseUrl + 'devices';
 
   static Future<List<Device>> allDevices() async {
     var url = Uri.parse(baseUrl + '/index.php');
