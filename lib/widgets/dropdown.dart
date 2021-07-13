@@ -22,7 +22,7 @@ class _DropDownButtonWidgetState extends State<DropDownButtonWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+      // margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
       child: DropdownButtonFormField<String>(
         value: _chosenValue,
         //elevation: 5,

@@ -39,16 +39,15 @@ class _DeviceListState extends State<DeviceList> {
           child: SingleChildScrollView(
         child: FutureBuilder(
             future: DeviceService.allDevices(),
-            builder: (context, asyncsnapshot) {
-              if (asyncsnapshot.connectionState == ConnectionState.waiting) {
+            builder: (context, snapShot) {
+              if (snapShot.connectionState == ConnectionState.waiting) {
                 return Center(
                   child: CircularProgressIndicator(),
                 );
-              } else if (asyncsnapshot.connectionState ==
-                  ConnectionState.done) {
+              } else if (snapShot.connectionState == ConnectionState.done) {
                 List<Device>? data;
-                if (asyncsnapshot.hasData) {
-                  data = asyncsnapshot.data as List<Device>;
+                if (snapShot.hasData) {
+                  data = snapShot.data as List<Device>;
                 }
                 return Column(
                   children: [

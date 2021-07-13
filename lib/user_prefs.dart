@@ -11,7 +11,6 @@ class UserPrefs {
       'id': user.id,
       'username': user.username,
       'companyId': user.companyId,
-      'userTypeId': user.userType,
     });
     pref.setString('user', userData);
   }
