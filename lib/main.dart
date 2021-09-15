@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/providers/device_provider.dart';
 import 'package:nanti_flutter_web/routes.dart';
 import 'package:nanti_flutter_web/screens/admin/admin_dashboard.dart';
+import 'package:nanti_flutter_web/screens/dashboard/dashboard.dart';
 import 'package:nanti_flutter_web/screens/user/user_dashboard.dart';
 import 'package:nanti_flutter_web/services/auth_service.dart';
 import 'package:nanti_flutter_web/widgets/app_drawer.dart';
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Devices Hub',
         theme: myThemeData(context),
-        home: MyHomePage(),
+        home: Dashboard(),
         routes: routes,
       ),
     );
@@ -44,7 +45,6 @@ class _MyHomePageState extends State<MyHomePage> {
     AuthService.isAdmin().then((value) {
       setState(() {
         dashBoardLoading = false;
-        print('setting loading to false');
       });
       if (value) {
         setState(() {
