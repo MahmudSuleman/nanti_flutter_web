@@ -25,7 +25,6 @@ class _UserListState extends State<UserList> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     CompanyService.allCompanies().then((companies) {
       companyItems =

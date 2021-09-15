@@ -31,8 +31,8 @@ class DashboardChip extends StatelessWidget {
         ),
         color: color,
       ),
-      padding: EdgeInsets.all(20),
-      width: 300,
+      padding: EdgeInsets.all(5),
+      width: 200,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -40,7 +40,7 @@ class DashboardChip extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 30, color: Colors.white),
+                fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
           ),
           SizedBox(
             height: 20,
