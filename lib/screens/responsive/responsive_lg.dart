@@ -9,8 +9,8 @@ class ResponsiveLg extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Row(
+    return Scaffold(
+      body: Row(
         children: [
           Expanded(
             child: Container(
@@ -21,7 +21,13 @@ class ResponsiveLg extends StatelessWidget {
           Expanded(
             flex: 5,
             child: SingleChildScrollView(
-              child: child,
+              child: Container(
+                height: MediaQuery.of(context).size.height,
+                decoration: BoxDecoration(
+                  color: kScaffoldBackground,
+                ),
+                child: child,
+              ),
             ),
           ),
         ],

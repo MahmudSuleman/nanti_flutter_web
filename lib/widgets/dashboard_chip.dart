@@ -28,27 +28,34 @@ class DashboardChip extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Text(
-            title,
-            style: TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 50, color: Colors.white),
+          FittedBox(
+            child: Text(
+              title,
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 50,
+                  color: Colors.white),
+            ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Container(
-                child: Icon(icon, size: 50, color: Colors.white),
-              ),
-              Container(
-                child: Text(
-                  summary,
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 50,
-                      color: Colors.white),
+          FittedBox(
+            fit: BoxFit.fill,
+            child: Row(
+              children: [
+                Container(
+                  child: Icon(icon, size: 50, color: Colors.white),
                 ),
-              ),
-            ],
+                SizedBox(width: 30),
+                Container(
+                  child: Text(
+                    summary,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 50,
+                        color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
           )
         ],
       ),

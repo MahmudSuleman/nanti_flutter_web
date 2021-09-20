@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:nanti_flutter_web/screens/responsive/responsive.dart';
+import 'package:nanti_flutter_web/screens/responsive/responsive_lg.dart';
+import 'package:nanti_flutter_web/screens/responsive/responsive_md.dart';
+import 'package:nanti_flutter_web/screens/responsive/responsive_sm.dart';
+import 'package:nanti_flutter_web/screens/responsive/responsive_xl.dart';
 
 import '../../constants.dart';
 import 'components/side_bar.dart';
@@ -8,48 +11,35 @@ import 'components/top_grid.dart';
 class Dashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Responsive(
-      child: Container(
-        height: 1000,
+    double size = MediaQuery.of(context).size.width;
+    return buildDashboard(size);
+  }
+
+  buildDashboard(size) {
+    if (kLargeScreenSize(size)) {
+      return ResponsiveLg(
+          child: Container(
         child: TopGrid(
           itemsCount: 4,
-          perRowCount: 2,
+          perRowCount: 4,
           mainGap: 50,
         ),
-      ),
-    );
-  }
-}
+      ));
+    }
 
-class DashboardLargeScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color.fromRGBO(55, 37, 73, 1),
-      body: SafeArea(
-        child: Row(
-          children: [
-            Expanded(
-              child: SideBar(),
-            ),
-            Expanded(
-              flex: 5,
-              child: SingleChildScrollView(
-                child: Container(
-                  height: 1000,
-                  decoration:
-                      BoxDecoration(color: Color.fromRGBO(96, 96, 96, .8)),
-                  child: TopGrid(
-                    itemsCount: 4,
-                    perRowCount: 4,
-                    mainGap: 50,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+    if (kMediumScreenSize(size)) {
+      return ResponsiveMd(
+        child: Text('medium'),
+      );
+    }
+    if (kSmallScreenSize(size)) {
+      return ResponsiveSm(
+        child: Text('small'),
+      );
+    }
+
+    return ResponsiveXl(
+      child: Text('xlarge'),
     );
   }
 }

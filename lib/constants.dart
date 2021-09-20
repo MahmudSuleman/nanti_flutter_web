@@ -12,9 +12,10 @@ final kHeaders = {
   HttpHeaders.contentTypeHeader: 'application/json',
 };
 
-final kScaffoldBackground = Color.fromRGBO(55, 37, 73, 0.5);
+final kScaffoldBackground = Color.fromRGBO(96, 96, 96, .8);
 
 final kAppBarBackground = Color.fromRGBO(55, 37, 73, 0.9019607843137255);
+final kAppBarBackgroundOld = Color.fromRGBO(55, 37, 73, 1);
 
 //colors
 final primaryColor = Color(0x3e2723);

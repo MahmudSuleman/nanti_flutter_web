@@ -7,6 +7,8 @@ class ResponsiveXl extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text('Responsive xl'));
+    return Center(
+      child: Text('Responsive xl'),
+    );
   }
 }
