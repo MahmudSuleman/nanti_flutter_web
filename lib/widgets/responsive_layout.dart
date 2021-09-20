@@ -23,22 +23,15 @@ class ResponsiveLayout extends StatelessWidget {
       double screenWidth = constraints.maxWidth;
       print(screenWidth);
       if (isLargeScreen(screenWidth)) {
-        print('large screen');
-
         return largeScreen;
       }
 
       if (isMediumScreen(screenWidth)) {
-        print('medium screen');
-
         return mediumScreen;
       }
       if (isSmallScreen(screenWidth)) {
-        print('small screen');
         return smallScreen;
       }
-
-      print('extra large screen');
 
       return extraLargeScreen;
     });

@@ -18,21 +18,12 @@ class DashboardChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 5,
-            blurRadius: 1,
-            offset: Offset(0, 3), // changes position of shadow
-          ),
-        ],
         borderRadius: BorderRadius.all(
-          Radius.circular(20),
+          Radius.circular(10),
         ),
         color: color,
       ),
       padding: EdgeInsets.all(5),
-      width: 200,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -40,10 +31,7 @@ class DashboardChip extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
-          ),
-          SizedBox(
-            height: 20,
+                fontWeight: FontWeight.bold, fontSize: 50, color: Colors.white),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,

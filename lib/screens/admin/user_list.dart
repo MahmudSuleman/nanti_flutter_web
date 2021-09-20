@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/constants.dart';
 import 'package:nanti_flutter_web/models/select_item.dart';
-import 'package:nanti_flutter_web/models/user.dart';
 import 'package:nanti_flutter_web/services/auth_service.dart';
 import 'package:nanti_flutter_web/services/company_service.dart';
 import 'package:nanti_flutter_web/services/user_service.dart';
@@ -46,9 +45,9 @@ class _UserListState extends State<UserList> {
               future: UserService.allUsers(),
               builder: (context, snapShot) {
                 if (snapShot.connectionState == ConnectionState.done) {
-                  List<User>? data;
+                  // late List<User>? data;
                   if (snapShot.hasData) {
-                    data = snapShot.data as List<User>;
+                    // data = snapShot.data as List<User>;
                     return Column(
                       children: [
                         Text(

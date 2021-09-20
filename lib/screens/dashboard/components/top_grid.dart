@@ -5,7 +5,7 @@ class TopGrid extends StatelessWidget {
   final int perRowCount;
   final int itemsCount;
   final double mainGap;
-  var crossGap = 20.0;
+  final crossGap = 20.0;
   // final List<DashboardChip> chips;
   TopGrid(
       {required this.perRowCount,
@@ -17,7 +17,6 @@ class TopGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.all(50),
-      height: 200,
       child: GridView.builder(
         itemCount: itemsCount,
         shrinkWrap: true,
@@ -25,7 +24,7 @@ class TopGrid extends StatelessWidget {
             crossAxisCount: perRowCount,
             crossAxisSpacing: crossGap,
             mainAxisSpacing: mainGap,
-            mainAxisExtent: 200),
+            mainAxisExtent: 150),
         itemBuilder: (context, index) => Container(
           child: DashboardChip(
             color: Colors.yellow,
@@ -33,7 +32,6 @@ class TopGrid extends StatelessWidget {
             icon: Icons.phone_android,
             summary: '200',
           ),
-          decoration: BoxDecoration(color: Colors.red),
         ),
       ),
     );

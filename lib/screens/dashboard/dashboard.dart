@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:nanti_flutter_web/widgets/responsive_layout.dart';
+import 'package:nanti_flutter_web/screens/responsive/responsive.dart';
 
+import '../../constants.dart';
 import 'components/side_bar.dart';
 import 'components/top_grid.dart';
 
 class Dashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(
-        smallScreen: DashboardSmallScreen(),
-        mediumScreen: DashboardMediumScreen(),
-        largeScreen: DashboardLargeScreen(),
-        extraLargeScreen: DashboardLargeScreen());
+    return Responsive(
+      child: Container(
+        height: 1000,
+        child: TopGrid(
+          itemsCount: 4,
+          perRowCount: 2,
+          mainGap: 50,
+        ),
+      ),
+    );
   }
 }
 
@@ -71,7 +77,7 @@ class DashboardSmallScreen extends StatelessWidget {
       ),
       appBar: AppBar(
         title: Text('Dashboard'),
-        backgroundColor: Color.fromRGBO(55, 37, 73, 1),
+        backgroundColor: kAppBarBackground,
       ),
       drawer: SideBar(),
     );
@@ -91,7 +97,7 @@ class DashboardMediumScreen extends StatelessWidget {
               Expanded(
                   child: Container(
                       child:
-                          TopGrid(mainGap: 20, perRowCount: 2, itemsCount: 4))),
+                          TopGrid(mainGap: 10, perRowCount: 2, itemsCount: 4))),
               Container(
                 child: Text('hello'),
               ),

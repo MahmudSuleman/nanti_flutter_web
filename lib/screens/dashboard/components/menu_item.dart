@@ -10,16 +10,27 @@ class MenuItem extends StatelessWidget {
     required this.iconLabel,
   });
 
-  @override
   Widget build(BuildContext context) {
-    return ListTile(
-      horizontalTitleGap: 0.0,
-      leading: Icon(iconName),
-      title: Text(iconLabel),
-      onTap: () {
-        Navigator.pushReplacementNamed(context, navUrl);
-      },
-      tileColor: Colors.white,
-    );
+    return LayoutBuilder(builder: (context, constraints) {
+      double size = constraints.maxWidth;
+      print('size: $size');
+      return Container(
+        margin: EdgeInsets.symmetric(horizontal: 10),
+        child: ListTile(
+          horizontalTitleGap: 0.0,
+          leading: Icon(iconName),
+          title: Text(
+            iconLabel,
+            style: TextStyle(
+              fontSize: size > 180 ? 15 : 10,
+            ),
+          ),
+          onTap: () {
+            Navigator.pushReplacementNamed(context, navUrl);
+          },
+          tileColor: Colors.white,
+        ),
+      );
+    });
   }
 }

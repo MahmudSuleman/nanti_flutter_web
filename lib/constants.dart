@@ -11,3 +11,18 @@ final kBaseUrl = 'http://localhost/nanti_flutter_web_api/endpoint/';
 final kHeaders = {
   HttpHeaders.contentTypeHeader: 'application/json',
 };
+
+final kScaffoldBackground = Color.fromRGBO(55, 37, 73, 0.5);
+
+final kAppBarBackground = Color.fromRGBO(55, 37, 73, 0.9019607843137255);
+
+//colors
+final primaryColor = Color(0x3e2723);
+final primaryLightColor = Color(0x6a4f4b);
+final primaryDarkColor = Color(0x1b0000);
+final primaryTextColor = Color(0xfffff);
+
+// screen sizes
+bool kSmallScreenSize(double size) => size <= 500;
+bool kMediumScreenSize(double size) => size > 500 && size <= 900;
+bool kLargeScreenSize(double size) => size > 900;

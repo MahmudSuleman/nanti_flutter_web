@@ -35,7 +35,7 @@ class SideBar extends StatelessWidget {
           height: 20,
         ),
         Text(
-          'DASHBOARD',
+          'Menu Items',
           style: TextStyle(color: Colors.white),
         ),
         SizedBox(
