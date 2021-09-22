@@ -245,7 +245,6 @@ class _DispatchListState extends State<DispatchList> {
                               });
 
                               if (res.statusCode == 200) {
-                                print(res.body);
                                 var body = jsonDecode(res.body)
                                     as Map<String, dynamic>;
                                 if (body['success']) {

@@ -21,7 +21,6 @@ class UserPrefs {
     if (logged) {
       var user = pref.getString('user');
       if (user != null) {
-        print(jsonDecode(user));
         return User.fromJson(jsonDecode(user));
       }
     } else {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/screens/admin/company_list.dart';
-import 'package:nanti_flutter_web/screens/admin/device_list.dart';
 import 'package:nanti_flutter_web/screens/admin/dispatch_list.dart';
 import 'package:nanti_flutter_web/screens/admin/maintenance_list.dart';
+import 'package:nanti_flutter_web/screens/device_list/device_list.dart';
 
 import '../../../user_prefs.dart';
 import '../../login.dart';

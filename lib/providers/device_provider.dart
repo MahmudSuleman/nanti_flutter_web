@@ -13,10 +13,7 @@ class DeviceProvider extends ChangeNotifier {
   }
 
   Future<void> store(Device device) async {
-    // mock device adding
-    print(devices.length);
     _devices.add(device);
-    print(devices);
     notifyListeners();
   }
 }

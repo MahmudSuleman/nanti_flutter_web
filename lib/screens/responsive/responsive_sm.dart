@@ -4,8 +4,12 @@ import 'package:nanti_flutter_web/screens/dashboard/components/side_bar.dart';
 import '../../constants.dart';
 
 class ResponsiveSm extends StatelessWidget {
-  const ResponsiveSm({Key? key, required this.child}) : super(key: key);
   final Widget child;
+  final String? appBarTitle;
+  const ResponsiveSm({
+    this.appBarTitle,
+    required this.child,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +17,7 @@ class ResponsiveSm extends StatelessWidget {
       backgroundColor: kScaffoldBackground,
       body: child,
       appBar: AppBar(
-        title: Text('Dashboard'),
+        title: Text(appBarTitle!),
         backgroundColor: kAppBarBackground,
       ),
       drawer: Drawer(

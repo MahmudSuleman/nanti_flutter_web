@@ -17,8 +17,6 @@ class DashboardSummaryService {
         if (data['success']) {
           temp = data['data'];
         }
-      } else {
-        print(response.body);
       }
     } catch (e) {
       print(e);
@@ -40,8 +38,6 @@ class DashboardSummaryService {
         if (data['success']) {
           temp = data['data'];
         }
-      } else {
-        print(response.body);
       }
     } catch (e) {
       print(e);

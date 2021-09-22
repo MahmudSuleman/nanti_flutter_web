@@ -21,7 +21,6 @@ class UserService {
           });
         }
       }
-      print(temp);
     } catch (error) {
       print(StackTrace.current);
     }
@@ -38,7 +37,6 @@ class UserService {
     });
 
     if (response.statusCode == 200) {
-      print(response.body);
       var data = jsonDecode(response.body) as Map<String, dynamic>;
       if (data['success']) {
         return true;

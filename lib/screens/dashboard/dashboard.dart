@@ -51,6 +51,7 @@ class _DashboardState extends State<Dashboard> {
 
     if (kMediumScreenSize(size)) {
       return ResponsiveMd(
+        appBarTitle: 'Dashboard',
         child: isAdmin
             ? AdminTopGrid(
                 perRowCount: 2,
@@ -62,6 +63,7 @@ class _DashboardState extends State<Dashboard> {
     }
     if (kSmallScreenSize(size)) {
       return ResponsiveSm(
+        appBarTitle: 'Dashboard',
         child: isAdmin
             ? AdminTopGrid(
                 perRowCount: 1,

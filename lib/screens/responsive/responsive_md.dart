@@ -5,8 +5,9 @@ import '../../constants.dart';
 
 class ResponsiveMd extends StatelessWidget {
   final Widget child;
+  final String appBarTitle;
 
-  const ResponsiveMd({required this.child});
+  const ResponsiveMd({required this.child, required this.appBarTitle});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +15,7 @@ class ResponsiveMd extends StatelessWidget {
       backgroundColor: kScaffoldBackground,
       body: child,
       appBar: AppBar(
-        title: Text('Dashboard'),
+        title: Text(appBarTitle),
         backgroundColor: kAppBarBackground,
       ),
       drawer: Drawer(
