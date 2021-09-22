@@ -24,8 +24,10 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromRGBO(200, 200, 200, 1),
       appBar: AppBar(
         title: Text('Login'),
+        backgroundColor: kAppBarBackground,
       ),
       body: isLoading
           ? Center(
@@ -57,38 +59,41 @@ class _LoginState extends State<Login> {
 
   Form _form() => Form(
       key: _formKey,
-      child: Column(
-        children: [
-          TextFormField(
-            decoration: InputDecoration(labelText: 'Enter username'),
-            controller: _usernameController,
-            validator: (value) {
-              if (value!.isEmpty) {
-                return 'Please provide username';
-              }
-              return null;
-            },
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          TextFormField(
-            decoration: InputDecoration(labelText: 'Enter password'),
-            controller: _passwordController,
-            obscureText: true,
-            validator: (value) {
-              if (value!.isEmpty) {
-                return 'Please provide password';
-              }
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 100),
+        child: Column(
+          children: [
+            TextFormField(
+              decoration: _inputDecoration('Username'),
+              controller: _usernameController,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'Please provide username';
+                }
+                return null;
+              },
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            TextFormField(
+              decoration: _inputDecoration('Password'),
+              controller: _passwordController,
+              obscureText: true,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'Please provide password';
+                }
 
-              return null;
-            },
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          _submitButton(),
-        ],
+                return null;
+              },
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            _submitButton(),
+          ],
+        ),
       ));
 
   MaterialButton _submitButton() => MaterialButton(
@@ -102,7 +107,7 @@ class _LoginState extends State<Login> {
           ),
         ),
         minWidth: double.infinity,
-        color: Theme.of(context).primaryColor,
+        color: kAppBarBackground,
         onPressed: () {
           if (_formKey.currentState!.validate()) {
             _formKey.currentState!.save();
@@ -111,16 +116,13 @@ class _LoginState extends State<Login> {
             });
             var username = _usernameController.text;
             var password = _passwordController.text;
-            print('username: $username');
 
             AuthService.login(username, password).then((value) {
-              print('response ${value.body}');
               setState(() {
                 isLoading = false;
               });
               if (value.statusCode == 200) {
                 var body = jsonDecode(value.body) as Map<String, dynamic>;
-                print('body: ${value.body}');
                 if (body['success']) {
                   UserPrefs.setUserPrefs(User.fromJson(body['data']));
 
@@ -149,4 +151,19 @@ class _LoginState extends State<Login> {
           }
         },
       );
+
+  _inputDecoration(String labelText) {
+    return InputDecoration(
+      labelText: labelText,
+      labelStyle: TextStyle(
+        color: kAppBarBackground,
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: kAppBarBackground),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: kAppBarBackground, width: 3),
+      ),
+    );
+  }
 }

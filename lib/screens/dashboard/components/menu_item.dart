@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class MenuItem extends StatelessWidget {
-  final String navUrl;
+  final Function()? onTap;
   final IconData iconName;
   final String iconLabel;
   const MenuItem({
-    required this.navUrl,
+    required this.onTap,
     required this.iconName,
     required this.iconLabel,
   });
@@ -13,7 +13,6 @@ class MenuItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       double size = constraints.maxWidth;
-      print('size: $size');
       return Container(
         margin: EdgeInsets.symmetric(horizontal: 10),
         child: ListTile(
@@ -25,9 +24,7 @@ class MenuItem extends StatelessWidget {
               fontSize: size > 180 ? 15 : 10,
             ),
           ),
-          onTap: () {
-            Navigator.pushReplacementNamed(context, navUrl);
-          },
+          onTap: onTap,
           tileColor: Colors.white,
         ),
       );

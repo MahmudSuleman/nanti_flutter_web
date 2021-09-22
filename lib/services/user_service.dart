@@ -23,7 +23,6 @@ class UserService {
       }
       print(temp);
     } catch (error) {
-      print('error: $error');
       print(StackTrace.current);
     }
 

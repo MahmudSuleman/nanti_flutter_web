@@ -23,7 +23,7 @@ class MaintenanceService {
         }
       }
     } catch (e) {
-      print('exception in maintenance service; all maintenance' + e.toString());
+      print(StackTrace.current);
     }
     return temp;
   }
@@ -53,7 +53,10 @@ class MaintenanceService {
   }
 
   static Future<Map<String, dynamic>> store(
-      companyId, deviceId, problemDescription) async {
+    companyId,
+    deviceId,
+    problemDescription,
+  ) async {
     late Map<String, dynamic> temp;
     try {
       var url = Uri.parse(baseUrl + 'store.php');
@@ -70,11 +73,9 @@ class MaintenanceService {
         } else {
           temp = body;
         }
-      } else {
-        print('error: ${response.body}');
       }
     } catch (e) {
-      print(e.toString());
+      print(StackTrace.current);
     }
 
     return temp;
@@ -94,12 +95,10 @@ class MaintenanceService {
         }
       } else {
         isDone = false;
-
-        print('server error, error: ${response.body}');
+        print(StackTrace.current);
       }
     } catch (e) {
       isDone = false;
-
       print(StackTrace.current);
     }
     return isDone;

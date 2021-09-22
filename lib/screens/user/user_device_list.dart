@@ -43,7 +43,6 @@ class _UserDeviceListState extends State<UserDeviceList> {
                 late List<Map<String, dynamic>> data;
                 if (snapShot.hasData) {
                   data = snapShot.data as List<Map<String, dynamic>>;
-                  print('snapShot data: $data');
                 }
                 return Column(
                   children: [

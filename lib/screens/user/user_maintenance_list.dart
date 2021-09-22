@@ -32,7 +32,6 @@ class UserMaintenanceList extends StatelessWidget {
                   late List<Maintenance> maintenance;
                   if (snapShot.hasData) {
                     maintenance = snapShot.data as List<Maintenance>;
-                    print('maintenance: ${maintenance.runtimeType}');
                   }
                   return Column(
                     children: [

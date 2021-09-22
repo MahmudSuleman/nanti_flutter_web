@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/screens/dashboard/components/side_bar.dart';
-import 'package:nanti_flutter_web/screens/dashboard/components/top_grid.dart';
 
 import '../../constants.dart';
 
@@ -13,19 +12,7 @@ class ResponsiveMd extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kScaffoldBackground,
-      body: Container(
-        child: Column(
-          children: [
-            Expanded(
-                child: Container(
-                    child:
-                        TopGrid(mainGap: 10, perRowCount: 2, itemsCount: 4))),
-            Container(
-              child: Text('hello'),
-            ),
-          ],
-        ),
-      ),
+      body: child,
       appBar: AppBar(
         title: Text('Dashboard'),
         backgroundColor: kAppBarBackground,

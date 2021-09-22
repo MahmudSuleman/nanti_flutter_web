@@ -250,7 +250,6 @@ class _DispatchListState extends State<DispatchList> {
                                     as Map<String, dynamic>;
                                 if (body['success']) {
                                   Navigator.pop(context, true);
-                                  print('confirm dialog must pop');
                                   // setState(
                                   //     () {});
                                 }
@@ -270,7 +269,6 @@ class _DispatchListState extends State<DispatchList> {
 
                 if (res != null) {
                   Navigator.pop(context);
-                  print('form popup must pop');
                   setState(() {
                     _chosenValue = null;
                     companyItems = [];

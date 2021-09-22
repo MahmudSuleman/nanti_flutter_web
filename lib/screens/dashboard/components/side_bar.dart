@@ -4,6 +4,8 @@ import 'package:nanti_flutter_web/screens/admin/device_list.dart';
 import 'package:nanti_flutter_web/screens/admin/dispatch_list.dart';
 import 'package:nanti_flutter_web/screens/admin/maintenance_list.dart';
 
+import '../../../user_prefs.dart';
+import '../../login.dart';
 import 'menu_item.dart';
 
 class SideBar extends StatelessWidget {
@@ -44,7 +46,9 @@ class SideBar extends StatelessWidget {
               height: 10,
             ),
             MenuItem(
-              navUrl: DeviceList.routeName,
+              onTap: () {
+                Navigator.of(context).pushNamed(DeviceList.routeName);
+              },
               iconName: Icons.phone_android,
               iconLabel: 'Devices',
             ),
@@ -52,7 +56,9 @@ class SideBar extends StatelessWidget {
               height: 10,
             ),
             MenuItem(
-              navUrl: CompanyList.routeName,
+              onTap: () {
+                Navigator.of(context).pushNamed(CompanyList.routeName);
+              },
               iconName: Icons.house,
               iconLabel: 'Companies',
             ),
@@ -60,7 +66,9 @@ class SideBar extends StatelessWidget {
               height: 10,
             ),
             MenuItem(
-              navUrl: DispatchList.routeName,
+              onTap: () {
+                Navigator.of(context).pushNamed(DispatchList.routeName);
+              },
               iconName: Icons.send,
               iconLabel: 'Dispatches',
             ),
@@ -68,9 +76,23 @@ class SideBar extends StatelessWidget {
               height: 10,
             ),
             MenuItem(
-              navUrl: MaintenanceList.routeName,
+              onTap: () {
+                Navigator.of(context).pushNamed(MaintenanceList.routeName);
+              },
               iconName: Icons.settings,
               iconLabel: 'Maintenances',
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            MenuItem(
+              onTap: () {
+                UserPrefs.clearUser().then((_) {
+                  Navigator.pushReplacementNamed(context, Login.routeName);
+                });
+              },
+              iconName: Icons.logout,
+              iconLabel: 'Logout',
             ),
           ],
         ),
