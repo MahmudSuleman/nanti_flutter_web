@@ -14,7 +14,7 @@ class ResponsiveSm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kScaffoldBackground,
+      // backgroundColor: kScaffoldBackground,
       body: child,
       appBar: AppBar(
         title: Text(appBarTitle!),

@@ -9,11 +9,9 @@ class DataTableWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: DataTable(
-        columns: header.map((e) => DataColumn(label: Text(e))).toList(),
-        rows: data,
-      ),
+    return DataTable(
+      columns: header.map((e) => DataColumn(label: Text(e))).toList(),
+      rows: data,
     );
   }
 }

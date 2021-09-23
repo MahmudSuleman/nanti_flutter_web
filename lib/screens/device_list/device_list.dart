@@ -17,7 +17,9 @@ class DeviceList extends StatelessWidget {
           return snapShot.data as bool ? AdminDeviceList() : UserDeviceList();
         }
 
-        return Center();
+        return Center(
+          child: CircularProgressIndicator(),
+        );
       },
     );
   }

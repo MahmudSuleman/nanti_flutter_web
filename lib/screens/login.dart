@@ -64,7 +64,7 @@ class _LoginState extends State<Login> {
         child: Column(
           children: [
             TextFormField(
-              decoration: _inputDecoration('Username'),
+              decoration: kInputDecoration('Username'),
               controller: _usernameController,
               validator: (value) {
                 if (value!.isEmpty) {
@@ -77,7 +77,7 @@ class _LoginState extends State<Login> {
               height: 20,
             ),
             TextFormField(
-              decoration: _inputDecoration('Password'),
+              decoration: kInputDecoration('Password'),
               controller: _passwordController,
               obscureText: true,
               validator: (value) {
@@ -151,19 +151,4 @@ class _LoginState extends State<Login> {
           }
         },
       );
-
-  _inputDecoration(String labelText) {
-    return InputDecoration(
-      labelText: labelText,
-      labelStyle: TextStyle(
-        color: kAppBarBackground,
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: kAppBarBackground),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: kAppBarBackground, width: 3),
-      ),
-    );
-  }
 }

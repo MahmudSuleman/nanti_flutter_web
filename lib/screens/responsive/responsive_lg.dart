@@ -23,9 +23,9 @@ class ResponsiveLg extends StatelessWidget {
             child: SingleChildScrollView(
               child: Container(
                 height: MediaQuery.of(context).size.height,
-                decoration: BoxDecoration(
-                  color: kScaffoldBackground,
-                ),
+                // decoration: BoxDecoration(
+                //   color: kScaffoldBackground,
+                // ),
                 child: child,
               ),
             ),

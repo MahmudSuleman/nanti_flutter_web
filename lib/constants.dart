@@ -27,3 +27,24 @@ final primaryTextColor = Color(0xfffff);
 bool kSmallScreenSize(double size) => size <= 500;
 bool kMediumScreenSize(double size) => size > 500 && size <= 900;
 bool kLargeScreenSize(double size) => size > 900;
+
+ButtonStyle kElevatedButtonStyle({Color? color}) {
+  return ButtonStyle(backgroundColor: MaterialStateColor.resolveWith((states) {
+    return color ?? kAppBarBackground;
+  }));
+}
+
+kInputDecoration(String labelText) {
+  return InputDecoration(
+    labelText: labelText,
+    labelStyle: TextStyle(
+      color: kAppBarBackground,
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: kAppBarBackground),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: kAppBarBackground, width: 3),
+    ),
+  );
+}
