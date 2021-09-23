@@ -22,11 +22,9 @@ class _UserDeviceListState extends State<UserDeviceList> {
   @override
   Widget build(BuildContext context) {
     AuthService.autoLogout(context);
-    final size = MediaQuery.of(context).size.width;
 
     return Responsive(
       appBarTitle: 'Devices List',
-      size: size,
       child: FutureBuilder(
           future: DispatchService.userDispatches(),
           builder: (context, snapShot) {

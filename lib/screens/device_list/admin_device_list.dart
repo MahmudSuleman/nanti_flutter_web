@@ -36,11 +36,9 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
   @override
   Widget build(BuildContext context) {
     AuthService.autoLogout(context);
-    final size = MediaQuery.of(context).size.width;
 
     return Responsive(
       appBarTitle: 'Devices List',
-      size: size,
       child: FutureBuilder(
           future: DeviceService.allDevices(),
           builder: (context, snapShot) {
