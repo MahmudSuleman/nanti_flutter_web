@@ -1,6 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/models/device.dart';
-import 'package:nanti_flutter_web/screens/admin/add_edit_device.dart';
 import 'package:nanti_flutter_web/screens/responsive/responsive.dart';
 import 'package:nanti_flutter_web/services/auth_service.dart';
 import 'package:nanti_flutter_web/services/device_sevice.dart';
@@ -23,6 +24,13 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
     'Available',
     'Action'
   ];
+
+  var isLoading;
+  var name;
+  var serialNumber;
+  var manufacturer;
+
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -85,21 +93,14 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
                                               ElevatedButton(
                                                 style: kElevatedButtonStyle(),
                                                 onPressed: () {
-                                                  Navigator.pushNamed(context,
-                                                      AddEditDevice.routeName,
-                                                      arguments: {
-                                                        'action': 'edit',
-                                                        'id': item.id,
-                                                        'name': item.name,
-                                                        'manufacturer':
-                                                            item.manufactuer,
-                                                        'serialNumber':
-                                                            item.serialNumber
-                                                      }).then((value) {
-                                                    if (value != null) {
-                                                      setState(() {});
-                                                    }
-                                                  });
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (context) {
+                                                        return AlertDialog(
+                                                          content:
+                                                              addEditDeviceForm(),
+                                                        );
+                                                      });
                                                 },
                                                 child: Icon(Icons.edit),
                                               ),
@@ -195,21 +196,152 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
             onPressed: () {
               showDialog(
                   context: context,
-                  useRootNavigator: false,
                   builder: (context) {
-                    return AddEditDevice();
+                    return AlertDialog(
+                      content: addEditDeviceForm(),
+                    );
                   });
             },
             child: Text('Add a Device'),
           ),
         ));
   }
+
+  addEditDeviceForm() {
+    return Container(
+      constraints: BoxConstraints(minWidth: 500),
+      child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Add New Device'.toUpperCase()),
+              kDivider(),
+              TextFormField(
+                decoration: kInputDecoration('Serial Number'),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Serial Number is Required';
+                  } else {
+                    setState(() {
+                      serialNumber = value;
+                    });
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              TextFormField(
+                decoration: kInputDecoration('Device Name'),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Device Name is Required';
+                  } else {
+                    setState(() {});
+                    name = value;
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              TextFormField(
+                decoration: kInputDecoration('Manufacturer Name'),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Device Manufacturer is Required';
+                  } else {
+                    setState(() {
+                      manufacturer = value;
+                    });
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              kDivider(),
+              ElevatedButton(
+                style: kElevatedButtonStyle(),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Submit',
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  ),
+                ),
+                onPressed: () {
+                  addDevice();
+                },
+              )
+            ],
+          )),
+    );
+  }
+
+  addDevice() {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      setState(() {
+        isLoading = true;
+      });
+      DeviceService.store(Device(
+              id: '${DateTime.now()}',
+              manufactuer: manufacturer,
+              name: name,
+              serialNumber: serialNumber))
+          .then((value) {
+        setState(() {
+          isLoading = false;
+        });
+        var body = jsonDecode(value.body);
+        if (body['success']) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text('Data saved')));
+          Navigator.pop(context, true);
+        } else {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(body['message'])));
+          _formKey.currentState!.reset();
+        }
+      });
+    }
+  }
+
+  editDevice(
+      {required String id,
+      required String name,
+      required String manufacturer,
+      required String serialNumber}) {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      setState(() {
+        isLoading = true;
+      });
+      DeviceService.update(Device(
+              id: id,
+              manufactuer: manufacturer,
+              name: name,
+              serialNumber: serialNumber))
+          .then((value) {
+        setState(() {
+          isLoading = false;
+        });
+        var body = jsonDecode(value.body);
+        if (body['success']) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text('Data Updated')));
+          Navigator.pop(context, true);
+        } else {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text('Data not Updated')));
+        }
+      });
+    }
+  }
 }
-
-
-// Navigator.pushNamed(context, AddEditDevice.routeName)
-//                   .then((value) {
-//                 if (value != null) {
-//                   setState(() {});
-//                 }
-//               });

@@ -50,6 +50,7 @@ class DeviceService {
 
   static Future<http.Response> store(Device device) async {
     var url = Uri.parse(baseUrl + '/store.php');
+
     var response = await http.post(url, body: {
       'name': device.name,
       'manufacturer': device.manufactuer,
@@ -61,13 +62,14 @@ class DeviceService {
 
   static Future<http.Response> update(Device device) async {
     var url = Uri.parse(baseUrl + '/update.php');
-    var response = await http.post(url, body: {
+    final body = {
       'id': device.id,
       'name': device.name,
       'manufacturer': device.manufactuer,
       'serialNumber': device.serialNumber,
-    });
+    };
 
+    var response = await http.post(url, body: body);
     return response;
   }
 }

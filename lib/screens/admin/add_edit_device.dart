@@ -1,11 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:nanti_flutter_web/constants.dart';
 import 'package:nanti_flutter_web/models/device.dart';
-import 'package:nanti_flutter_web/services/auth_service.dart';
 import 'package:nanti_flutter_web/services/device_sevice.dart';
-import 'package:nanti_flutter_web/widgets/main_container.dart';
 import 'package:nanti_flutter_web/widgets/text_input_widget.dart';
 
 // ignore: must_be_immutable
@@ -42,8 +39,6 @@ class _AddEditDeviceState extends State<AddEditDevice> {
   Device? device;
   @override
   Widget build(BuildContext context) {
-    AuthService.autoLogout(context);
-
     var args = ModalRoute.of(context)!.settings.arguments;
     if (args != null) {
       args = args as Map<String, String>;
@@ -59,109 +54,97 @@ class _AddEditDeviceState extends State<AddEditDevice> {
       _deviceSerialNumberController.text = serialNumber;
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(header),
-      ),
-      body: MainContainer(
-        child: isLoading
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : Center(
-                child: SingleChildScrollView(
+    return isLoading
+        ? Center(
+            child: CircularProgressIndicator(),
+          )
+        : SingleChildScrollView(
+            child: Column(
+              children: [
+                Text(
+                  header.toUpperCase(),
+                ),
+                Divider(),
+                Form(
+                  key: _formKey,
+                  autovalidateMode: AutovalidateMode.disabled,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        header.toUpperCase(),
-                        style: kPageHeaderTextStyle,
+                      TextInputWidget(
+                        controller: _deviceNameController,
+                        labelText: 'Device Name',
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Device name is required';
+                          } else {
+                            deviceName = value;
+                          }
+                          return null;
+                        },
                       ),
-                      Divider(),
-                      Form(
-                        key: _formKey,
-                        autovalidateMode: AutovalidateMode.disabled,
-                        child: Column(
-                          // mainAxisSize: MainAxisSize.min,
-                          children: [
-                            TextInputWidget(
-                              controller: _deviceNameController,
-                              labelText: 'Device Name',
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return 'Device name is required';
-                                } else {
-                                  deviceName = value;
-                                }
-                                return null;
-                              },
+                      SizedBox(
+                        height: 50,
+                      ),
+                      TextInputWidget(
+                        controller: _deviceSerialNumberController,
+                        labelText: 'Device Serail Number',
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Device Serial Number is required';
+                          } else {
+                            deviceSerialNumber = value;
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(
+                        height: 50,
+                      ),
+                      TextInputWidget(
+                        controller: _deviceManufacturerController,
+                        labelText: 'Device Manufacturer Name',
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Device Manufacturer is required';
+                          } else {
+                            deviceManufacturer = value;
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(
+                        height: 25,
+                      ),
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 20),
+                        child: MaterialButton(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          onPressed: () {
+                            action == 'add' ? _save() : _edit();
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              top: 10,
+                              bottom: 10,
                             ),
-                            SizedBox(
-                              height: 50,
+                            child: Text(
+                              'Submit',
+                              style:
+                                  TextStyle(fontSize: 25, color: Colors.white),
                             ),
-                            TextInputWidget(
-                              controller: _deviceSerialNumberController,
-                              labelText: 'Device Serail Number',
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return 'Device Serial Number is required';
-                                } else {
-                                  deviceSerialNumber = value;
-                                }
-                                return null;
-                              },
-                            ),
-                            SizedBox(
-                              height: 50,
-                            ),
-                            TextInputWidget(
-                              controller: _deviceManufacturerController,
-                              labelText: 'Device Manufacturer Name',
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return 'Device Manufacturer is required';
-                                } else {
-                                  deviceManufacturer = value;
-                                }
-                                return null;
-                              },
-                            ),
-                            SizedBox(
-                              height: 25,
-                            ),
-                            Container(
-                              margin: EdgeInsets.symmetric(horizontal: 20),
-                              child: MaterialButton(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                onPressed: () {
-                                  action == 'add' ? _save() : _edit();
-                                },
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                    top: 10,
-                                    bottom: 10,
-                                  ),
-                                  child: Text(
-                                    'Submit',
-                                    style: TextStyle(
-                                        fontSize: 25, color: Colors.white),
-                                  ),
-                                ),
-                                color: Theme.of(context).primaryColor,
-                                minWidth: double.infinity,
-                              ),
-                            )
-                          ],
+                          ),
+                          color: Theme.of(context).primaryColor,
+                          minWidth: double.infinity,
                         ),
                       )
                     ],
                   ),
-                ),
-              ),
-      ),
-    );
+                )
+              ],
+            ),
+          );
   }
 
   _save() {

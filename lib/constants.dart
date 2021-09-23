@@ -48,3 +48,11 @@ kInputDecoration(String labelText) {
     ),
   );
 }
+
+kDivider() {
+  return Divider(
+    thickness: 2,
+    height: 20,
+    color: kAppBarBackground,
+  );
+}
