@@ -29,6 +29,7 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
   var name;
   var serialNumber;
   var manufacturer;
+  var id;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -93,12 +94,22 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
                                               ElevatedButton(
                                                 style: kElevatedButtonStyle(),
                                                 onPressed: () {
+                                                  setState(() {
+                                                    name = item.name;
+                                                    manufacturer =
+                                                        item.manufactuer;
+                                                    serialNumber =
+                                                        item.serialNumber;
+                                                    id = item.id;
+                                                  });
+
                                                   showDialog(
                                                       context: context,
                                                       builder: (context) {
                                                         return AlertDialog(
                                                           content:
-                                                              addEditDeviceForm(),
+                                                              addEditDeviceForm(
+                                                                  true, id),
                                                         );
                                                       });
                                                 },
@@ -194,11 +205,17 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
           child: ElevatedButton(
             style: kElevatedButtonStyle(),
             onPressed: () {
+              setState(() {
+                name = null;
+                manufacturer = null;
+                serialNumber = null;
+                id = null;
+              });
               showDialog(
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      content: addEditDeviceForm(),
+                      content: addEditDeviceForm(false),
                     );
                   });
             },
@@ -207,7 +224,7 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
         ));
   }
 
-  addEditDeviceForm() {
+  addEditDeviceForm([bool isEdiding = true, String? id]) {
     return Container(
       constraints: BoxConstraints(minWidth: 500),
       child: Form(
@@ -216,9 +233,10 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Add New Device'.toUpperCase()),
+              Text(isEdiding ? 'Edit Device' : 'Add New Device'),
               kDivider(),
               TextFormField(
+                initialValue: serialNumber,
                 decoration: kInputDecoration('Serial Number'),
                 validator: (value) {
                   if (value!.isEmpty) {
@@ -235,6 +253,7 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
                 height: 20,
               ),
               TextFormField(
+                initialValue: name,
                 decoration: kInputDecoration('Device Name'),
                 validator: (value) {
                   if (value!.isEmpty) {
@@ -250,6 +269,7 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
                 height: 20,
               ),
               TextFormField(
+                initialValue: manufacturer,
                 decoration: kInputDecoration('Manufacturer Name'),
                 validator: (value) {
                   if (value!.isEmpty) {
@@ -276,7 +296,10 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
                   ),
                 ),
                 onPressed: () {
-                  addDevice();
+                  if (isEdiding)
+                    editDevice(id!);
+                  else
+                    addDevice();
                 },
               )
             ],
@@ -313,11 +336,7 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
     }
   }
 
-  editDevice(
-      {required String id,
-      required String name,
-      required String manufacturer,
-      required String serialNumber}) {
+  editDevice(String id) {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       setState(() {
