@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/constants.dart';
 import 'package:nanti_flutter_web/models/company.dart';
-import 'package:nanti_flutter_web/screens/admin/add_edit_company.dart';
 import 'package:nanti_flutter_web/screens/company_list/add_company.dart';
 import 'package:nanti_flutter_web/screens/company_list/edit_company.dart';
 import 'package:nanti_flutter_web/screens/responsive/responsive.dart';

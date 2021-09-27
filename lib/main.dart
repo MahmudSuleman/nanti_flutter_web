@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/providers/device_provider.dart';
 import 'package:nanti_flutter_web/routes.dart';
-import 'package:nanti_flutter_web/screens/admin/admin_dashboard.dart';
 import 'package:nanti_flutter_web/screens/dashboard/dashboard.dart';
-import 'package:nanti_flutter_web/screens/user/user_dashboard.dart';
-import 'package:nanti_flutter_web/services/auth_service.dart';
-import 'package:nanti_flutter_web/widgets/app_drawer.dart';
-import 'package:nanti_flutter_web/widgets/main_container.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -24,65 +19,6 @@ class MyApp extends StatelessWidget {
         theme: myThemeData(context),
         home: Dashboard(),
         routes: routes,
-      ),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey();
-
-  bool dashBoardLoading = true;
-  bool isAdmin = false;
-  @override
-  void initState() {
-    super.initState();
-    AuthService.isAdmin().then((value) {
-      setState(() {
-        dashBoardLoading = false;
-      });
-      if (value) {
-        setState(() {
-          isAdmin = true;
-        });
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    AuthService.autoLogout(context);
-
-    return Scaffold(
-      // backgroundColor: Colors.black12,
-      appBar: AppBar(
-        leading: IconButton(
-            icon: Icon(Icons.dehaze),
-            onPressed: () {
-              if (_scaffoldKey.currentState!.isDrawerOpen == false) {
-                _scaffoldKey.currentState!.openDrawer();
-              } else {
-                _scaffoldKey.currentState!.openEndDrawer();
-              }
-            }),
-        title: Text('Device Hub'),
-      ),
-      body: Scaffold(
-        key: _scaffoldKey,
-        body: MainContainer(
-          // child: MyHomePage(),
-          child: dashBoardLoading
-              ? Center(child: CircularProgressIndicator())
-              : isAdmin
-                  ? AdminDashBoard()
-                  : UserDashBoard(),
-        ),
-        drawer: AppDrawer(),
       ),
     );
   }

@@ -1,6 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:nanti_flutter_web/screens/admin/add_edit_company.dart';
-import 'package:nanti_flutter_web/screens/admin/add_edit_device.dart';
 import 'package:nanti_flutter_web/screens/admin/add_edit_dispatch.dart';
 
 import 'package:nanti_flutter_web/screens/admin/dispatch_list.dart';
@@ -25,8 +23,6 @@ final Map<String, WidgetBuilder> routes = {
   UserMaintenanceList.routeName: (_) => UserMaintenanceList(),
 
   // add update pages
-  AddEditDevice.routeName: (_) => AddEditDevice(),
-  AddEditCompany.routeName: (_) => AddEditCompany(),
   AddEditDispatch.routeName: (_) => AddEditDispatch(),
 
   // auth routes
