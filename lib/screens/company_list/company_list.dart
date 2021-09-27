@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/constants.dart';
 import 'package:nanti_flutter_web/models/company.dart';
 import 'package:nanti_flutter_web/screens/admin/add_edit_company.dart';
+import 'package:nanti_flutter_web/screens/company_list/add_company.dart';
+import 'package:nanti_flutter_web/screens/company_list/edit_company.dart';
 import 'package:nanti_flutter_web/screens/responsive/responsive.dart';
 import 'package:nanti_flutter_web/services/auth_service.dart';
 import 'package:nanti_flutter_web/services/company_service.dart';
@@ -46,12 +48,13 @@ class _CompanyListState extends State<CompanyList> {
                       child: ElevatedButton(
                         style: kElevatedButtonStyle(),
                         onPressed: () {
-                          Navigator.pushNamed(context, AddEditCompany.routeName)
-                              .then((value) {
-                            if (value != null) {
-                              setState(() {});
-                            }
-                          });
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  content: AddCompany(),
+                                );
+                              }).then((value) => setState(() {}));
                         },
                         child: Text('Add Company'),
                       ),
@@ -96,19 +99,20 @@ class _CompanyListState extends State<CompanyList> {
                           ElevatedButton(
                             style: kElevatedButtonStyle(),
                             onPressed: () {
-                              Navigator.pushNamed(
-                                  context, AddEditCompany.routeName,
-                                  arguments: {
-                                    'action': 'edit',
-                                    'id': item.id,
-                                    'name': item.name,
-                                    'type': item.type,
-                                    'contact': item.contact,
-                                  }).then((value) {
-                                if (value != null) {
-                                  setState(() {});
-                                }
-                              });
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      content: EditCompany(
+                                        new Company(
+                                          id: item.id,
+                                          name: item.name,
+                                          type: item.type,
+                                          contact: item.contact,
+                                        ),
+                                      ),
+                                    );
+                                  }).then((value) => setState(() {}));
                             },
                             child: Icon(Icons.edit),
                           ),

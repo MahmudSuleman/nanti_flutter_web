@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nanti_flutter_web/screens/admin/company_list.dart';
-import 'package:nanti_flutter_web/screens/admin/dispatch_list.dart';
-import 'package:nanti_flutter_web/screens/admin/maintenance_list.dart';
+import 'package:nanti_flutter_web/screens/company_list/company_list.dart';
 import 'package:nanti_flutter_web/screens/device_list/device_list.dart';
 
 import '../../../user_prefs.dart';
@@ -65,26 +63,26 @@ class SideBar extends StatelessWidget {
             SizedBox(
               height: 10,
             ),
-            MenuItem(
-              onTap: () {
-                Navigator.of(context).pushNamed(DispatchList.routeName);
-              },
-              iconName: Icons.send,
-              iconLabel: 'Dispatches',
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            MenuItem(
-              onTap: () {
-                Navigator.of(context).pushNamed(MaintenanceList.routeName);
-              },
-              iconName: Icons.settings,
-              iconLabel: 'Maintenances',
-            ),
-            SizedBox(
-              height: 10,
-            ),
+            // MenuItem(
+            //   onTap: () {
+            //     Navigator.of(context).pushNamed(DispatchList.routeName);
+            //   },
+            //   iconName: Icons.send,
+            //   iconLabel: 'Dispatches',
+            // ),
+            // SizedBox(
+            //   height: 10,
+            // ),
+            // MenuItem(
+            //   onTap: () {
+            //     Navigator.of(context).pushNamed(MaintenanceList.routeName);
+            //   },
+            //   iconName: Icons.settings,
+            //   iconLabel: 'Maintenances',
+            // ),
+            // SizedBox(
+            //   height: 10,
+            // ),
             MenuItem(
               onTap: () {
                 UserPrefs.clearUser().then((_) {
