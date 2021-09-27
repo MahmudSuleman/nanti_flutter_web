@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nanti_flutter_web/screens/company_list/company_list.dart';
+import 'package:nanti_flutter_web/screens/company/company_list.dart';
 import 'package:nanti_flutter_web/screens/device_list/device_list.dart';
 
 import '../../../user_prefs.dart';
