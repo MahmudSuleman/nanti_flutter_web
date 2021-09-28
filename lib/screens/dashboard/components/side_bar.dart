@@ -6,10 +6,13 @@ import '../../../user_prefs.dart';
 import '../../login.dart';
 import 'menu_item.dart';
 
-class SideBar extends StatelessWidget {
-  const SideBar({
-    Key? key,
-  }) : super(key: key);
+class SideBar extends StatefulWidget {
+  @override
+  _SideBarState createState() => _SideBarState();
+}
+
+class _SideBarState extends State<SideBar> {
+  bool showHidenMenu = false;
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +66,50 @@ class SideBar extends StatelessWidget {
             SizedBox(
               height: 10,
             ),
+            MenuItem(
+              onTap: () {
+                // toggle available and dispatched devices
+                setState(() {
+                  showHidenMenu = !showHidenMenu;
+                });
+              },
+              iconName: Icons.send,
+              iconLabel: 'Dispatches',
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            if (showHidenMenu)
+              Container(
+                margin: EdgeInsets.only(left: 20),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 5,
+                    ),
+                    MenuItem(
+                      onTap: () {
+                        // Navigator.of(context).pushNamed(DispatchList.routeName);
+                      },
+                      iconName: Icons.event_available,
+                      iconLabel: 'Available',
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    MenuItem(
+                      onTap: () {
+                        // Navigator.of(context).pushNamed(DispatchList.routeName);
+                      },
+                      iconName: Icons.event_busy,
+                      iconLabel: 'Dispatched',
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                  ],
+                ),
+              ),
             // MenuItem(
             //   onTap: () {
             //     Navigator.of(context).pushNamed(DispatchList.routeName);
