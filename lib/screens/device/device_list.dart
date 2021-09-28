@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:nanti_flutter_web/screens/device_list/admin_device_list.dart';
-import 'package:nanti_flutter_web/screens/device_list/user_device_list.dart';
+import 'package:nanti_flutter_web/screens/device/admin_device_list.dart';
+import 'package:nanti_flutter_web/screens/device/user_device_list.dart';
 import 'package:nanti_flutter_web/services/auth_service.dart';
 
 class DeviceList extends StatelessWidget {
