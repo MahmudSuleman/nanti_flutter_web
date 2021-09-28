@@ -7,16 +7,17 @@ import 'package:nanti_flutter_web/screens/responsive/responsive_xl.dart';
 
 class Responsive extends StatelessWidget {
   final Widget child;
-  final String? appBarTitle;
+  final String appBarTitle;
 
   const Responsive({
     required this.child,
-    this.appBarTitle,
+    required this.appBarTitle,
   });
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size.width;
+    print(size);
     return buildResponsive(size);
   }
 
