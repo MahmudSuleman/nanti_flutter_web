@@ -49,22 +49,25 @@ class _UserDeviceListState extends State<UserDeviceList> {
                           ? Align(
                               alignment: Alignment.center,
                               child: Text('No data found'))
-                          : DataTableWidget(
-                              header: _tableHeader,
-                              data: data
-                                  .map(
-                                    (Map<String, dynamic> item) => DataRow(
-                                      cells: [
-                                        DataCell(Text(item['serialNumber'])),
-                                        DataCell(Text(item['deviceName'])),
-                                        DataCell(Text(item['manufacturer'])),
-                                        DataCell(
-                                          sendDeviceButton(context, item),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                  .toList(),
+                          : Container(
+                              width: 1000,
+                              child: DataTableWidget(
+                                header: _tableHeader,
+                                data: data
+                                    .map(
+                                      (Map<String, dynamic> item) => DataRow(
+                                        cells: [
+                                          DataCell(Text(item['serialNumber'])),
+                                          DataCell(Text(item['deviceName'])),
+                                          DataCell(Text(item['manufacturer'])),
+                                          DataCell(
+                                            sendDeviceButton(context, item),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                    .toList(),
+                              ),
                             ),
                     )
                   ],

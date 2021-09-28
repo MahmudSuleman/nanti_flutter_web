@@ -17,7 +17,6 @@ class Responsive extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size.width;
-    print(size);
     return buildResponsive(size);
   }
 
@@ -30,7 +29,7 @@ class Responsive extends StatelessWidget {
 
     if (kMediumScreenSize(screenWidth)) {
       return ResponsiveMd(
-        appBarTitle: appBarTitle!,
+        appBarTitle: appBarTitle,
         child: child,
       );
     }
