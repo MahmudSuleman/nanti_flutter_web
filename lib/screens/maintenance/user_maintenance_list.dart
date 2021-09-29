@@ -10,6 +10,7 @@ class UserMaintenanceList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AuthService.autoLogout(context);
+    final size = MediaQuery.of(context).size.width;
 
     List<String> _tableHeader = [
       'Date',
@@ -31,10 +32,7 @@ class UserMaintenanceList extends StatelessWidget {
                   }
                   return Column(
                     children: [
-                      Text(
-                        'Maintenance History',
-                        style: kPageHeaderTextStyle,
-                      ),
+                      kPageHeaderTitle('Maintenance History', size),
                       Divider(),
                       SizedBox(
                         height: 20,

@@ -41,16 +41,14 @@ class _DispatchedListState extends State<DispatchedList> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size.width;
+
     return Responsive(
       appBarTitle: 'Dispatched Devices',
       child: SingleChildScrollView(
         child: Column(
           children: [
-            Text(
-              "Dispatched Devices",
-              style: kPageHeaderTextStyle,
-              textAlign: TextAlign.center,
-            ),
+            kPageHeaderTitle('Dispatched Devices', size),
             Divider(),
             SizedBox(height: 20),
             FutureBuilder(

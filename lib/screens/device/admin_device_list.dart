@@ -37,6 +37,8 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
   Widget build(BuildContext context) {
     AuthService.autoLogout(context);
 
+    final size = MediaQuery.of(context).size.width;
+
     return Responsive(
       appBarTitle: 'Devices List',
       child: FutureBuilder(
@@ -50,11 +52,7 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
               return SingleChildScrollView(
                 child: Column(
                   children: [
-                    Text(
-                      "Devices List",
-                      style: kPageHeaderTextStyle,
-                      textAlign: TextAlign.center,
-                    ),
+                    kPageHeaderTitle('Devices List', size),
                     Divider(),
                     addDevicesButton(context),
                     Divider(),

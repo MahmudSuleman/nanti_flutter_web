@@ -26,7 +26,7 @@ class TopGrid extends StatelessWidget {
               crossAxisCount: perRowCount,
               crossAxisSpacing: crossGap,
               mainAxisSpacing: mainGap,
-              mainAxisExtent: 150),
+              mainAxisExtent: 100),
           itemBuilder: (context, index) {
             return Container(
               child: DashboardChip(

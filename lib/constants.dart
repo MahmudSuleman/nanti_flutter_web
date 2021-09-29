@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 final kPageHeaderTextStyle =
     TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
+TextStyle kCalculatePageHeaderTextStyle(double size) => TextStyle(
+    fontSize: kCalculateFont(size) * 1.5, fontWeight: FontWeight.bold);
+
 // final kBaseUrl = 'http://10.0.2.2/nanti_flutter_web_api/endpoint/';
 // final kBaseUrl = 'http://localhost/nanti_flutter_web_api/endpoint/';
 final kBaseUrl = 'http://92.205.22.26:75/endpoint/';
@@ -28,6 +31,7 @@ bool kLargeScreenSize(double size) => size > 900;
 
 //  calculate font size
 double kCalculateFont(double size) {
+  print(size);
   if (kSmallScreenSize(size)) return 12;
   if (kMediumScreenSize(size)) return 15;
   if (kLargeScreenSize(size)) return 20;
@@ -62,3 +66,12 @@ kDivider() {
     color: kAppBarBackground,
   );
 }
+
+kPageHeaderTitle(String title, double size) => Text(
+      "Devices List",
+      style: kCalculatePageHeaderTextStyle(size),
+      textAlign: TextAlign.center,
+    );
+
+
+    // kAddItemButton(String title) =>

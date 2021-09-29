@@ -22,7 +22,7 @@ class _UserDeviceListState extends State<UserDeviceList> {
   @override
   Widget build(BuildContext context) {
     AuthService.autoLogout(context);
-
+    final size = MediaQuery.of(context).size.width;
     return Responsive(
       appBarTitle: 'Devices List',
       child: FutureBuilder(
@@ -36,11 +36,7 @@ class _UserDeviceListState extends State<UserDeviceList> {
               return SingleChildScrollView(
                 child: Column(
                   children: [
-                    Text(
-                      "Devices List",
-                      style: kPageHeaderTextStyle,
-                      textAlign: TextAlign.center,
-                    ),
+                    kPageHeaderTitle('Devices List', size),
                     Divider(),
                     SizedBox(height: 20),
                     SingleChildScrollView(

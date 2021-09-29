@@ -46,7 +46,7 @@ class AdminTopGrid extends StatelessWidget {
                   ),
                 ]);
           }
-          return CircularProgressIndicator();
+          return Center(child: CircularProgressIndicator());
         });
   }
 }

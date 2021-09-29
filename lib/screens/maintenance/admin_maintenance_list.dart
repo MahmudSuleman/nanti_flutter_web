@@ -15,6 +15,7 @@ class _AdminMaintenanceListState extends State<AdminMaintenanceList> {
   @override
   Widget build(BuildContext context) {
     AuthService.autoLogout(context);
+    final size = MediaQuery.of(context).size.width;
 
     List<String> _tableHeader = [
       'Date',
@@ -37,10 +38,7 @@ class _AdminMaintenanceListState extends State<AdminMaintenanceList> {
                 }
                 return Column(
                   children: [
-                    Text(
-                      'Maintenance List',
-                      style: kPageHeaderTextStyle,
-                    ),
+                    kPageHeaderTitle('Maintenance List', size),
                     Divider(),
                     SizedBox(
                       height: 20,
@@ -50,8 +48,7 @@ class _AdminMaintenanceListState extends State<AdminMaintenanceList> {
                       child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: maintenance!.isEmpty
-                            ? Align(
-                                alignment: Alignment.center,
+                            ? Center(
                                 child: Text('No data found'),
                               )
                             : Container(
@@ -139,7 +136,7 @@ class _AdminMaintenanceListState extends State<AdminMaintenanceList> {
                 );
               }
               return Center(
-                child: CircularProgressIndicator(),
+                child: Center(child: CircularProgressIndicator()),
               );
             }),
       ),
