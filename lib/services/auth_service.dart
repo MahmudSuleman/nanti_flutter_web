@@ -24,7 +24,11 @@ class AuthService {
   static Future<void> autoLogout(context) async {
     isLoggedIn().then((value) {
       if (!value) {
-        Navigator.of(context).pushReplacementNamed(Login.routeName);
+        Navigator.pushAndRemoveUntil<void>(
+          context,
+          MaterialPageRoute<void>(builder: (BuildContext context) => Login()),
+          ModalRoute.withName('/login'),
+        );
       }
     });
   }

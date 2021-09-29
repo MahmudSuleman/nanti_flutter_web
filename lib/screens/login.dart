@@ -23,6 +23,7 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Color.fromRGBO(200, 200, 200, 1),
       appBar: AppBar(
@@ -35,7 +36,8 @@ class _LoginState extends State<Login> {
             )
           : Container(
               padding: EdgeInsets.symmetric(
-                  horizontal: MediaQuery.of(context).size.width * 0.2),
+                horizontal: size < 500 ? size * 0.05 : size * 0.2,
+              ),
               child: Center(
                 child: SingleChildScrollView(
                   child: Column(
@@ -57,44 +59,46 @@ class _LoginState extends State<Login> {
     );
   }
 
-  Form _form() => Form(
-      key: _formKey,
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 100),
-        child: Column(
-          children: [
-            TextFormField(
-              decoration: kInputDecoration('Username'),
-              controller: _usernameController,
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return 'Please provide username';
-                }
-                return null;
-              },
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            TextFormField(
-              decoration: kInputDecoration('Password'),
-              controller: _passwordController,
-              obscureText: true,
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return 'Please provide password';
-                }
+  Form _form() {
+    return Form(
+        key: _formKey,
+        child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            children: [
+              TextFormField(
+                decoration: kInputDecoration('Username'),
+                controller: _usernameController,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please provide username';
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              TextFormField(
+                decoration: kInputDecoration('Password'),
+                controller: _passwordController,
+                obscureText: true,
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please provide password';
+                  }
 
-                return null;
-              },
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            _submitButton(),
-          ],
-        ),
-      ));
+                  return null;
+                },
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              _submitButton(),
+            ],
+          ),
+        ));
+  }
 
   MaterialButton _submitButton() => MaterialButton(
         child: Padding(
@@ -118,11 +122,13 @@ class _LoginState extends State<Login> {
             var password = _passwordController.text;
 
             AuthService.login(username, password).then((value) {
+              print(value.body);
               setState(() {
                 isLoading = false;
               });
               if (value.statusCode == 200) {
                 var body = jsonDecode(value.body) as Map<String, dynamic>;
+
                 if (body['success']) {
                   UserPrefs.setUserPrefs(User.fromJson(body['data']));
 

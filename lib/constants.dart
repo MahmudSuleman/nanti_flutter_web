@@ -6,11 +6,9 @@ final kPageHeaderTextStyle =
     TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
 // final kBaseUrl = 'http://10.0.2.2/nanti_flutter_web_api/endpoint/';
-final kBaseUrl = 'http://localhost/nanti_flutter_web_api/endpoint/';
-// final kBaseUrl = 'http://92.205.22.26:75/endpoint/';
-final kHeaders = {
-  HttpHeaders.contentTypeHeader: 'application/json',
-};
+// final kBaseUrl = 'http://localhost/nanti_flutter_web_api/endpoint/';
+final kBaseUrl = 'http://92.205.22.26:75/endpoint/';
+final kHeaders = {HttpHeaders.contentTypeHeader: 'application/json'};
 
 final kScaffoldBackground = Color.fromRGBO(96, 96, 96, .8);
 
@@ -27,6 +25,14 @@ final primaryTextColor = Color(0xfffff);
 bool kSmallScreenSize(double size) => size <= 500;
 bool kMediumScreenSize(double size) => size > 500 && size <= 900;
 bool kLargeScreenSize(double size) => size > 900;
+
+//  calculate font size
+double kCalculateFont(double size) {
+  if (kSmallScreenSize(size)) return 12;
+  if (kMediumScreenSize(size)) return 15;
+  if (kLargeScreenSize(size)) return 20;
+  return 12;
+}
 
 ButtonStyle kElevatedButtonStyle({Color? color}) {
   return ButtonStyle(backgroundColor: MaterialStateColor.resolveWith((states) {

@@ -138,8 +138,12 @@ class _SideBarState extends State<SideBar> {
                   MenuItem(
                     onTap: () {
                       UserPrefs.clearUser().then((_) {
-                        Navigator.pushReplacementNamed(
-                            context, Login.routeName);
+                        Navigator.pushAndRemoveUntil<void>(
+                          context,
+                          MaterialPageRoute<void>(
+                              builder: (BuildContext context) => Login()),
+                          ModalRoute.withName('/login'),
+                        );
                       });
                     },
                     iconName: Icons.logout,

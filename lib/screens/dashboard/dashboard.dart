@@ -4,12 +4,9 @@ import 'package:nanti_flutter_web/screens/responsive/responsive_md.dart';
 import 'package:nanti_flutter_web/screens/responsive/responsive_sm.dart';
 import 'package:nanti_flutter_web/screens/responsive/responsive_xl.dart';
 import 'package:nanti_flutter_web/services/auth_service.dart';
-import 'package:nanti_flutter_web/widgets/dashboard_chip.dart';
 
 import '../../constants.dart';
 import 'components/admin_top_grid.dart';
-import 'components/side_bar.dart';
-import 'components/top_grid.dart';
 import 'components/user_top_grid.dart';
 
 class Dashboard extends StatefulWidget {
