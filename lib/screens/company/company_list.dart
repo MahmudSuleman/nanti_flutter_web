@@ -6,6 +6,7 @@ import 'package:nanti_flutter_web/screens/company/edit_company.dart';
 import 'package:nanti_flutter_web/screens/responsive/responsive.dart';
 import 'package:nanti_flutter_web/services/auth_service.dart';
 import 'package:nanti_flutter_web/services/company_service.dart';
+import 'package:nanti_flutter_web/widgets/add_item_button.dart';
 
 class CompanyList extends StatefulWidget {
   static const routeName = '/company-list';
@@ -24,6 +25,7 @@ class _CompanyListState extends State<CompanyList> {
   @override
   Widget build(BuildContext context) {
     AuthService.autoLogout(context);
+    final size = MediaQuery.of(context).size.width;
 
     return Responsive(
       appBarTitle: 'Companies List',
@@ -34,29 +36,20 @@ class _CompanyListState extends State<CompanyList> {
             if (snapShot.connectionState == ConnectionState.done) {
               return Column(
                 children: [
-                  Text(
-                    'Companies List',
-                    style: kPageHeaderTextStyle,
-                    textAlign: TextAlign.center,
-                  ),
+                  kPageHeaderTitle('Devices List', size),
                   Divider(),
                   Align(
                     alignment: Alignment.bottomLeft,
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 20),
-                      child: ElevatedButton(
-                        style: kElevatedButtonStyle(),
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  content: AddCompany(),
-                                );
-                              }).then((value) => setState(() {}));
-                        },
-                        child: Text('Add Company'),
-                      ),
+                    child: AddItemButton(
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                content: AddCompany(),
+                              );
+                            }).then((value) => setState(() {}));
+                      },
                     ),
                   ),
                   Divider(),
