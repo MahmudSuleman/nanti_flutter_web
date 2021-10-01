@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.nanti_flutter_web">
    <application
-        android:label="nanti_flutter_web"
+        android:label="Device Hub"
         android:usesCleartextTraffic="true"
         android:icon="@mipmap/launcher_icon">
         <activity
