@@ -56,6 +56,16 @@ class _SideBarState extends State<SideBar> {
                   ),
                   MenuItem(
                     onTap: () {
+                      Navigator.of(context).pushNamed('/');
+                    },
+                    iconName: Icons.home,
+                    iconLabel: 'Home',
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  MenuItem(
+                    onTap: () {
                       Navigator.of(context).pushNamed(DeviceList.routeName);
                     },
                     iconName: Icons.phone_android,

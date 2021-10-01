@@ -68,7 +68,7 @@ kDivider() {
 }
 
 kPageHeaderTitle(String title, double size) => Text(
-      "Devices List",
+      title,
       style: kCalculatePageHeaderTextStyle(size),
       textAlign: TextAlign.center,
     );

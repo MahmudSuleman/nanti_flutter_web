@@ -36,11 +36,7 @@ class AuthService {
   static Future<bool> isLoggedIn() async {
     var pref = await SharedPreferences.getInstance();
     var user = pref.getString('user');
-    if (user != null) {
-      return true;
-    }
-
-    return false;
+    return user != null;
   }
 
   static Future<bool> isAdmin() async {

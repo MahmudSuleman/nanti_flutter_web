@@ -36,7 +36,7 @@ class _CompanyListState extends State<CompanyList> {
             if (snapShot.connectionState == ConnectionState.done) {
               return Column(
                 children: [
-                  kPageHeaderTitle('Devices List', size),
+                  kPageHeaderTitle('Companies List', size),
                   Divider(),
                   Align(
                     alignment: Alignment.bottomLeft,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/providers/device_provider.dart';
 import 'package:nanti_flutter_web/routes.dart';
-import 'package:nanti_flutter_web/screens/dashboard/dashboard.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -17,7 +16,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Devices Hub',
         theme: myThemeData(context),
-        home: Dashboard(),
+        initialRoute: '/',
         routes: routes,
       ),
     );

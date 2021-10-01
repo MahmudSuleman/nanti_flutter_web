@@ -53,11 +53,11 @@ class _AvailableDispatchState extends State<AvailableDispatch> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size.width;
     return Responsive(
-        appBarTitle: 'Available Dispatch',
+        appBarTitle: 'Available Devices',
         child: SingleChildScrollView(
           child: Column(
             children: [
-              kPageHeaderTitle('Available Dispatches', size),
+              kPageHeaderTitle('Available Devices', size),
               Divider(),
               SizedBox(height: 20),
               FutureBuilder(

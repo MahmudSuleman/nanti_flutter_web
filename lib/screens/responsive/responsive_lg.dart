@@ -10,6 +10,10 @@ class ResponsiveLg extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: kAppBarBackground,
+        automaticallyImplyLeading: false,
+      ),
       body: Row(
         children: [
           Expanded(
@@ -22,10 +26,8 @@ class ResponsiveLg extends StatelessWidget {
             flex: 5,
             child: SingleChildScrollView(
               child: Container(
-                height: MediaQuery.of(context).size.height,
-                // decoration: BoxDecoration(
-                //   color: kScaffoldBackground,
-                // ),
+                height: MediaQuery.of(context).size.height -
+                    AppBar().preferredSize.height,
                 child: child,
               ),
             ),
