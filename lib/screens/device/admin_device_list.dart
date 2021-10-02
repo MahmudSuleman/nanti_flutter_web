@@ -5,6 +5,7 @@ import 'package:nanti_flutter_web/models/device.dart';
 import 'package:nanti_flutter_web/screens/responsive/responsive.dart';
 import 'package:nanti_flutter_web/services/auth_service.dart';
 import 'package:nanti_flutter_web/services/device_sevice.dart';
+import 'package:nanti_flutter_web/services/manufacturer_service.dart';
 import 'package:nanti_flutter_web/widgets/add_item_button.dart';
 import 'package:nanti_flutter_web/widgets/data_table_widget.dart';
 
@@ -21,6 +22,7 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
   List<String> _tableHeader = [
     'Serial Number',
     'Name',
+    'Model',
     'Manufacturer',
     'Available',
     'Action'
@@ -30,6 +32,7 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
   var name;
   var serialNumber;
   var manufacturer;
+  var model;
   var id;
 
   final _formKey = GlobalKey<FormState>();
@@ -37,6 +40,7 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
   @override
   Widget build(BuildContext context) {
     AuthService.autoLogout(context);
+    ManufacturerService.allManufacturers();
 
     final size = MediaQuery.of(context).size.width;
 
@@ -94,6 +98,7 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
                                         cells: [
                                           DataCell(Text(item.serialNumber)),
                                           DataCell(Text(item.name)),
+                                          DataCell(Text(item.model)),
                                           DataCell(Text(item.manufactuer)),
                                           DataCell(
                                             item.isAvailable == '1'
@@ -118,6 +123,7 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
                                                       name = item.name;
                                                       manufacturer =
                                                           item.manufactuer;
+                                                      model = item.model;
                                                       serialNumber =
                                                           item.serialNumber;
                                                       id = item.id;
@@ -260,6 +266,22 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
                 height: 20,
               ),
               TextFormField(
+                initialValue: model,
+                decoration: kInputDecoration('Device Model'),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Model is Required';
+                  } else {
+                    setState(() {});
+                    model = value;
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              TextFormField(
                 initialValue: manufacturer,
                 decoration: kInputDecoration('Manufacturer Name'),
                 validator: (value) {
@@ -308,6 +330,7 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
               id: '${DateTime.now()}',
               manufactuer: manufacturer,
               name: name,
+              model: model,
               serialNumber: serialNumber))
           .then((value) {
         setState(() {
@@ -337,6 +360,7 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
               id: id,
               manufactuer: manufacturer,
               name: name,
+              model: model,
               serialNumber: serialNumber))
           .then((value) {
         setState(() {
