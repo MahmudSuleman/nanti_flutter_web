@@ -3,6 +3,7 @@ class Device {
   final String serialNumber;
   final String manufactuer;
   final String name;
+  final String model;
   final String? isAvailable;
 
   Device({
@@ -10,6 +11,7 @@ class Device {
     required this.manufactuer,
     required this.name,
     required this.serialNumber,
+    required this.model,
     this.isAvailable,
   });
 
@@ -18,5 +20,6 @@ class Device {
         serialNumber = json['serialNumber'],
         name = json['name'],
         manufactuer = json['manufacturer'],
+        model = json['model'],
         isAvailable = json['isAvailable'];
 }
