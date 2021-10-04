@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/models/device.dart';
 import 'package:nanti_flutter_web/models/manufacturer.dart';
 import 'package:nanti_flutter_web/providers/manufacturer_provider.dart';
-import 'package:nanti_flutter_web/screens/device/manufacturer_dropdown.dart';
 import 'package:nanti_flutter_web/screens/responsive/responsive.dart';
 import 'package:nanti_flutter_web/services/auth_service.dart';
 import 'package:nanti_flutter_web/services/device_sevice.dart';
@@ -40,7 +39,6 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
   var selectedValue;
   List<DropdownMenuItem<String>> dropdownItems = [];
   final _formKey = GlobalKey<FormState>();
-  final _dropKey = GlobalKey<ManufacturerDropDownState>();
 
   @override
   Widget build(BuildContext context) {
@@ -68,9 +66,10 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
                       child: AddItemButton(
                         onPressed: () {
                           setState(() {
-                            selectedValue = null;
+                            // selectedValue = null;
                             name = null;
                             manufacturerId = null;
+                            model = null;
                             serialNumber = null;
                             id = null;
                           });
@@ -92,7 +91,8 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
                       child: data == null
                           ? Align(
                               alignment: Alignment.center,
-                              child: Text('No data found'))
+                              child: Text('No data found'),
+                            )
                           : Container(
                               width: 1000,
                               child: DataTableWidget(
@@ -104,7 +104,7 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
                                           DataCell(Text(item.serialNumber)),
                                           DataCell(Text(item.name)),
                                           DataCell(Text(item.model)),
-                                          DataCell(Text(item.manufactuer!)),
+                                          DataCell(Text(item.manufacturer!)),
                                           DataCell(
                                             item.isAvailable == '1'
                                                 ? Chip(
@@ -123,11 +123,12 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
                                               children: [
                                                 ElevatedButton(
                                                   style: kElevatedButtonStyle(),
+                                                  child: Icon(Icons.edit),
                                                   onPressed: () {
                                                     setState(() {
                                                       name = item.name;
                                                       manufacturerId =
-                                                          item.manufactuer;
+                                                          item.manufacturerId;
                                                       model = item.model;
                                                       serialNumber =
                                                           item.serialNumber;
@@ -144,7 +145,6 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
                                                           );
                                                         });
                                                   },
-                                                  child: Icon(Icons.edit),
                                                 ),
                                                 SizedBox(
                                                   width: 10,
@@ -289,7 +289,7 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
               Consumer<ManufacturerProvider>(
                   builder: (context, manufacturer, child) {
                 return DropdownButtonFormField<String>(
-                  value: selectedValue,
+                  value: manufacturerId ?? selectedValue,
                   decoration: kInputDecoration('Manufacturer'),
                   items: manufacturer.allManufacturers.map((Manufacturer m) {
                     return DropdownMenuItem<String>(
@@ -338,7 +338,7 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
       });
       Device _device = Device(
           id: '${DateTime.now()}',
-          manufactuer: _dropKey.currentState!.manufacturerId,
+          manufacturerId: manufacturerId,
           name: name,
           model: model,
           serialNumber: serialNumber);
@@ -369,7 +369,7 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
       });
       DeviceService.update(Device(
               id: id,
-              manufactuer: manufacturerId,
+              manufacturerId: manufacturerId,
               name: name,
               model: model,
               serialNumber: serialNumber))

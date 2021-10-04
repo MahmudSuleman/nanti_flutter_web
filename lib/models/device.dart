@@ -1,14 +1,15 @@
 class Device {
   final String id;
   final String serialNumber;
-  final String? manufactuer;
+  final String manufacturerId;
   final String name;
   final String model;
   final String? isAvailable;
+  String? manufacturer;
 
   Device({
     required this.id,
-    required this.manufactuer,
+    required this.manufacturerId,
     required this.name,
     required this.serialNumber,
     required this.model,
@@ -19,12 +20,13 @@ class Device {
       : id = json['id'].toString(),
         serialNumber = json['serialNumber'],
         name = json['name'],
-        manufactuer = json['manufacturer'],
+        manufacturerId = json['manufacturer_id'],
+        manufacturer = json['manufacturer'],
         model = json['model'],
         isAvailable = json['isAvailable'];
 
   @override
   String toString() {
-    return 'id: $id, serialNumber: $serialNumber, \nname: $name, manufacturer: $manufactuer, model: $model, isAvailable: $isAvailable';
+    return 'id: $id, serialNumber: $serialNumber, \nname: $name, manufacturer: $manufacturerId, model: $model, isAvailable: $isAvailable';
   }
 }

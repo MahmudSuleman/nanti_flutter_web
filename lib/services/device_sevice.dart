@@ -55,7 +55,7 @@ class DeviceService {
 
     var response = await http.post(url, body: {
       'name': device.name,
-      'manufacturer': device.manufactuer,
+      'manufacturer': device.manufacturerId,
       'model': device.model,
       'serialNumber': device.serialNumber,
     });
@@ -68,7 +68,7 @@ class DeviceService {
     final body = {
       'id': device.id,
       'name': device.name,
-      'manufacturer': device.manufactuer,
+      'manufacturer': device.manufacturerId,
       'model': device.model,
       'serialNumber': device.serialNumber,
     };
