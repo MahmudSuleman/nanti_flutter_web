@@ -1,7 +1,7 @@
 class Device {
   final String id;
   final String serialNumber;
-  final String manufactuer;
+  final String? manufactuer;
   final String name;
   final String model;
   final String? isAvailable;
@@ -22,4 +22,9 @@ class Device {
         manufactuer = json['manufacturer'],
         model = json['model'],
         isAvailable = json['isAvailable'];
+
+  @override
+  String toString() {
+    return 'id: $id, serialNumber: $serialNumber, \nname: $name, manufacturer: $manufactuer, model: $model, isAvailable: $isAvailable';
+  }
 }

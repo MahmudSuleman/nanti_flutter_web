@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/providers/device_provider.dart';
+import 'package:nanti_flutter_web/providers/manufacturer_provider.dart';
 import 'package:nanti_flutter_web/routes.dart';
 import 'package:provider/provider.dart';
 
@@ -11,7 +12,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => DeviceProvider())],
+      providers: [
+        ChangeNotifierProvider(create: (_) => DeviceProvider()),
+        ChangeNotifierProvider(create: (_) => ManufacturerProvider()),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Devices Hub',

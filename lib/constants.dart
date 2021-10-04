@@ -31,7 +31,6 @@ bool kLargeScreenSize(double size) => size > 900;
 
 //  calculate font size
 double kCalculateFont(double size) {
-  print(size);
   if (kSmallScreenSize(size)) return 12;
   if (kMediumScreenSize(size)) return 15;
   if (kLargeScreenSize(size)) return 20;

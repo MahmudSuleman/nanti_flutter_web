@@ -96,7 +96,7 @@ class _AvailableDispatchState extends State<AvailableDispatch> {
                                         cells: [
                                           DataCell(Text(item.serialNumber)),
                                           DataCell(Text(item.name)),
-                                          DataCell(Text(item.manufactuer)),
+                                          DataCell(Text(item.manufactuer!)),
                                           DataCell(
                                             ElevatedButton(
                                               style: kElevatedButtonStyle(),
