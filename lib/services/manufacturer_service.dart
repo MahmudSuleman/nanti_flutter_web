@@ -17,8 +17,6 @@ class ManufacturerService {
       var response = await http.get(url, headers: {
         HttpHeaders.contentTypeHeader: "application/json",
       });
-      print(response.body);
-
       if (response.statusCode == 200) {
         List<dynamic> body = jsonDecode(response.body);
         body.forEach((element) {
