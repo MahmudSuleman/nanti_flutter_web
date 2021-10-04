@@ -9,8 +9,8 @@ TextStyle kCalculatePageHeaderTextStyle(double size) => TextStyle(
     fontSize: kCalculateFont(size) * 1.5, fontWeight: FontWeight.bold);
 
 // final kBaseUrl = 'http://10.0.2.2/nanti_flutter_web_api/endpoint/';
-// final kBaseUrl = 'http://localhost/nanti_flutter_web_api/endpoint/';
-final kBaseUrl = 'http://92.205.22.26:75/endpoint/';
+final kBaseUrl = 'http://localhost/nanti_flutter_web_api/endpoint/';
+// final kBaseUrl = 'http://92.205.22.26:75/endpoint/';
 final kHeaders = {HttpHeaders.contentTypeHeader: 'application/json'};
 
 final kScaffoldBackground = Color.fromRGBO(96, 96, 96, .8);

@@ -10,9 +10,11 @@ class DeviceService {
 
   static Future<List<Device>> allDevices() async {
     var url = Uri.parse(baseUrl + '/index.php');
+
     var response = await http.get(url, headers: {
       HttpHeaders.contentTypeHeader: "application/json",
     });
+
     List<Device> temp = [];
     if (response.statusCode == 200) {
       List<dynamic> body = jsonDecode(response.body);
@@ -54,6 +56,7 @@ class DeviceService {
     var response = await http.post(url, body: {
       'name': device.name,
       'manufacturer': device.manufactuer,
+      'model': device.model,
       'serialNumber': device.serialNumber,
     });
 
@@ -66,6 +69,7 @@ class DeviceService {
       'id': device.id,
       'name': device.name,
       'manufacturer': device.manufactuer,
+      'model': device.model,
       'serialNumber': device.serialNumber,
     };
 

@@ -122,7 +122,6 @@ class _LoginState extends State<Login> {
             var password = _passwordController.text;
 
             AuthService.login(username, password).then((value) {
-              print(value.body);
               setState(() {
                 isLoading = false;
               });
