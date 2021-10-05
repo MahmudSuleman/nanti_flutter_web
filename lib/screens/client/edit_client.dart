@@ -1,20 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/constants.dart';
-import 'package:nanti_flutter_web/models/company.dart';
-import 'package:nanti_flutter_web/services/company_service.dart';
+import 'package:nanti_flutter_web/models/client.dart';
+import 'package:nanti_flutter_web/models/client_type.dart';
+import 'package:nanti_flutter_web/providers/client_type_provider.dart';
+import 'package:nanti_flutter_web/services/client_service.dart';
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
-class EditClient extends StatelessWidget {
+class EditClient extends StatefulWidget {
   final Client company;
 
   EditClient(this.company);
+
+  @override
+  _EditClientState createState() => _EditClientState();
+}
+
+class _EditClientState extends State<EditClient> {
+  String? selectedValue;
+
   String name = '';
+
   String type = '';
+
   String contact = '';
 
   @override
   Widget build(BuildContext context) {
     var _formKey = GlobalKey<FormState>();
+
     return Container(
       constraints: BoxConstraints(minWidth: 300, maxWidth: 1000),
       child: Form(
@@ -23,10 +37,10 @@ class EditClient extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Edit Company'),
+              Text('Edit Client'),
               kDivider(),
               TextFormField(
-                initialValue: company.name,
+                initialValue: widget.company.name,
                 decoration: kInputDecoration('Name'),
                 validator: (value) {
                   if (value!.isEmpty) {
@@ -41,24 +55,40 @@ class EditClient extends StatelessWidget {
               SizedBox(
                 height: 20,
               ),
-              TextFormField(
-                initialValue: company.type,
-                decoration: kInputDecoration('Company Type'),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Company type is required';
-                  } else {
-                    type = value;
-                  }
+              Consumer<ClientTypeProvider>(builder: (_, types, __) {
+                return DropdownButtonFormField<String>(
+                  value: selectedValue ?? widget.company.typeId,
+                  decoration: kInputDecoration('Client Type'),
+                  onChanged: (value) {
+                    type = value!;
+                    setState(() {
+                      selectedValue = value;
+                    });
+                  },
+                  items: types.allClientTypes
+                      .map(
+                        (ClientType clientType) => DropdownMenuItem(
+                          value: clientType.id,
+                          child: Text(clientType.name),
+                        ),
+                      )
+                      .toList(),
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Client type is required';
+                    } else {
+                      type = value;
+                    }
 
-                  return null;
-                },
-              ),
+                    return null;
+                  },
+                );
+              }),
               SizedBox(
                 height: 20,
               ),
               TextFormField(
-                initialValue: company.contact,
+                initialValue: widget.company.contact,
                 decoration: kInputDecoration('Contact'),
                 validator: (value) {
                   if (value!.isEmpty) {
@@ -78,9 +108,9 @@ class EditClient extends StatelessWidget {
                     _formKey.currentState!.save();
 
                     var response = await ClientService.update(new Client(
-                        id: company.id,
+                        id: widget.company.id,
                         name: name,
-                        type: type,
+                        typeId: type,
                         contact: contact));
 
                     if (response.statusCode == 200) {

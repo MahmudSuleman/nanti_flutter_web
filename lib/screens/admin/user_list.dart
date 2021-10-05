@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/constants.dart';
 import 'package:nanti_flutter_web/models/select_item.dart';
 import 'package:nanti_flutter_web/services/auth_service.dart';
-import 'package:nanti_flutter_web/services/company_service.dart';
+import 'package:nanti_flutter_web/services/client_service.dart';
 import 'package:nanti_flutter_web/services/user_service.dart';
 import 'package:nanti_flutter_web/widgets/main_container.dart';
 

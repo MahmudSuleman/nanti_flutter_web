@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/constants.dart';
-import 'package:nanti_flutter_web/models/company.dart';
+import 'package:nanti_flutter_web/models/client.dart';
+import 'package:nanti_flutter_web/providers/client_type_provider.dart';
 import 'package:nanti_flutter_web/screens/client/add_client.dart';
 import 'package:nanti_flutter_web/screens/client/edit_client.dart';
 import 'package:nanti_flutter_web/screens/responsive/responsive.dart';
 import 'package:nanti_flutter_web/services/auth_service.dart';
-import 'package:nanti_flutter_web/services/company_service.dart';
+import 'package:nanti_flutter_web/services/client_service.dart';
 import 'package:nanti_flutter_web/widgets/add_item_button.dart';
+import 'package:provider/provider.dart';
 
 class ClientList extends StatefulWidget {
   static const routeName = '/client-list';
@@ -26,6 +28,7 @@ class _ClientListState extends State<ClientList> {
   Widget build(BuildContext context) {
     AuthService.autoLogout(context);
     final size = MediaQuery.of(context).size.width;
+    Provider.of<ClientTypeProvider>(context).init();
 
     return Responsive(
       appBarTitle: 'Clients List',
@@ -86,7 +89,7 @@ class _ClientListState extends State<ClientList> {
                     for (Client item in data)
                       DataRow(cells: [
                         DataCell(Text(item.name)),
-                        DataCell(Text(item.type)),
+                        DataCell(Text(item.typeName!)),
                         DataCell(Text(item.contact)),
                         DataCell(Row(
                           children: [
@@ -101,7 +104,7 @@ class _ClientListState extends State<ClientList> {
                                           new Client(
                                             id: item.id,
                                             name: item.name,
-                                            type: item.type,
+                                            typeId: item.typeId,
                                             contact: item.contact,
                                           ),
                                         ),

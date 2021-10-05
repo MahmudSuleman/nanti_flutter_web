@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/models/device.dart';
 import 'package:nanti_flutter_web/models/select_item.dart';
 import 'package:nanti_flutter_web/screens/responsive/responsive.dart';
-import 'package:nanti_flutter_web/services/company_service.dart';
+import 'package:nanti_flutter_web/services/client_service.dart';
 import 'package:nanti_flutter_web/services/device_sevice.dart';
 import 'package:nanti_flutter_web/services/dispatch_service.dart';
 import 'package:nanti_flutter_web/widgets/data_table_widget.dart';

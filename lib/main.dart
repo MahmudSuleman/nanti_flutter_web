@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nanti_flutter_web/providers/client_type_provider.dart';
 import 'package:nanti_flutter_web/providers/device_provider.dart';
 import 'package:nanti_flutter_web/providers/manufacturer_provider.dart';
 import 'package:nanti_flutter_web/routes.dart';
@@ -15,6 +16,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => DeviceProvider()),
         ChangeNotifierProvider(create: (_) => ManufacturerProvider()),
+        ChangeNotifierProvider(create: (_) => ClientTypeProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

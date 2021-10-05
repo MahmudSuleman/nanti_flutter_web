@@ -1,10 +1,11 @@
-import 'package:nanti_flutter_web/constants.dart';
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
-import 'package:nanti_flutter_web/models/company.dart';
+import 'package:nanti_flutter_web/constants.dart';
+import 'package:nanti_flutter_web/models/client.dart';
 
 class ClientService {
-  static String baseUrl = kBaseUrl + 'company/';
+  static String baseUrl = kBaseUrl + 'client/';
 
   static Future<List<Client>> allClients() async {
     var url = Uri.parse(baseUrl + 'index.php');
@@ -13,10 +14,12 @@ class ClientService {
 
     if (response.statusCode == 200) {
       List<dynamic> body = jsonDecode(response.body);
-      for (var company in body) {
-        temp.add(Client.fromJson(company));
+
+      for (var client in body) {
+        temp.add(Client.fromJson(client));
       }
     }
+
     return temp;
   }
 
@@ -24,20 +27,20 @@ class ClientService {
     var url = Uri.parse(baseUrl + '/store.php');
     var response = await http.post(url, body: {
       'name': company.name,
-      'type': company.type,
+      'client_type_id': company.typeId,
       'contact': company.contact
     });
 
     return response;
   }
 
-  static Future<http.Response> update(Client company) async {
+  static Future<http.Response> update(Client client) async {
     var url = Uri.parse(baseUrl + '/update.php');
     var response = await http.post(url, body: {
-      'id': company.id,
-      'name': company.name,
-      'type': company.type,
-      'contact': company.contact,
+      'id': client.id,
+      'name': client.name,
+      'client_type_id': client.typeId,
+      'contact': client.contact,
     });
 
     return response;
