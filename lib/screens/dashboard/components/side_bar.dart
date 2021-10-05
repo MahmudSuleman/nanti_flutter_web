@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nanti_flutter_web/screens/company/company_list.dart';
+import 'package:nanti_flutter_web/screens/client/client_list.dart';
 import 'package:nanti_flutter_web/screens/device/device_list.dart';
 import 'package:nanti_flutter_web/screens/dispatch/available_list.dart';
 import 'package:nanti_flutter_web/screens/dispatch/dispatched_list.dart';
@@ -77,7 +77,7 @@ class _SideBarState extends State<SideBar> {
                   if (snapShot.data as bool)
                     MenuItem(
                       onTap: () {
-                        Navigator.of(context).pushNamed(CompanyList.routeName);
+                        Navigator.of(context).pushNamed(ClientList.routeName);
                       },
                       iconName: Icons.house,
                       iconLabel: 'Companies',

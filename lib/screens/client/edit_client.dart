@@ -4,10 +4,10 @@ import 'package:nanti_flutter_web/models/company.dart';
 import 'package:nanti_flutter_web/services/company_service.dart';
 
 // ignore: must_be_immutable
-class EditCompany extends StatelessWidget {
+class EditClient extends StatelessWidget {
   final Company company;
 
-  EditCompany(this.company);
+  EditClient(this.company);
   String name = '';
   String type = '';
   String contact = '';
@@ -84,7 +84,6 @@ class EditCompany extends StatelessWidget {
                         contact: contact));
 
                     if (response.statusCode == 200) {
-                      print(response.body);
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text('Company Updated Successfully')));
                       Navigator.pop(context, true);

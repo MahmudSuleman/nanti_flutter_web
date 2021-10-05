@@ -4,7 +4,7 @@ import 'package:nanti_flutter_web/models/company.dart';
 import 'package:nanti_flutter_web/services/company_service.dart';
 
 // ignore: must_be_immutable
-class AddCompany extends StatelessWidget {
+class AddClient extends StatelessWidget {
   String name = '';
   String type = '';
   String contact = '';
@@ -20,7 +20,7 @@ class AddCompany extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Add Company'),
+              Text('Add Client'),
               kDivider(),
               TextFormField(
                 decoration: kInputDecoration('Name'),
@@ -38,10 +38,10 @@ class AddCompany extends StatelessWidget {
                 height: 20,
               ),
               TextFormField(
-                decoration: kInputDecoration('Company Type'),
+                decoration: kInputDecoration('Client Type'),
                 validator: (value) {
                   if (value!.isEmpty) {
-                    return 'Company type is required';
+                    return 'Client type is required';
                   } else {
                     type = value;
                   }
@@ -78,12 +78,12 @@ class AddCompany extends StatelessWidget {
                         contact: contact));
 
                     if (response.statusCode == 200) {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text('Company Added Successfully')));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Client Added Successfully')));
                       Navigator.pop(context, true);
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Failed to Updated Company')));
+                          SnackBar(content: Text('Failed to Updated Client')));
                     }
                   }
                 },
