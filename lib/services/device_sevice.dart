@@ -68,7 +68,7 @@ class DeviceService {
     final body = {
       'id': device.id,
       'name': device.name,
-      'manufacturer': device.manufacturerId,
+      'manufacturerId': device.manufacturerId,
       'model': device.model,
       'serialNumber': device.serialNumber,
     };

@@ -97,121 +97,7 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
                               width: 1000,
                               child: DataTableWidget(
                                 header: _tableHeader,
-                                data: data
-                                    .map(
-                                      (Device item) => DataRow(
-                                        cells: [
-                                          DataCell(Text(item.serialNumber)),
-                                          DataCell(Text(item.name)),
-                                          DataCell(Text(item.model)),
-                                          DataCell(Text(item.manufacturer!)),
-                                          DataCell(
-                                            item.isAvailable == '1'
-                                                ? Chip(
-                                                    label: Text('Yes'),
-                                                    backgroundColor:
-                                                        Colors.green,
-                                                  )
-                                                : Chip(
-                                                    label: Text('No '),
-                                                    backgroundColor:
-                                                        Colors.red[100],
-                                                  ),
-                                          ),
-                                          DataCell(
-                                            Row(
-                                              children: [
-                                                ElevatedButton(
-                                                  style: kElevatedButtonStyle(),
-                                                  child: Icon(Icons.edit),
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      name = item.name;
-                                                      manufacturerId =
-                                                          item.manufacturerId;
-                                                      model = item.model;
-                                                      serialNumber =
-                                                          item.serialNumber;
-                                                      id = item.id;
-                                                    });
-
-                                                    showDialog(
-                                                        context: context,
-                                                        builder: (context) {
-                                                          return AlertDialog(
-                                                            content:
-                                                                addEditDeviceForm(
-                                                                    true, id),
-                                                          );
-                                                        });
-                                                  },
-                                                ),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                ElevatedButton(
-                                                  style: kElevatedButtonStyle(
-                                                      color: Colors.red),
-                                                  onPressed: () {
-                                                    showDialog(
-                                                      context: context,
-                                                      builder: (context) =>
-                                                          AlertDialog(
-                                                        content: Text(
-                                                            'Are you sure you want to delete this item?'),
-                                                        actions: [
-                                                          MaterialButton(
-                                                            onPressed:
-                                                                () async {
-                                                              var res =
-                                                                  await DeviceService
-                                                                      .destroy(
-                                                                          item.id);
-
-                                                              if (res) {
-                                                                Navigator.pop(
-                                                                    context);
-                                                                ScaffoldMessenger.of(
-                                                                        context)
-                                                                    .showSnackBar(SnackBar(
-                                                                        content:
-                                                                            Text('Data deleted!')));
-                                                              } else {
-                                                                Navigator.pop(
-                                                                    context);
-                                                                ScaffoldMessenger.of(
-                                                                        context)
-                                                                    .showSnackBar(SnackBar(
-                                                                        content:
-                                                                            Text('Failed to delete device data!')));
-                                                              }
-                                                            },
-                                                            // color: Colors.red,
-                                                            child: Text('Yes'),
-                                                          ),
-                                                          MaterialButton(
-                                                            onPressed: () {
-                                                              Navigator.pop(
-                                                                  context);
-                                                            },
-                                                            // color: Colors.red,
-                                                            child: Text('No'),
-                                                          )
-                                                        ],
-                                                      ),
-                                                    ).then((value) {
-                                                      setState(() {});
-                                                    });
-                                                  },
-                                                  child: Icon(Icons.delete),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                    .toList(),
+                                data: _tableBody(data),
                               ),
                             ),
                     )
@@ -225,6 +111,103 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
           }),
     );
   }
+
+  List<DataRow> _tableBody(List<Device> data) => data
+      .map(
+        (Device item) => DataRow(
+          cells: [
+            DataCell(Text(item.serialNumber)),
+            DataCell(Text(item.name)),
+            DataCell(Text(item.model)),
+            DataCell(Text(item.manufacturer!)),
+            DataCell(
+              item.isAvailable == '1'
+                  ? Chip(
+                      label: Text('Yes'),
+                      backgroundColor: Colors.green,
+                    )
+                  : Chip(
+                      label: Text('No '),
+                      backgroundColor: Colors.red[100],
+                    ),
+            ),
+            DataCell(
+              Row(
+                children: [
+                  ElevatedButton(
+                    style: kElevatedButtonStyle(),
+                    child: Icon(Icons.edit),
+                    onPressed: () {
+                      setState(() {
+                        name = item.name;
+                        manufacturerId = item.manufacturerId;
+                        model = item.model;
+                        serialNumber = item.serialNumber;
+                        id = item.id;
+                      });
+
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              content: addEditDeviceForm(true, id),
+                            );
+                          });
+                    },
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  ElevatedButton(
+                    style: kElevatedButtonStyle(color: Colors.red),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          content: Text(
+                              'Are you sure you want to delete this item?'),
+                          actions: [
+                            MaterialButton(
+                              onPressed: () async {
+                                var res = await DeviceService.destroy(item.id);
+
+                                if (res) {
+                                  Navigator.pop(context);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text('Data deleted!')));
+                                } else {
+                                  Navigator.pop(context);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text(
+                                              'Failed to delete device data!')));
+                                }
+                              },
+                              // color: Colors.red,
+                              child: Text('Yes'),
+                            ),
+                            MaterialButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              // color: Colors.red,
+                              child: Text('No'),
+                            )
+                          ],
+                        ),
+                      ).then((value) {
+                        setState(() {});
+                      });
+                    },
+                    child: Icon(Icons.delete),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      )
+      .toList();
 
   addEditDeviceForm([bool isEdiding = true, String? id]) {
     return Container(
@@ -378,6 +361,7 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
           isLoading = false;
         });
         var body = jsonDecode(value.body);
+        print('data recieved: $body');
         if (body['success']) {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text('Data Updated')));
