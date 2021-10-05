@@ -1,17 +1,17 @@
-class Company {
+class Client {
   final String id;
   final String name;
   final String type;
   final String contact;
 
-  Company({
+  Client({
     required this.id,
     required this.name,
     required this.type,
     required this.contact,
   });
 
-  Company.fromJson(Map<String, dynamic> json)
+  Client.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         name = json['name'],
         type = json['type'],

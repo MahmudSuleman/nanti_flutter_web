@@ -6,21 +6,21 @@ import 'package:nanti_flutter_web/models/company.dart';
 class CompanyService {
   static String baseUrl = kBaseUrl + 'company/';
 
-  static Future<List<Company>> allCompanies() async {
+  static Future<List<Client>> allCompanies() async {
     var url = Uri.parse(baseUrl + 'index.php');
     var response = await http.get(url, headers: kHeaders);
-    List<Company> temp = [];
+    List<Client> temp = [];
 
     if (response.statusCode == 200) {
       List<dynamic> body = jsonDecode(response.body);
       for (var company in body) {
-        temp.add(Company.fromJson(company));
+        temp.add(Client.fromJson(company));
       }
     }
     return temp;
   }
 
-  static Future<http.Response> store(Company company) async {
+  static Future<http.Response> store(Client company) async {
     var url = Uri.parse(baseUrl + '/store.php');
     var response = await http.post(url, body: {
       'name': company.name,
@@ -31,7 +31,7 @@ class CompanyService {
     return response;
   }
 
-  static Future<http.Response> update(Company company) async {
+  static Future<http.Response> update(Client company) async {
     var url = Uri.parse(baseUrl + '/update.php');
     var response = await http.post(url, body: {
       'id': company.id,

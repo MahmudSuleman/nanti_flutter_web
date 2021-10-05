@@ -80,7 +80,7 @@ class _SideBarState extends State<SideBar> {
                         Navigator.of(context).pushNamed(ClientList.routeName);
                       },
                       iconName: Icons.house,
-                      iconLabel: 'Companies',
+                      iconLabel: 'Clients',
                     ),
                   if (snapShot.data as bool)
                     SizedBox(

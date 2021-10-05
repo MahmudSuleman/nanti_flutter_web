@@ -9,7 +9,7 @@ import 'package:nanti_flutter_web/services/company_service.dart';
 import 'package:nanti_flutter_web/widgets/add_item_button.dart';
 
 class ClientList extends StatefulWidget {
-  static const routeName = '/company-list';
+  static const routeName = '/client-list';
 
   @override
   _ClientListState createState() => _ClientListState();
@@ -83,7 +83,7 @@ class _ClientListState extends State<ClientList> {
                       .map((e) => DataColumn(label: Text(e)))
                       .toList(),
                   rows: [
-                    for (Company item in data)
+                    for (Client item in data)
                       DataRow(cells: [
                         DataCell(Text(item.name)),
                         DataCell(Text(item.type)),
@@ -98,7 +98,7 @@ class _ClientListState extends State<ClientList> {
                                     builder: (context) {
                                       return AlertDialog(
                                         content: EditClient(
-                                          new Company(
+                                          new Client(
                                             id: item.id,
                                             name: item.name,
                                             type: item.type,
