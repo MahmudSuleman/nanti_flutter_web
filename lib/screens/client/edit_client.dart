@@ -5,7 +5,7 @@ import 'package:nanti_flutter_web/services/company_service.dart';
 
 // ignore: must_be_immutable
 class EditClient extends StatelessWidget {
-  final Company company;
+  final Client company;
 
   EditClient(this.company);
   String name = '';
@@ -77,7 +77,7 @@ class EditClient extends StatelessWidget {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
 
-                    var response = await CompanyService.update(new Company(
+                    var response = await ClientService.update(new Client(
                         id: company.id,
                         name: name,
                         type: type,

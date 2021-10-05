@@ -25,9 +25,9 @@ class _UserListState extends State<UserList> {
   @override
   void initState() {
     super.initState();
-    CompanyService.allCompanies().then((companies) {
+    ClientService.allClients().then((clients) {
       companyItems =
-          companies.map((e) => SelectItem(id: e.id, name: e.name)).toList();
+          clients.map((e) => SelectItem(id: e.id, name: e.name)).toList();
     });
   }
 

@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:nanti_flutter_web/models/company.dart';
 
-class CompanyService {
+class ClientService {
   static String baseUrl = kBaseUrl + 'company/';
 
-  static Future<List<Client>> allCompanies() async {
+  static Future<List<Client>> allClients() async {
     var url = Uri.parse(baseUrl + 'index.php');
     var response = await http.get(url, headers: kHeaders);
     List<Client> temp = [];

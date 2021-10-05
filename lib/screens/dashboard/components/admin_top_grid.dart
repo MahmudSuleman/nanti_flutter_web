@@ -34,9 +34,9 @@ class AdminTopGrid extends StatelessWidget {
                   ),
                   DashboardChip(
                     color: Color.fromRGBO(20, 20, 20, 1),
-                    title: 'Companies',
+                    title: 'Clients',
                     icon: Icons.house,
-                    summary: '${dashboardData['companies']}',
+                    summary: '${dashboardData['clients']}',
                   ),
                   DashboardChip(
                     color: Colors.pink.shade200,

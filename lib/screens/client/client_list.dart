@@ -28,15 +28,15 @@ class _ClientListState extends State<ClientList> {
     final size = MediaQuery.of(context).size.width;
 
     return Responsive(
-      appBarTitle: 'Companies List',
+      appBarTitle: 'Clients List',
       child: SingleChildScrollView(
         child: FutureBuilder(
-          future: CompanyService.allCompanies(),
+          future: ClientService.allClients(),
           builder: (context, snapShot) {
             if (snapShot.connectionState == ConnectionState.done) {
               return Column(
                 children: [
-                  kPageHeaderTitle('Companies List', size),
+                  kPageHeaderTitle('Clients List', size),
                   Divider(),
                   Align(
                     alignment: Alignment.bottomLeft,
@@ -124,9 +124,8 @@ class _ClientListState extends State<ClientList> {
                                     actions: [
                                       MaterialButton(
                                         onPressed: () async {
-                                          var res =
-                                              await CompanyService.destroy(
-                                                  item.id);
+                                          var res = await ClientService.destroy(
+                                              item.id);
 
                                           if (res) {
                                             Navigator.pop(context);

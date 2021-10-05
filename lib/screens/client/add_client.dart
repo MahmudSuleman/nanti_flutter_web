@@ -71,7 +71,7 @@ class AddClient extends StatelessWidget {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
 
-                    var response = await CompanyService.store(new Company(
+                    var response = await ClientService.store(new Client(
                         id: '${DateTime.now()}',
                         name: name,
                         type: type,
