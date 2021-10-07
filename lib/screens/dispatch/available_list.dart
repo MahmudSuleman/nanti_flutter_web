@@ -5,14 +5,13 @@ import 'package:nanti_flutter_web/models/device.dart';
 import 'package:nanti_flutter_web/models/select_item.dart';
 import 'package:nanti_flutter_web/screens/responsive/responsive.dart';
 import 'package:nanti_flutter_web/services/client_service.dart';
-import 'package:nanti_flutter_web/services/device_sevice.dart';
 import 'package:nanti_flutter_web/services/dispatch_service.dart';
 import 'package:nanti_flutter_web/widgets/data_table_widget.dart';
 
 import '../../constants.dart';
 
 class AvailableDispatch extends StatefulWidget {
-  static String routeName = '/avaliable-dispatch';
+  static String routeName = '/available-dispatch';
 
   @override
   _AvailableDispatchState createState() => _AvailableDispatchState();
@@ -25,19 +24,6 @@ class _AvailableDispatchState extends State<AvailableDispatch> {
   var _selectedCompany;
 
   List<SelectItem> companyItems = [];
-
-  Future<List<Device>> _availableDevices() async {
-    List<Device> allDevices = await DeviceService.allDevices();
-
-    List<Device> data = [];
-    if (allDevices.isNotEmpty) {
-      for (var item in allDevices) {
-        if (item.isAvailable == '1') data.add(item);
-      }
-    }
-
-    return data;
-  }
 
   @override
   void initState() {
@@ -61,7 +47,7 @@ class _AvailableDispatchState extends State<AvailableDispatch> {
               Divider(),
               SizedBox(height: 20),
               FutureBuilder(
-                future: _availableDevices(),
+                future: DispatchService.available(),
                 builder: (context, snapShot) {
                   if (snapShot.connectionState == ConnectionState.done) {
                     if (snapShot.hasData) {
@@ -96,7 +82,8 @@ class _AvailableDispatchState extends State<AvailableDispatch> {
                                         cells: [
                                           DataCell(Text(item.serialNumber)),
                                           DataCell(Text(item.name)),
-                                          DataCell(Text(item.manufacturerId)),
+                                          DataCell(
+                                              Text(item.manufacturerName!)),
                                           DataCell(
                                             ElevatedButton(
                                               style: kElevatedButtonStyle(),

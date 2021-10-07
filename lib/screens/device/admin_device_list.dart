@@ -119,7 +119,7 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
             DataCell(Text(item.serialNumber)),
             DataCell(Text(item.name)),
             DataCell(Text(item.model)),
-            DataCell(Text(item.manufacturer!)),
+            DataCell(Text(item.manufacturerName!)),
             DataCell(
               item.isAvailable == '1'
                   ? Chip(

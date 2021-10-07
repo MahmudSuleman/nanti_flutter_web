@@ -5,7 +5,7 @@ class Device {
   final String name;
   final String model;
   final String? isAvailable;
-  String? manufacturer;
+  String? manufacturerName;
 
   Device({
     required this.id,
@@ -18,12 +18,12 @@ class Device {
 
   Device.fromJson(Map<String, dynamic> json)
       : id = json['id'].toString(),
-        serialNumber = json['serialNumber'],
+        serialNumber = json['serial_number'],
         name = json['name'],
         manufacturerId = json['manufacturer_id'],
-        manufacturer = json['manufacturer'],
+        manufacturerName = json['manufacturer_name'],
         model = json['model'],
-        isAvailable = json['isAvailable'];
+        isAvailable = json['is_available'];
 
   @override
   String toString() {

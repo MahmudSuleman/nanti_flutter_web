@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:nanti_flutter_web/constants.dart';
+import 'package:nanti_flutter_web/models/device.dart';
 import 'package:nanti_flutter_web/models/dispatch.dart';
 
 import '../user_prefs.dart';
@@ -61,5 +62,23 @@ class DispatchService {
     var url = Uri.parse(baseUrl + '/store.php');
     var response = await http.post(url, body: dispatch);
     return response;
+  }
+
+  static Future<List<Device>> available() async {
+    var url = Uri.parse(baseUrl + '/available.php');
+
+    var response = await http.get(url, headers: {
+      HttpHeaders.contentTypeHeader: "application/json",
+    });
+
+    List<Device> temp = [];
+    if (response.statusCode == 200) {
+      List<dynamic> body = jsonDecode(response.body);
+      for (Map<String, dynamic> device in body) {
+        temp.add(Device.fromJson(device));
+      }
+    }
+
+    return temp;
   }
 }

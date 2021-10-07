@@ -72,8 +72,8 @@ class _DispatchedListState extends State<DispatchedList> {
                           data: [
                             for (Dispatch item in data)
                               DataRow(cells: [
-                                DataCell(Text(item.companyName)),
-                                DataCell(Text(item.deviceName)),
+                                DataCell(Text(item.clientName!)),
+                                DataCell(Text(item.deviceName!)),
                                 DataCell(ElevatedButton(
                                   style: kElevatedButtonStyle(),
                                   child: Icon(

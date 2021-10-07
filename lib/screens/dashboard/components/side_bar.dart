@@ -3,6 +3,7 @@ import 'package:nanti_flutter_web/screens/client/client_list.dart';
 import 'package:nanti_flutter_web/screens/device/device_list.dart';
 import 'package:nanti_flutter_web/screens/dispatch/available_list.dart';
 import 'package:nanti_flutter_web/screens/dispatch/dispatched_list.dart';
+import 'package:nanti_flutter_web/screens/dispatch_note/dispatch_note_list.dart';
 import 'package:nanti_flutter_web/screens/maintenance/maintenance_list.dart';
 import 'package:nanti_flutter_web/services/auth_service.dart';
 
@@ -106,6 +107,17 @@ class _SideBarState extends State<SideBar> {
                       margin: EdgeInsets.only(left: 20),
                       child: Column(
                         children: [
+                          SizedBox(
+                            height: 5,
+                          ),
+                          MenuItem(
+                            onTap: () {
+                              Navigator.of(context)
+                                  .pushNamed(DispatchNoteList.routeName);
+                            },
+                            iconName: Icons.note_add,
+                            iconLabel: 'Dispatch Notes',
+                          ),
                           SizedBox(
                             height: 5,
                           ),

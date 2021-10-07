@@ -18,11 +18,11 @@ class DeviceService {
     List<Device> temp = [];
     if (response.statusCode == 200) {
       List<dynamic> body = jsonDecode(response.body);
-
       for (Map<String, dynamic> device in body) {
         temp.add(Device.fromJson(device));
       }
     }
+
     return temp;
   }
 
