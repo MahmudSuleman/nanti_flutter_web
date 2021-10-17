@@ -6,6 +6,7 @@ import 'package:nanti_flutter_web/models/dispatch_note.dart';
 
 class DispatchNoteService {
   static String baseUrl = kBaseUrl + '/dispatch_note';
+
   static Future<List<DispatchNote>> allNote() async {
     var url = Uri.parse(baseUrl + '/index.php');
     var response = await http.get(url, headers: kHeaders);
@@ -17,5 +18,15 @@ class DispatchNoteService {
       });
     }
     return temp;
+  }
+
+  static Future<bool> addNote(DispatchNote note) async {
+    var url = Uri.parse(baseUrl + '/store.php');
+    var response = await http.post(url, body: {
+      'note': note.note,
+      'noteDate': note.noteDate,
+      'clientId': note.clientId
+    });
+    return response.statusCode == 200;
   }
 }
