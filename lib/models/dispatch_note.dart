@@ -1,5 +1,5 @@
 class DispatchNote {
-  final String id;
+  final String? id;
   final String note;
   final String noteDate;
   final String clientId;
@@ -7,7 +7,7 @@ class DispatchNote {
   String? deletedAt;
 
   DispatchNote({
-    required this.id,
+    this.id,
     required this.note,
     required this.noteDate,
     required this.clientId,

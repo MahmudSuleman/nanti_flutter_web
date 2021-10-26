@@ -103,7 +103,7 @@ class _AddNoteFormState extends State<AddNoteForm> {
         });
       },
       validator: (value) {
-        return value == null ? 'Client field is requied' : null;
+        return value == null ? 'Client field is required' : null;
       },
     );
   }
@@ -117,7 +117,6 @@ class _AddNoteFormState extends State<AddNoteForm> {
           if (_formKey.currentState!.validate()) {
             _formKey.currentState!.save();
             DispatchNoteService.addNote(DispatchNote(
-              id: '',
               clientId: clientId,
               note: noteDetails,
               noteDate: chosenDate,

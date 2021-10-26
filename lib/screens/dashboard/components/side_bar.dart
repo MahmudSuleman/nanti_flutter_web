@@ -17,7 +17,7 @@ class SideBar extends StatefulWidget {
 }
 
 class _SideBarState extends State<SideBar> {
-  bool showHidenMenu = false;
+  bool showHiddenMenu = false;
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +92,7 @@ class _SideBarState extends State<SideBar> {
                       onTap: () {
                         // toggle available and dispatched devices
                         setState(() {
-                          showHidenMenu = !showHidenMenu;
+                          showHiddenMenu = !showHiddenMenu;
                         });
                       },
                       iconName: Icons.send,
@@ -102,7 +102,7 @@ class _SideBarState extends State<SideBar> {
                     SizedBox(
                       height: 10,
                     ),
-                  if (showHidenMenu)
+                  if (showHiddenMenu)
                     Container(
                       margin: EdgeInsets.only(left: 20),
                       child: Column(

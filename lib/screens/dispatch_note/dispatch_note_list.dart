@@ -4,6 +4,7 @@ import 'package:nanti_flutter_web/screens/dispatch_note/add_note_form.dart';
 import 'package:nanti_flutter_web/screens/responsive/responsive.dart';
 import 'package:nanti_flutter_web/services/dispatch_note_service.dart';
 import 'package:nanti_flutter_web/widgets/add_item_button.dart';
+
 import '../../constants.dart';
 
 class DispatchNoteList extends StatefulWidget {
@@ -56,7 +57,7 @@ class _DispatchNoteListState extends State<DispatchNoteList> {
               );
             }
 
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator());
           },
         ),
       ),

@@ -14,6 +14,7 @@ class MenuItem extends StatelessWidget {
     return LayoutBuilder(builder: (context, constraints) {
       double size = constraints.maxWidth;
       return Container(
+        color: Colors.white,
         margin: EdgeInsets.symmetric(horizontal: 10),
         child: ListTile(
           horizontalTitleGap: 0.0,
