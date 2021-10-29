@@ -5,13 +5,12 @@ import 'package:nanti_flutter_web/constants.dart';
 import 'package:nanti_flutter_web/models/client_type.dart';
 
 class ClientTypeService {
-  static String baseUrl = kBaseUrl + '/client_type';
+  static String baseUrl = kBaseUrl + 'client_type';
 
   static Future<List<ClientType>> allClientTypes() async {
     var url = Uri.parse(baseUrl + '/index.php');
     List<ClientType> clientTypes = [];
-    var response =
-        await http.get(url, headers: {'Content-Type': 'application/json'});
+    var response = await http.get(url);
     if (response.statusCode == 200) {
       var body = jsonDecode(response.body) as List<dynamic>;
 

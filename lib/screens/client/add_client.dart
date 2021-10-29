@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/constants.dart';
 import 'package:nanti_flutter_web/models/client.dart';
-import 'package:nanti_flutter_web/models/client_type.dart';
-import 'package:nanti_flutter_web/providers/client_type_provider.dart';
 import 'package:nanti_flutter_web/services/client_service.dart';
-import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class AddClient extends StatefulWidget {
@@ -49,31 +46,31 @@ class _AddClientState extends State<AddClient> {
               SizedBox(
                 height: 20,
               ),
-              Consumer<ClientTypeProvider>(builder: (_, types, __) {
-                return DropdownButtonFormField<String>(
-                  value: selectedValue,
-                  decoration: kInputDecoration('Client Type'),
-                  onChanged: (value) {
-                    type = value!;
-                    setState(() {
-                      selectedValue = value;
-                    });
-                  },
-                  items: types.allClientTypes
-                      .map((ClientType clientType) => DropdownMenuItem(
-                          value: clientType.id, child: Text(clientType.name)))
-                      .toList(),
-                  validator: (value) {
-                    if (value == null) {
-                      return 'Client type is required';
-                    } else {
-                      type = value;
-                    }
-
-                    return null;
-                  },
-                );
-              }),
+              // Consumer<ClientTypeProvider>(builder: (_, types, __) {
+              //   return DropdownButtonFormField<String>(
+              //     value: selectedValue,
+              //     decoration: kInputDecoration('Client Type'),
+              //     onChanged: (value) {
+              //       type = value!;
+              //       setState(() {
+              //         selectedValue = value;
+              //       });
+              //     },
+              //     items: types.allClientTypes
+              //         .map((clientType) => DropdownMenuItem<String>(
+              //             value: clientType.id, child: Text(clientType.name)))
+              //         .toList(),
+              //     validator: (value) {
+              //       if (value == null) {
+              //         return 'Client type is required';
+              //       } else {
+              //         type = value;
+              //       }
+              //
+              //       return null;
+              //     },
+              //   );
+              // }),
               SizedBox(
                 height: 20,
               ),
@@ -97,9 +94,8 @@ class _AddClientState extends State<AddClient> {
                     _formKey.currentState!.save();
 
                     var response = await ClientService.store(new Client(
-                        id: '${DateTime.now()}',
                         name: name,
-                        typeId: type,
+                        clientTypeId: int.parse(type),
                         contact: contact));
 
                     if (response.statusCode == 200) {

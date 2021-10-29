@@ -27,7 +27,7 @@ class _AddNoteFormState extends State<AddNoteForm> {
   Widget build(BuildContext context) {
     ClientService.allClients().then((clients) {
       companyItems = clients.map((e) {
-        return SelectItem(id: e.id, name: e.name);
+        return SelectItem(id: e.id.toString(), name: e.name);
       }).toList();
       if (this.mounted) setState(() {});
     });

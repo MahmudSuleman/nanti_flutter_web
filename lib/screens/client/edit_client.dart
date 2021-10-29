@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/constants.dart';
 import 'package:nanti_flutter_web/models/client.dart';
-import 'package:nanti_flutter_web/models/client_type.dart';
-import 'package:nanti_flutter_web/providers/client_type_provider.dart';
 import 'package:nanti_flutter_web/services/client_service.dart';
-import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class EditClient extends StatefulWidget {
-  final Client company;
+  final Client client;
 
-  EditClient(this.company);
+  EditClient(this.client);
 
   @override
   _EditClientState createState() => _EditClientState();
@@ -40,7 +37,7 @@ class _EditClientState extends State<EditClient> {
               Text('Edit Client'),
               kDivider(),
               TextFormField(
-                initialValue: widget.company.name,
+                initialValue: widget.client.name,
                 decoration: kInputDecoration('Name'),
                 validator: (value) {
                   if (value!.isEmpty) {
@@ -55,40 +52,40 @@ class _EditClientState extends State<EditClient> {
               SizedBox(
                 height: 20,
               ),
-              Consumer<ClientTypeProvider>(builder: (_, types, __) {
-                return DropdownButtonFormField<String>(
-                  value: selectedValue ?? widget.company.typeId,
-                  decoration: kInputDecoration('Client Type'),
-                  onChanged: (value) {
-                    type = value!;
-                    setState(() {
-                      selectedValue = value;
-                    });
-                  },
-                  items: types.allClientTypes
-                      .map(
-                        (ClientType clientType) => DropdownMenuItem(
-                          value: clientType.id,
-                          child: Text(clientType.name),
-                        ),
-                      )
-                      .toList(),
-                  validator: (value) {
-                    if (value == null) {
-                      return 'Client type is required';
-                    } else {
-                      type = value;
-                    }
-
-                    return null;
-                  },
-                );
-              }),
+              // Consumer<ClientTypeProvider>(builder: (_, types, __) {
+              //   return DropdownButtonFormField<String>(
+              //     value: selectedValue ?? widget.client.clientTypeId as String?,
+              //     decoration: kInputDecoration('Client Type'),
+              //     onChanged: (value) {
+              //       type = value!;
+              //       setState(() {
+              //         selectedValue = value;
+              //       });
+              //     },
+              //     items: types.allClientTypes
+              //         .map(
+              //           (clientType) => DropdownMenuItem(
+              //             value: clientType.id,
+              //             child: Text(clientType.name),
+              //           ),
+              //         )
+              //         .toList(),
+              //     validator: (value) {
+              //       if (value == null) {
+              //         return 'Client type is required';
+              //       } else {
+              //         type = value;
+              //       }
+              //
+              //       return null;
+              //     },
+              //   );
+              // }),
               SizedBox(
                 height: 20,
               ),
               TextFormField(
-                initialValue: widget.company.contact,
+                initialValue: widget.client.contact,
                 decoration: kInputDecoration('Contact'),
                 validator: (value) {
                   if (value!.isEmpty) {
@@ -108,9 +105,9 @@ class _EditClientState extends State<EditClient> {
                     _formKey.currentState!.save();
 
                     var response = await ClientService.update(new Client(
-                        id: widget.company.id,
+                        id: widget.client.id,
                         name: name,
-                        typeId: type,
+                        clientTypeId: int.parse(type),
                         contact: contact));
 
                     if (response.statusCode == 200) {
