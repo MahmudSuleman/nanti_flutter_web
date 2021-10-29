@@ -11,7 +11,7 @@ class DashboardSummaryService {
     late Map<String, dynamic> temp = {};
     try {
       var url = Uri.parse(baseUrl + 'admin_dashboard_summary.php');
-      var response = await http.get(url, headers: kHeaders);
+      var response = await http.get(url);
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body) as Map<String, dynamic>;
         if (data['success']) {

@@ -29,4 +29,16 @@ class DispatchNoteService {
     });
     return response.statusCode == 200;
   }
+
+  static Future<bool> editNote(DispatchNote note) async {
+    var url = Uri.parse(baseUrl + '/update.php');
+    var response = await http.post(url, body: {
+      'id': note.id,
+      'note': note.note,
+      'noteDate': note.noteDate,
+      'clientId': note.clientId
+    });
+    print(note);
+    return response.statusCode == 200;
+  }
 }

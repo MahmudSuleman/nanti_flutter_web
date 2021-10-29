@@ -9,7 +9,7 @@ class ClientService {
 
   static Future<List<Client>> allClients() async {
     var url = Uri.parse(baseUrl + 'index.php');
-    var response = await http.get(url, headers: kHeaders);
+    var response = await http.get(url);
     List<Client> temp = [];
 
     if (response.statusCode == 200) {

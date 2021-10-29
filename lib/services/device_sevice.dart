@@ -11,9 +11,7 @@ class DeviceService {
   static Future<List<Device>> allDevices() async {
     var url = Uri.parse(baseUrl + '/index.php');
 
-    var response = await http.get(url, headers: {
-      HttpHeaders.contentTypeHeader: "application/json",
-    });
+    var response = await http.get(url);
 
     List<Device> temp = [];
     if (response.statusCode == 200) {

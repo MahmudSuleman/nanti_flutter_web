@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:nanti_flutter_web/constants.dart';
@@ -14,12 +13,7 @@ class DispatchService {
 
   static Future<List<Dispatch>> allDispatches() async {
     var url = Uri.parse(baseUrl + '/index.php');
-    var response = await http.get(
-      url,
-      headers: {
-        HttpHeaders.contentTypeHeader: 'application/json',
-      },
-    );
+    var response = await http.get(url);
 
     List<Dispatch> temp = [];
     if (response.statusCode == 200) {
@@ -34,12 +28,7 @@ class DispatchService {
 
   static Future<List<Map<String, dynamic>>> userDispatches() async {
     var url = Uri.parse(baseUrl + '/index.php');
-    var response = await http.get(
-      url,
-      headers: {
-        HttpHeaders.contentTypeHeader: 'application/json',
-      },
-    );
+    var response = await http.get(url);
     List<Map<String, dynamic>> temp = [];
     var isAdmin = await AuthService.isAdmin();
 
@@ -67,9 +56,7 @@ class DispatchService {
   static Future<List<Device>> available() async {
     var url = Uri.parse(baseUrl + '/available.php');
 
-    var response = await http.get(url, headers: {
-      HttpHeaders.contentTypeHeader: "application/json",
-    });
+    var response = await http.get(url);
 
     List<Device> temp = [];
     if (response.statusCode == 200) {

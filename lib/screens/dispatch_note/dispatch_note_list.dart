@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/models/dispatch_note.dart';
 import 'package:nanti_flutter_web/screens/dispatch_note/add_note_form.dart';
+import 'package:nanti_flutter_web/screens/dispatch_note/edit_note_form.dart';
 import 'package:nanti_flutter_web/screens/responsive/responsive.dart';
 import 'package:nanti_flutter_web/services/dispatch_note_service.dart';
 import 'package:nanti_flutter_web/widgets/add_item_button.dart';
@@ -86,7 +87,15 @@ class _DispatchNoteListState extends State<DispatchNoteList> {
         children: [
           buildActionButton(
             icon: Icons.edit,
-            onPressed: () {},
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      content: EditNoteForm(note: note),
+                    );
+                  });
+            },
           ),
           SizedBox(
             width: 20,
@@ -94,11 +103,43 @@ class _DispatchNoteListState extends State<DispatchNoteList> {
           buildActionButton(
             icon: Icons.delete,
             color: Colors.red,
-            onPressed: () {},
+            onPressed: () async {
+              bool? deleted = await deleteDialog();
+              if (deleted != null || deleted!) {
+                setState(() {});
+              }
+
+              print('Deleted: $deleted');
+            },
           ),
         ],
       )),
     ]);
+  }
+
+  Future<bool?> deleteDialog() async {
+    return showDialog<bool?>(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Delete Item!'),
+            content: Text(
+              'Are you sure you want to delete this item?',
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                  },
+                  child: Text('Yes')),
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                  child: Text('No')),
+            ],
+          );
+        });
   }
 
   DataCell buildTableCell(DispatchNote note) {

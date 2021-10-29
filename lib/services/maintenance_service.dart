@@ -15,7 +15,7 @@ class MaintenanceService {
     var url = Uri.parse(baseUrl + 'index.php');
     List<Maintenance> temp = [];
     try {
-      var response = await http.get(url, headers: kHeaders);
+      var response = await http.get(url);
       if (response.statusCode == 200) {
         List<dynamic> body = jsonDecode(response.body);
         for (var maintenance in body) {
@@ -32,7 +32,7 @@ class MaintenanceService {
     var url = Uri.parse(baseUrl + 'index.php');
     List<Maintenance> temp = [];
     try {
-      var response = await http.get(url, headers: kHeaders);
+      var response = await http.get(url);
       var isAdmin = await AuthService.isAdmin();
       if (response.statusCode == 200) {
         List<dynamic> body = jsonDecode(response.body);

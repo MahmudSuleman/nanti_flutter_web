@@ -1,8 +1,6 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:http/http.dart' as http;
-
 import 'package:nanti_flutter_web/constants.dart';
 import 'package:nanti_flutter_web/models/manufacturer.dart';
 
@@ -14,9 +12,7 @@ class ManufacturerService {
 
     List<Manufacturer> manufacturer = [];
     try {
-      var response = await http.get(url, headers: {
-        HttpHeaders.contentTypeHeader: "application/json",
-      });
+      var response = await http.get(url);
       if (response.statusCode == 200) {
         List<dynamic> body = jsonDecode(response.body);
         body.forEach((element) {
