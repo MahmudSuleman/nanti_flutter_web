@@ -5,10 +5,10 @@ import 'package:nanti_flutter_web/constants.dart';
 import 'package:nanti_flutter_web/models/manufacturer.dart';
 
 class ManufacturerService {
-  static String baseUrl = '$kBaseUrl/manufacturer';
+  static String baseUrl = '$kBaseUrl2/manufacturer';
 
   static Future<List<Manufacturer>> allManufacturers() async {
-    final url = Uri.parse('$baseUrl/index.php');
+    final url = Uri.parse(baseUrl);
 
     List<Manufacturer> manufacturer = [];
     try {

@@ -84,7 +84,7 @@ class _AvailableDispatchState extends State<AvailableDispatch> {
                                           DataCell(Text(item.serialNumber)),
                                           DataCell(Text(item.name)),
                                           DataCell(
-                                              Text(item.manufacturerName!)),
+                                              Text(item.manufacturer!.name)),
                                           DataCell(
                                             ElevatedButton(
                                               style: kElevatedButtonStyle(),
@@ -188,7 +188,7 @@ class _AvailableDispatchState extends State<AvailableDispatch> {
                           MaterialButton(
                             onPressed: () async {
                               var res = await DispatchService.store({
-                                'deviceId': item.id,
+                                'deviceId': '${item.id}',
                                 'companyId': _selectedCompany
                               });
 

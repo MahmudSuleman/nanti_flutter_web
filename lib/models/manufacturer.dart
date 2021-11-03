@@ -1,10 +1,27 @@
 class Manufacturer {
-  final String id;
-  final String name;
+  Manufacturer({
+    required this.id,
+    required this.name,
+    required this.createdAt,
+    required this.updatedAt,
+  });
 
-  Manufacturer({required this.id, required this.name});
+  int id;
+  String name;
+  DateTime createdAt;
+  DateTime updatedAt;
 
-  Manufacturer.fromJson(data)
-      : this.id = data['id'],
-        this.name = data['name'];
+  factory Manufacturer.fromJson(Map<String, dynamic> json) => Manufacturer(
+        id: json["id"],
+        name: json["name"],
+        createdAt: DateTime.parse(json["created_at"]),
+        updatedAt: DateTime.parse(json["updated_at"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "created_at": createdAt.toIso8601String(),
+        "updated_at": updatedAt.toIso8601String(),
+      };
 }

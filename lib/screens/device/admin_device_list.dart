@@ -119,9 +119,9 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
             DataCell(Text(item.serialNumber)),
             DataCell(Text(item.name)),
             DataCell(Text(item.model)),
-            DataCell(Text(item.manufacturerName!)),
+            DataCell(Text(item.manufacturer!.name)),
             DataCell(
-              item.isAvailable == '1'
+              item.isAvailable == 1
                   ? Chip(
                       label: Text('Yes'),
                       backgroundColor: Colors.green,
@@ -209,107 +209,106 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
       )
       .toList();
 
-  addEditDeviceForm([bool isEdiding = true, String? id]) {
-    return Container(
-      constraints: BoxConstraints(minWidth: 500),
-      child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(isEdiding ? 'Edit Device' : 'Add New Device'),
-              kDivider(),
-              TextFormField(
-                initialValue: serialNumber,
-                decoration: kInputDecoration('Serial Number'),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Serial Number is Required';
-                  } else {
-                    setState(() {
-                      serialNumber = value;
-                    });
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              TextFormField(
-                initialValue: name,
-                decoration: kInputDecoration('Device Name'),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Device Name is Required';
-                  } else {
-                    setState(() {});
-                    name = value;
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              TextFormField(
-                initialValue: model,
-                decoration: kInputDecoration('Device Model'),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Model is Required';
-                  } else {
-                    setState(() {});
-                    model = value;
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Consumer<ManufacturerProvider>(
-                  builder: (context, manufacturer, child) {
-                return DropdownButtonFormField<String>(
-                  value: manufacturerId ?? selectedValue,
-                  decoration: kInputDecoration('Manufacturer'),
-                  items: manufacturer.allManufacturers.map((Manufacturer m) {
-                    return DropdownMenuItem<String>(
-                      value: '${m.id}',
-                      child: Text(m.name),
-                    );
-                  }).toList(),
-                  onChanged: (String? value) {
-                    manufacturerId = value!;
-                    setState(() {
-                      selectedValue = value;
-                    });
+  addEditDeviceForm([bool isEdiding = true, int? id]) {
+    return SingleChildScrollView(
+      child: Container(
+        constraints: BoxConstraints(minWidth: 500),
+        child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(isEdiding ? 'Edit Device' : 'Add New Device'),
+                kDivider(),
+                TextFormField(
+                  initialValue: serialNumber,
+                  decoration: kInputDecoration('Serial Number'),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Serial Number is Required';
+                    } else {
+                      setState(() {
+                        serialNumber = value;
+                      });
+                    }
+                    return null;
                   },
-                );
-              }),
-              SizedBox(
-                height: 20,
-              ),
-              kDivider(),
-              ElevatedButton(
-                style: kElevatedButtonStyle(),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Submit',
-                    style: TextStyle(color: Colors.white, fontSize: 20),
-                  ),
                 ),
-                onPressed: () {
-                  if (isEdiding)
-                    editDevice(id!);
-                  else
-                    addDevice();
-                },
-              )
-            ],
-          )),
+                SizedBox(
+                  height: 20,
+                ),
+                TextFormField(
+                  initialValue: name,
+                  decoration: kInputDecoration('Device Name'),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Device Name is Required';
+                    } else {
+                      setState(() {});
+                      name = value;
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                TextFormField(
+                  initialValue: model,
+                  decoration: kInputDecoration('Device Model'),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Model is Required';
+                    } else {
+                      setState(() {});
+                      model = value;
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Consumer<ManufacturerProvider>(
+                    builder: (context, manufacturer, child) {
+                  return DropdownButtonFormField(
+                    value: manufacturerId ?? selectedValue,
+                    decoration: kInputDecoration('Manufacturer'),
+                    items: manufacturer.allManufacturers.map((Manufacturer m) {
+                      return DropdownMenuItem(
+                        value: m.id,
+                        child: Text(m.name),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      manufacturerId = value!;
+                      setState(() {
+                        selectedValue = value;
+                      });
+                    },
+                  );
+                }),
+                kDivider(),
+                ElevatedButton(
+                  style: kElevatedButtonStyle(),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Submit',
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    ),
+                  ),
+                  onPressed: () {
+                    if (isEdiding)
+                      editDevice(id!);
+                    else
+                      addDevice();
+                  },
+                )
+              ],
+            )),
+      ),
     );
   }
 
@@ -320,7 +319,6 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
         isLoading = true;
       });
       Device _device = Device(
-          id: '${DateTime.now()}',
           manufacturerId: manufacturerId,
           name: name,
           model: model,
@@ -344,7 +342,7 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
     }
   }
 
-  editDevice(String id) {
+  editDevice(int id) {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       setState(() {

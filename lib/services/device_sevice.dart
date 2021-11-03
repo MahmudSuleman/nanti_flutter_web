@@ -6,16 +6,16 @@ import 'package:nanti_flutter_web/constants.dart';
 import 'package:nanti_flutter_web/models/device.dart';
 
 class DeviceService {
-  static String baseUrl = kBaseUrl + 'devices';
+  static String baseUrl = kBaseUrl2 + '/device';
 
   static Future<List<Device>> allDevices() async {
-    var url = Uri.parse(baseUrl + '/index.php');
-
-    var response = await http.get(url);
-
     List<Device> temp = [];
+    var url = Uri.parse(baseUrl);
+    var response = await http.get(url, headers: kHeaders);
+
     if (response.statusCode == 200) {
       List<dynamic> body = jsonDecode(response.body);
+
       for (Map<String, dynamic> device in body) {
         temp.add(Device.fromJson(device));
       }
@@ -24,7 +24,7 @@ class DeviceService {
     return temp;
   }
 
-  static Future<bool> destroy(String id) async {
+  static Future<bool> destroy(int? id) async {
     var url = Uri.parse(baseUrl + '/destroy.php');
     var response = await http.post(url, body: {'id': id});
     if (response.statusCode == 200) {
