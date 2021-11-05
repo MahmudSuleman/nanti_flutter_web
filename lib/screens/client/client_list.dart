@@ -83,9 +83,10 @@ class _ClientListState extends State<ClientList> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Add Client'),
+          Text(client != null ? 'Edit Client' : 'Add Client'),
           kDivider(),
           TextFormField(
+            initialValue: client != null ? client.name : '',
             decoration: kInputDecoration('Name'),
             validator: (value) {
               return value == null || value.isEmpty ? 'Name is required' : null;
@@ -98,7 +99,7 @@ class _ClientListState extends State<ClientList> {
             height: 20,
           ),
           DropdownButtonFormField<int>(
-            value: selectedClientType,
+            value: client != null ? client.clientTypeId : selectedClientType,
             decoration: kInputDecoration('Client Type'),
             onChanged: (value) {
               setState(() {
@@ -124,6 +125,7 @@ class _ClientListState extends State<ClientList> {
             height: 20,
           ),
           TextFormField(
+            initialValue: client != null ? client.contact : '',
             decoration: kInputDecoration('Contact'),
             validator: (value) {
               return value == null || value.isEmpty
@@ -140,13 +142,18 @@ class _ClientListState extends State<ClientList> {
             onPressed: () async {
               if (_formKey.currentState!.validate()) {
                 _formKey.currentState!.save();
+                _client.id = client != null ? client.id : null;
+                var response = client != null
+                    ? await ClientService.update(_client)
+                    : await ClientService.store(_client);
 
-                var response = await ClientService.store(_client);
-
+                String successMessage = client != null
+                    ? 'Client updated successfully'
+                    : 'Client added successfully';
                 if (response.statusCode == 200 || response.statusCode == 201) {
                   buildSnackbar(
                     context,
-                    'Client added successfully',
+                    successMessage,
                   );
                   Navigator.pop(context, true);
                 } else {
@@ -241,7 +248,7 @@ class _ClientListState extends State<ClientList> {
 
                   if (res) {
                     Navigator.pop(context);
-                    buildSnackbar(context, 'Item deleted successfully');
+                    buildSnackbar(context, 'Client deleted successfully');
                   } else {
                     Navigator.pop(context);
                     buildSnackbar(context, 'Something went wrong');

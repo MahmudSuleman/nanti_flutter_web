@@ -33,11 +33,10 @@ class ClientService extends ChangeNotifier {
   }
 
   static Future<http.Response> update(Client client) async {
-    var url = Uri.parse(baseUrl + '/update.php');
-    var response = await http.post(url, body: {
-      'id': client.id,
+    var url = Uri.parse(baseUrl + '/${client.id}');
+    var response = await http.put(url, body: {
       'name': client.name,
-      'client_type_id': client.clientTypeId,
+      'client_type_id': client.clientTypeId.toString(),
       'contact': client.contact,
     });
 
@@ -45,12 +44,8 @@ class ClientService extends ChangeNotifier {
   }
 
   static Future<bool> destroy(int? id) async {
-    var url = Uri.parse(baseUrl + '/destroy.php');
-    var response = await http.post(url, body: {'id': id});
-    if (response.statusCode == 200) {
-      var body = jsonDecode(response.body);
-      return body['success'];
-    }
-    return false;
+    var url = Uri.parse(baseUrl + '/$id');
+    var response = await http.delete(url, body: {'id': id.toString()});
+    return response.statusCode == 204;
   }
 }
