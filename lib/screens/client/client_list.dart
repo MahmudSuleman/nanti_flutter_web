@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/constants.dart';
 import 'package:nanti_flutter_web/models/client.dart';
-import 'package:nanti_flutter_web/screens/client/add_client.dart';
-import 'package:nanti_flutter_web/screens/client/edit_client.dart';
+import 'package:nanti_flutter_web/models/client_type.dart';
 import 'package:nanti_flutter_web/screens/responsive/responsive.dart';
 import 'package:nanti_flutter_web/services/auth_service.dart';
 import 'package:nanti_flutter_web/services/client_service.dart';
+import 'package:nanti_flutter_web/services/client_type_service.dart';
 import 'package:nanti_flutter_web/widgets/add_item_button.dart';
 
 class ClientList extends StatefulWidget {
@@ -23,6 +23,21 @@ class _ClientListState extends State<ClientList> {
     'Actions',
   ];
 
+  final _formKey = GlobalKey<FormState>();
+  var selectedClientType;
+  Client _client = Client(name: '', contact: '', clientTypeId: 0);
+  List<ClientType> types = [];
+
+  @override
+  void initState() {
+    super.initState();
+    ClientTypeService.allClientTypes().then((value) {
+      value.forEach((element) {
+        types.add(element);
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     AuthService.autoLogout(context);
@@ -38,24 +53,9 @@ class _ClientListState extends State<ClientList> {
                 children: [
                   kPageHeaderTitle('Clients List', size),
                   Divider(),
-                  Align(
-                    alignment: Alignment.bottomLeft,
-                    child: AddItemButton(
-                      onPressed: () {
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                content: AddClient(),
-                              );
-                            }).then((value) => setState(() {}));
-                      },
-                    ),
-                  ),
+                  buildAddButton(types),
                   Divider(),
-                  SizedBox(
-                    height: 20,
-                  ),
+                  SizedBox(height: 20),
                   _buildTable(data: snapShot.data)
                 ],
               );
@@ -65,6 +65,125 @@ class _ClientListState extends State<ClientList> {
             );
           },
         ),
+      ),
+    );
+  }
+
+  buildSnackbar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
+    );
+  }
+
+  buildClientForm({Client? client}) => Form(
+      key: _formKey,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Add Client'),
+          kDivider(),
+          TextFormField(
+            decoration: kInputDecoration('Name'),
+            validator: (value) {
+              return value == null || value.isEmpty ? 'Name is required' : null;
+            },
+            onSaved: (value) {
+              _client.name = value!;
+            },
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          DropdownButtonFormField<int>(
+            value: selectedClientType,
+            decoration: kInputDecoration('Client Type'),
+            onChanged: (value) {
+              setState(() {
+                selectedClientType = value;
+              });
+            },
+            onSaved: (value) {
+              _client.clientTypeId = value!;
+            },
+            items: types
+                .map(
+                  (clientType) => DropdownMenuItem<int>(
+                    value: clientType.id,
+                    child: Text(clientType.name),
+                  ),
+                )
+                .toList(),
+            validator: (value) {
+              return value == null ? 'Client Type is required' : null;
+            },
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          TextFormField(
+            decoration: kInputDecoration('Contact'),
+            validator: (value) {
+              return value == null || value.isEmpty
+                  ? 'Contact is required'
+                  : null;
+            },
+            onSaved: (value) {
+              _client.contact = value!;
+            },
+          ),
+          kDivider(),
+          ElevatedButton(
+            style: kElevatedButtonStyle(),
+            onPressed: () async {
+              if (_formKey.currentState!.validate()) {
+                _formKey.currentState!.save();
+
+                var response = await ClientService.store(_client);
+
+                if (response.statusCode == 200 || response.statusCode == 201) {
+                  buildSnackbar(
+                    context,
+                    'Client added successfully',
+                  );
+                  Navigator.pop(context, true);
+                } else {
+                  buildSnackbar(
+                    context,
+                    'Something went wrong',
+                  );
+                }
+              }
+            },
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 8,
+                vertical: 12,
+              ),
+              child: Text(
+                'Submit',
+                style: TextStyle(fontSize: 20),
+              ),
+            ),
+          )
+        ],
+      ));
+
+  Align buildAddButton(List<ClientType> types) {
+    return Align(
+      alignment: Alignment.bottomLeft,
+      child: AddItemButton(
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  content: buildClientForm(),
+                );
+              }).then((value) => setState(() {}));
+        },
       ),
     );
   }
@@ -88,82 +207,82 @@ class _ClientListState extends State<ClientList> {
                         DataCell(Text('${item.name}')),
                         DataCell(Text('${item.clientType!.name}')),
                         DataCell(Text('${item.contact}')),
-                        DataCell(Row(
-                          children: [
-                            ElevatedButton(
-                              style: kElevatedButtonStyle(),
-                              onPressed: () {
-                                showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        content: EditClient(
-                                          Client(
-                                            id: item.id,
-                                            name: item.name,
-                                            clientTypeId: item.clientTypeId,
-                                            contact: item.contact,
-                                          ),
-                                        ),
-                                      );
-                                    }).then((value) => setState(() {}));
-                              },
-                              child: Icon(Icons.edit),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            ElevatedButton(
-                              style: kElevatedButtonStyle(color: Colors.red),
-                              onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                    content: Text(
-                                        'Are you sure you want to delete this item?'),
-                                    actions: [
-                                      MaterialButton(
-                                        onPressed: () async {
-                                          var res = await ClientService.destroy(
-                                              item.id);
-
-                                          if (res) {
-                                            Navigator.pop(context);
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(SnackBar(
-                                                    content:
-                                                        Text('Data deleted!')));
-                                          } else {
-                                            Navigator.pop(context);
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(SnackBar(
-                                                    content: Text(
-                                                        'Failed to delete device data!')));
-                                          }
-                                        },
-                                        // color: Colors.red,
-                                        child: Text('Yes'),
-                                      ),
-                                      MaterialButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        // color: Colors.red,
-                                        child: Text('No'),
-                                      )
-                                    ],
-                                  ),
-                                ).then((value) {
-                                  setState(() {});
-                                });
-                              },
-                              child: Icon(Icons.delete),
-                            ),
-                          ],
-                        )),
+                        DataCell(buildAddEditTableRow(item)),
                       ])
                   ]),
             ),
           );
+  }
+
+  buildAddEditTableRow(Client item) {
+    return Row(
+      children: [
+        buildEditButton(item),
+        SizedBox(width: 10),
+        buildDeleteButton(item),
+      ],
+    );
+  }
+
+  buildDeleteButton(Client item) {
+    return ElevatedButton(
+      style: kElevatedButtonStyle(color: Colors.red),
+      child: Icon(Icons.delete),
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            content: Text('Are you sure you want to delete this item?'),
+            actions: [
+              MaterialButton(
+                child: Text('Yes'),
+                onPressed: () async {
+                  var res = await ClientService.destroy(item.id);
+
+                  if (res) {
+                    Navigator.pop(context);
+                    buildSnackbar(context, 'Item deleted successfully');
+                  } else {
+                    Navigator.pop(context);
+                    buildSnackbar(context, 'Something went wrong');
+                  }
+                },
+              ),
+              MaterialButton(
+                child: Text('No'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            ],
+          ),
+        ).then((value) {
+          setState(() {});
+        });
+      },
+    );
+  }
+
+  buildEditButton(Client item) {
+    return ElevatedButton(
+      style: kElevatedButtonStyle(),
+      child: Icon(Icons.edit),
+      onPressed: () {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                content: buildClientForm(
+                  client: Client(
+                    id: item.id,
+                    name: item.name,
+                    clientTypeId: item.clientTypeId,
+                    contact: item.contact,
+                  ),
+                ),
+              );
+            }).then((value) => setState(() {}));
+      },
+    );
   }
 }

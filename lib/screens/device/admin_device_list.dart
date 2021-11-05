@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/models/device.dart';
 import 'package:nanti_flutter_web/models/manufacturer.dart';
@@ -13,6 +11,12 @@ import 'package:provider/provider.dart';
 
 import '../../constants.dart';
 
+/*
+
+* TODO: fix page refresh when [add button is pressed, dropdown pressed, edit button pressed ]
+TODO: replace snackbars messages pop up with a flutterToast widget
+* 
+ */
 class AdminDeviceList extends StatefulWidget {
   const AdminDeviceList({Key? key}) : super(key: key);
 
@@ -31,12 +35,12 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
   ];
 
   var isLoading;
-  var name;
+  String? name;
   var serialNumber;
-  var manufacturerId;
-  var model;
-  var id;
-  var selectedValue;
+  int? manufacturerId;
+  String? model;
+  int? id;
+  int? selectedValue;
   List<DropdownMenuItem<String>> dropdownItems = [];
   final _formKey = GlobalKey<FormState>();
 
@@ -170,7 +174,7 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
                             MaterialButton(
                               onPressed: () async {
                                 var res = await DeviceService.destroy(item.id);
-
+// todo: use flutter toast to display success messages
                                 if (res) {
                                   Navigator.pop(context);
                                   ScaffoldMessenger.of(context).showSnackBar(
@@ -209,7 +213,8 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
       )
       .toList();
 
-  addEditDeviceForm([bool isEdiding = true, int? id]) {
+  //todo: extract to a widget
+  addEditDeviceForm([bool isEditing = true, int? id]) {
     return SingleChildScrollView(
       child: Container(
         constraints: BoxConstraints(minWidth: 500),
@@ -219,7 +224,7 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(isEdiding ? 'Edit Device' : 'Add New Device'),
+                Text(isEditing ? 'Edit Device' : 'Add New Device'),
                 kDivider(),
                 TextFormField(
                   initialValue: serialNumber,
@@ -272,11 +277,11 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
                 ),
                 Consumer<ManufacturerProvider>(
                     builder: (context, manufacturer, child) {
-                  return DropdownButtonFormField(
+                  return DropdownButtonFormField<int>(
                     value: manufacturerId ?? selectedValue,
                     decoration: kInputDecoration('Manufacturer'),
                     items: manufacturer.allManufacturers.map((Manufacturer m) {
-                      return DropdownMenuItem(
+                      return DropdownMenuItem<int>(
                         value: m.id,
                         child: Text(m.name),
                       );
@@ -300,7 +305,7 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
                     ),
                   ),
                   onPressed: () {
-                    if (isEdiding)
+                    if (isEditing)
                       editDevice(id!);
                     else
                       addDevice();
@@ -318,24 +323,22 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
       setState(() {
         isLoading = true;
       });
+
       Device _device = Device(
-          manufacturerId: manufacturerId,
-          name: name,
-          model: model,
-          serialNumber: serialNumber);
+        manufacturerId: manufacturerId!,
+        name: name!,
+        model: model!,
+        serialNumber: serialNumber,
+      );
 
       DeviceService.store(_device).then((value) {
-        setState(() {
-          isLoading = false;
-        });
-        var body = jsonDecode(value.body);
-        if (body['success']) {
+        if (value.statusCode == 200) {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text('Data saved')));
           Navigator.pop(context, true);
         } else {
           ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text(body['message'])));
+              .showSnackBar(SnackBar(content: Text('Failed to save data')));
           _formKey.currentState!.reset();
         }
       });
@@ -348,19 +351,16 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
       setState(() {
         isLoading = true;
       });
-      DeviceService.update(Device(
-              id: id,
-              manufacturerId: manufacturerId,
-              name: name,
-              model: model,
-              serialNumber: serialNumber))
-          .then((value) {
-        setState(() {
-          isLoading = false;
-        });
-        var body = jsonDecode(value.body);
-        print('data recieved: $body');
-        if (body['success']) {
+      DeviceService.update(
+        Device(
+          id: id,
+          manufacturerId: manufacturerId!,
+          name: name!,
+          model: model!,
+          serialNumber: serialNumber,
+        ),
+      ).then((value) {
+        if (value.statusCode == 200) {
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text('Data Updated')));
           Navigator.pop(context, true);

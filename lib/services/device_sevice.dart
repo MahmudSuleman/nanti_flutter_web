@@ -25,13 +25,12 @@ class DeviceService {
   }
 
   static Future<bool> destroy(int? id) async {
-    var url = Uri.parse(baseUrl + '/destroy.php');
-    var response = await http.post(url, body: {'id': id});
-    if (response.statusCode == 200) {
-      var body = jsonDecode(response.body);
-      return body['success'];
-    }
-    return false;
+    var url = Uri.parse('$baseUrl/$id');
+    print(url);
+    var response = await http.delete(
+      url,
+    );
+    return response.statusCode == 200;
   }
 
   static Future<Device?> find(String id) async {
@@ -49,29 +48,26 @@ class DeviceService {
   }
 
   static Future<http.Response> store(Device device) async {
-    var url = Uri.parse(baseUrl + '/store.php');
+    var url = Uri.parse(baseUrl);
 
     var response = await http.post(url, body: {
       'name': device.name,
-      'manufacturer': device.manufacturerId,
+      'manufacturer_id': device.manufacturerId.toString(),
       'model': device.model,
-      'serialNumber': device.serialNumber,
+      'serial_number': device.serialNumber,
     });
 
     return response;
   }
 
   static Future<http.Response> update(Device device) async {
-    var url = Uri.parse(baseUrl + '/update.php');
+    var url = Uri.parse('$baseUrl/${device.id}');
     final body = {
-      'id': device.id,
       'name': device.name,
-      'manufacturerId': device.manufacturerId,
+      'manufacturer_id': device.manufacturerId.toString(),
       'model': device.model,
-      'serialNumber': device.serialNumber,
+      'serial_number': device.serialNumber,
     };
-
-    var response = await http.post(url, body: body);
-    return response;
+    return await http.put(url, body: body);
   }
 }

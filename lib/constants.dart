@@ -11,6 +11,7 @@ TextStyle kCalculatePageHeaderTextStyle(double size) => TextStyle(
 // final kBaseUrl = 'http://10.0.2.2/nanti_flutter_web_api/endpoint/';
 final kBaseUrl = 'http://localhost/nanti_flutter_web_api/endpoint/';
 final kBaseUrl2 = 'http://localhost:8000/api';
+// final kBaseUrl2 = 'http://10.0.2.2:8000/api';
 // final kBaseUrl =
 // 'https://888c-41-66-234-182.ngrok.io/nanti_flutter_web_api/endpoint/';
 // final kBaseUrl = 'http://92.205.22.26:75/endpoint/';

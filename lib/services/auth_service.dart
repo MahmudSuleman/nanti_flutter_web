@@ -13,8 +13,10 @@ class AuthService {
     late var response;
     try {
       var url = Uri.parse(baseUrl + 'login.php');
-      response = await http
-          .post(url, body: {'username': username, 'password': password});
+      response = await http.post(url, body: {
+        'username': username,
+        'password': password,
+      });
     } catch (e) {
       print(Common.exceptionMessage('AuthService Login', e.toString()));
     }
