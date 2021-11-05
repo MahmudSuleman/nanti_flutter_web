@@ -29,7 +29,7 @@ class _EditNoteFormState extends State<EditNoteForm> {
     chosenDate = widget.note.noteDate;
     noteDetails = widget.note.note;
     clientId = widget.note.clientId;
-    ClientService.allClients().then((clients) {
+    ClientService.index().then((clients) {
       companyItems = clients.map((e) {
         return SelectItem(id: e.id.toString(), name: e.name);
       }).toList();

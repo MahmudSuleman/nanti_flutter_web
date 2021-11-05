@@ -33,7 +33,7 @@ class _DispatchedListState extends State<DispatchedList> {
   void initState() {
     super.initState();
 
-    ClientService.allClients().then((clients) {
+    ClientService.index().then((clients) {
       companyItems = clients
           .map((e) => SelectItem(id: e.id.toString(), name: e.name))
           .toList();

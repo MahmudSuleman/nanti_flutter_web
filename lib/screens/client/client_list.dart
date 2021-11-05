@@ -46,7 +46,7 @@ class _ClientListState extends State<ClientList> {
       appBarTitle: 'Clients List',
       child: SingleChildScrollView(
         child: FutureBuilder(
-          future: ClientService.allClients(),
+          future: ClientService.index(),
           builder: (context, snapShot) {
             if (snapShot.connectionState == ConnectionState.done) {
               return Column(

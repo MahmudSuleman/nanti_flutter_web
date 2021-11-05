@@ -25,7 +25,7 @@ class _AddNoteFormState extends State<AddNoteForm> {
 
   @override
   Widget build(BuildContext context) {
-    ClientService.allClients().then((clients) {
+    ClientService.index().then((clients) {
       companyItems = clients.map((e) {
         return SelectItem(id: e.id.toString(), name: e.name);
       }).toList();

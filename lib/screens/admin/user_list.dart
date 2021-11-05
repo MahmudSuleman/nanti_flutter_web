@@ -25,7 +25,7 @@ class _UserListState extends State<UserList> {
   @override
   void initState() {
     super.initState();
-    ClientService.allClients().then((clients) {
+    ClientService.index().then((clients) {
       companyItems = clients
           .map((e) => SelectItem(id: e.id.toString(), name: e.name))
           .toList();
@@ -65,10 +65,12 @@ class _UserListState extends State<UserList> {
                               child: Text('Add User'),
                               onPressed: () {
                                 showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                        title: Text('Add User'),
-                                        content: _popUpForm()));
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: Text('Add User'),
+                                    content: _popUpForm(),
+                                  ),
+                                );
 
                                 /// show add user popup
                               },
