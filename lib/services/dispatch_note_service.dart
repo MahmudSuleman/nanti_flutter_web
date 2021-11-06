@@ -18,30 +18,32 @@ class DispatchNoteService {
         temp.add(DispatchNote.fromJson(element));
       });
     }
-    print('temp: $temp');
-
     return temp;
   }
 
-  static Future<bool> addNote(DispatchNote note) async {
-    var url = Uri.parse(baseUrl + '/store.php');
+  static Future<bool> store(DispatchNote note) async {
+    var url = Uri.parse(baseUrl);
     var response = await http.post(url, body: {
       'note': note.note,
+      'note_date': note.noteDate,
+      'client_id': note.clientId.toString()
+    });
+    return response.statusCode == 201;
+  }
+
+  static Future<bool> update(DispatchNote note) async {
+    var url = Uri.parse('$baseUrl/${note.id}');
+    var response = await http.put(url, body: {
+      'note': note.note,
       'noteDate': note.noteDate,
-      'clientId': note.clientId
+      'clientId': note.clientId.toString()
     });
     return response.statusCode == 200;
   }
 
-  static Future<bool> editNote(DispatchNote note) async {
-    var url = Uri.parse(baseUrl + '/update.php');
-    var response = await http.post(url, body: {
-      'id': note.id,
-      'note': note.note,
-      'noteDate': note.noteDate,
-      'clientId': note.clientId
-    });
-    print(note);
-    return response.statusCode == 200;
+  static Future<bool> destroy(id) async {
+    var url = Uri.parse('$baseUrl/$id');
+    var response = await http.delete(url);
+    return response.statusCode == 204;
   }
 }

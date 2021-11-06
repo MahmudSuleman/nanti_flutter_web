@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:nanti_flutter_web/models/client.dart';
 import 'package:nanti_flutter_web/models/dispatch_note.dart';
 import 'package:nanti_flutter_web/screens/dispatch_note/edit_note_form.dart';
 import 'package:nanti_flutter_web/screens/responsive/responsive.dart';
+import 'package:nanti_flutter_web/services/client_service.dart';
 import 'package:nanti_flutter_web/services/dispatch_note_service.dart';
 import 'package:nanti_flutter_web/widgets/add_item_button.dart';
 
@@ -20,6 +22,12 @@ class _DispatchNoteListState extends State<DispatchNoteList> {
   @override
   Widget build(BuildContext context) {
     double size = MediaQuery.of(context).size.width;
+    List<Client> clientItems = [];
+    ClientService.index().then((clients) {
+      clients.forEach((client) {
+        clientItems.add(client);
+      });
+    });
     return Responsive(
       appBarTitle: 'Dispatch Notes',
       child: SingleChildScrollView(
@@ -39,7 +47,9 @@ class _DispatchNoteListState extends State<DispatchNoteList> {
                             context: context,
                             builder: (context) {
                               return AlertDialog(
-                                content: NoteForm(),
+                                content: NoteForm(
+                                  clients: clientItems,
+                                ),
                               );
                             }).then((value) => setState(() {}));
                       },
@@ -52,7 +62,8 @@ class _DispatchNoteListState extends State<DispatchNoteList> {
                   Container(
                     width: 1000,
                     child: SingleChildScrollView(
-                      child: buildTable(snapShot.data as List<DispatchNote>?),
+                      child: buildTable(
+                          snapShot.data as List<DispatchNote>?, clientItems),
                     ),
                   )
                 ],
@@ -66,7 +77,7 @@ class _DispatchNoteListState extends State<DispatchNoteList> {
     );
   }
 
-  buildTable(List<DispatchNote>? data) {
+  buildTable(List<DispatchNote>? data, List<Client> clientItems) {
     return data == null
         ? Center(
             child: Text('No data found'),
@@ -75,7 +86,9 @@ class _DispatchNoteListState extends State<DispatchNoteList> {
             columns: ['Note', 'Client', 'Date', 'Actions']
                 .map(buildTableColumn)
                 .toList(),
-            rows: data.map(buildTableRow).toList(),
+            rows: data.map((e) {
+              return buildTableRow(e, clientItems);
+            }).toList(),
           );
   }
 
@@ -83,7 +96,7 @@ class _DispatchNoteListState extends State<DispatchNoteList> {
     return DataColumn(label: Text(label));
   }
 
-  DataRow buildTableRow(DispatchNote note) {
+  DataRow buildTableRow(DispatchNote note, List<Client> clientItems) {
     return DataRow(cells: [
       DataCell(Text(note.note)),
       DataCell(Text(note.client!.name)),
@@ -97,7 +110,7 @@ class _DispatchNoteListState extends State<DispatchNoteList> {
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      content: EditNoteForm(note: note),
+                      content: NoteForm(clients: clientItems, note: note),
                     );
                   });
             },
@@ -109,12 +122,13 @@ class _DispatchNoteListState extends State<DispatchNoteList> {
             icon: Icons.delete,
             color: Colors.red,
             onPressed: () async {
-              bool? deleted = await deleteDialog();
-              if (deleted != null || deleted!) {
-                setState(() {});
-              }
+              bool? deleted = await deleteDialog(note.id);
+              String message = deleted == true ? 'Deleted' : 'Cancelled';
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(message),
+              ));
 
-              print('Deleted: $deleted');
+              setState(() {});
             },
           ),
         ],
@@ -122,7 +136,7 @@ class _DispatchNoteListState extends State<DispatchNoteList> {
     ]);
   }
 
-  Future<bool?> deleteDialog() async {
+  Future<bool?> deleteDialog(id) async {
     return showDialog<bool?>(
         context: context,
         builder: (context) {
@@ -133,8 +147,9 @@ class _DispatchNoteListState extends State<DispatchNoteList> {
             ),
             actions: [
               TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(true);
+                  onPressed: () async {
+                    bool res = await DispatchNoteService.destroy(id);
+                    Navigator.of(context).pop(res);
                   },
                   child: Text('Yes')),
               TextButton(

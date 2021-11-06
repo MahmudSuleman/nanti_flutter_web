@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:nanti_flutter_web/models/client.dart';
 import 'package:nanti_flutter_web/models/dispatch_note.dart';
-import 'package:nanti_flutter_web/models/select_item.dart';
-import 'package:nanti_flutter_web/services/client_service.dart';
 import 'package:nanti_flutter_web/services/dispatch_note_service.dart';
 
 import '../../constants.dart';
 
 class NoteForm extends StatefulWidget {
-  const NoteForm({Key? key}) : super(key: key);
+  const NoteForm({Key? key, required this.clients, this.note})
+      : super(key: key);
+  final List<Client> clients;
+  final DispatchNote? note;
 
   @override
   _NoteFormState createState() => _NoteFormState();
@@ -16,21 +18,19 @@ class NoteForm extends StatefulWidget {
 
 class _NoteFormState extends State<NoteForm> {
   var _formKey = GlobalKey<FormState>();
-  var chosenDate = DateFormat.yMd().format(DateTime.now());
+  var chosenDate = DateFormat.yMMMd().format(DateTime.now());
   var _chosenValue;
   var noteDetails;
   var clientId;
 
-  List<SelectItem> companyItems = [];
-
   @override
   Widget build(BuildContext context) {
-    ClientService.index().then((clients) {
-      companyItems = clients.map((e) {
-        return SelectItem(id: e.id.toString(), name: e.name);
-      }).toList();
-      if (this.mounted) setState(() {});
-    });
+    if (widget.note != null) {
+      setState(() {
+        chosenDate = widget.note!.noteDate;
+        clientId = widget.note!.clientId;
+      });
+    }
     return Form(
       key: _formKey,
       child: Column(
@@ -68,12 +68,13 @@ class _NoteFormState extends State<NoteForm> {
       firstDate: DateTime.parse('2000-01-01'),
       lastDate: DateTime.now(),
     ).then((value) => setState(() {
-          chosenDate = '${DateFormat.yMd().format(value!)}';
+          chosenDate = '${DateFormat.yMMMd().format(value!)}';
         }));
   }
 
   buildNoteDetailInput() {
     return TextFormField(
+      initialValue: widget.note?.note,
       decoration: kInputDecoration('Note Details'),
       maxLines: 3,
       validator: (value) {
@@ -89,14 +90,12 @@ class _NoteFormState extends State<NoteForm> {
 
   buildClientDropDown() {
     return DropdownButtonFormField(
-      value: _chosenValue,
+      value: widget.note != null ? widget.note!.clientId : _chosenValue,
       decoration: kInputDecoration('Select Client'),
-      items: companyItems
-          .map((e) =>
-              DropdownMenuItem(value: '${e.id}', child: Text('${e.name}')))
+      items: widget.clients
+          .map((e) => DropdownMenuItem(value: e.id, child: Text(e.name)))
           .toList(),
       onChanged: (value) {
-        print(value);
         setState(() {
           clientId = value;
           _chosenValue = value;
@@ -112,39 +111,53 @@ class _NoteFormState extends State<NoteForm> {
     return Align(
       alignment: Alignment.bottomLeft,
       child: ElevatedButton(
-        style: kElevatedButtonStyle(),
-        onPressed: () {
-          if (_formKey.currentState!.validate()) {
-            _formKey.currentState!.save();
-            DispatchNoteService.addNote(DispatchNote(
-              clientId: clientId,
-              note: noteDetails,
-              noteDate: chosenDate,
-            )).then((value) {
-              if (value) {
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Text(
+              'Submit',
+              style: TextStyle(fontSize: 18),
+            ),
+          ),
+          style: kElevatedButtonStyle(),
+          onPressed: () async {
+            if (_formKey.currentState!.validate()) {
+              _formKey.currentState!.save();
+
+              var response = widget.note == null
+                  ? await DispatchNoteService.store(
+                      DispatchNote(
+                        clientId: clientId,
+                        note: noteDetails,
+                        noteDate: chosenDate,
+                      ),
+                    )
+                  : await DispatchNoteService.update(
+                      DispatchNote(
+                        id: widget.note!.id,
+                        clientId: clientId,
+                        note: noteDetails,
+                        noteDate: chosenDate,
+                      ),
+                    );
+
+              String successMessage = widget.note == null
+                  ? 'Note added successfully'
+                  : 'Note updated successfully';
+              if (response) {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     backgroundColor: Colors.green,
-                    content: Text('Data saved successfully')));
+                    content: Text(successMessage)));
                 Navigator.of(context).pop(true);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text('Failed to save'),
+                    content: Text('Something went wrong'),
                     backgroundColor: Colors.red,
                   ),
                 );
               }
-            });
-          }
-        },
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: Text(
-            'Submit',
-            style: TextStyle(fontSize: 18),
-          ),
-        ),
-      ),
+            }
+          }),
     );
   }
 }

@@ -23,7 +23,6 @@ class DispatchNote {
       client: json['client'] != null ? Client.fromJson(json['client']) : null,
     );
 
-    print('note id: $note.id');
     return note;
   }
 }

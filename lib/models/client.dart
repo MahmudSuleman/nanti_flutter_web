@@ -25,7 +25,6 @@ class Client extends ChangeNotifier {
   ClientType? clientType;
 
   factory Client.fromJson(json) {
-    print('client from json: $json');
     return Client(
       id: json["id"] ?? null,
       name: json["name"] ?? "",
