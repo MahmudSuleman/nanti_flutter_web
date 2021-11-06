@@ -28,7 +28,7 @@ class _EditNoteFormState extends State<EditNoteForm> {
   Widget build(BuildContext context) {
     chosenDate = widget.note.noteDate;
     noteDetails = widget.note.note;
-    clientId = widget.note.clientId;
+    clientId = widget.note.client!.id;
     ClientService.index().then((clients) {
       companyItems = clients.map((e) {
         return SelectItem(id: e.id.toString(), name: e.name);
@@ -96,7 +96,7 @@ class _EditNoteFormState extends State<EditNoteForm> {
 
   buildClientDropDown() {
     return DropdownButtonFormField(
-      value: _chosenValue ?? widget.note.clientId,
+      value: _chosenValue ?? widget.note.client!.id,
       decoration: kInputDecoration('Select Client'),
       items: companyItems
           .map((e) =>

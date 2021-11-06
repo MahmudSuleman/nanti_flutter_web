@@ -15,9 +15,6 @@ class Client extends ChangeNotifier {
     required this.name,
     required this.contact,
     required this.clientTypeId,
-    this.createdAt,
-    this.updatedAt,
-    this.deletedAt,
     this.clientType,
   });
 
@@ -25,27 +22,18 @@ class Client extends ChangeNotifier {
   String name;
   String contact;
   int clientTypeId;
-  DateTime? createdAt;
-  DateTime? updatedAt;
-  DateTime? deletedAt;
   ClientType? clientType;
 
-  factory Client.fromJson(Map<String, dynamic> json) {
+  factory Client.fromJson(json) {
+    print('client from json: $json');
     return Client(
-      id: json["id"],
-      name: json["name"],
-      contact: json["contact"],
-      clientTypeId: json["client_type_id"],
-      createdAt: json["created_at"] != null
-          ? DateTime.parse(json['created_at'])
+      id: json["id"] ?? null,
+      name: json["name"] ?? "",
+      contact: json["contact"] ?? "",
+      clientTypeId: json["client_type_id"] ?? 0,
+      clientType: json["client_type"] != null
+          ? ClientType.fromJson(json["client_type"])
           : null,
-      updatedAt: json["updated_at"] != null
-          ? DateTime.parse(json['updated_at'])
-          : null,
-      deletedAt: json["deleted_at"] != null
-          ? DateTime.parse(json['deleted_at'])
-          : null,
-      clientType: ClientType.fromJson(json["client_type"]),
     );
   }
 }

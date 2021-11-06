@@ -6,7 +6,7 @@ class DispatchNoteProvider extends ChangeNotifier {
   List<DispatchNote> _notes = [];
 
   void init() {
-    DispatchNoteService.allNote().then((value) => _notes = value);
+    DispatchNoteService.index().then((value) => _notes = value);
   }
 
   List<DispatchNote> get allNotes {

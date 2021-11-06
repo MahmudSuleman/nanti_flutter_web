@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/models/dispatch_note.dart';
-import 'package:nanti_flutter_web/screens/dispatch_note/add_note_form.dart';
 import 'package:nanti_flutter_web/screens/dispatch_note/edit_note_form.dart';
 import 'package:nanti_flutter_web/screens/responsive/responsive.dart';
 import 'package:nanti_flutter_web/services/dispatch_note_service.dart';
 import 'package:nanti_flutter_web/widgets/add_item_button.dart';
 
 import '../../constants.dart';
+import 'note_form.dart';
 
 class DispatchNoteList extends StatefulWidget {
   const DispatchNoteList({Key? key}) : super(key: key);
@@ -21,9 +21,10 @@ class _DispatchNoteListState extends State<DispatchNoteList> {
   Widget build(BuildContext context) {
     double size = MediaQuery.of(context).size.width;
     return Responsive(
+      appBarTitle: 'Dispatch Notes',
       child: SingleChildScrollView(
         child: FutureBuilder(
-          future: DispatchNoteService.allNote(),
+          future: DispatchNoteService.index(),
           builder: (context, snapShot) {
             if (snapShot.connectionState == ConnectionState.done) {
               return Column(
@@ -38,7 +39,7 @@ class _DispatchNoteListState extends State<DispatchNoteList> {
                             context: context,
                             builder: (context) {
                               return AlertDialog(
-                                content: AddNoteForm(),
+                                content: NoteForm(),
                               );
                             }).then((value) => setState(() {}));
                       },
@@ -51,7 +52,7 @@ class _DispatchNoteListState extends State<DispatchNoteList> {
                   Container(
                     width: 1000,
                     child: SingleChildScrollView(
-                      child: buildTable(snapShot.data as List<DispatchNote>),
+                      child: buildTable(snapShot.data as List<DispatchNote>?),
                     ),
                   )
                 ],
@@ -62,16 +63,20 @@ class _DispatchNoteListState extends State<DispatchNoteList> {
           },
         ),
       ),
-      appBarTitle: 'Dispatch Notes',
     );
   }
 
-  buildTable(List<DispatchNote> data) {
-    return DataTable(
-      columns:
-          ['Note', 'Client', 'Date', 'Actions'].map(buildTableColumn).toList(),
-      rows: data.map(buildTableRow).toList(),
-    );
+  buildTable(List<DispatchNote>? data) {
+    return data == null
+        ? Center(
+            child: Text('No data found'),
+          )
+        : DataTable(
+            columns: ['Note', 'Client', 'Date', 'Actions']
+                .map(buildTableColumn)
+                .toList(),
+            rows: data.map(buildTableRow).toList(),
+          );
   }
 
   DataColumn buildTableColumn(label) {
@@ -81,7 +86,7 @@ class _DispatchNoteListState extends State<DispatchNoteList> {
   DataRow buildTableRow(DispatchNote note) {
     return DataRow(cells: [
       DataCell(Text(note.note)),
-      DataCell(Text(note.clientName!)),
+      DataCell(Text(note.client!.name)),
       DataCell(Text(note.noteDate)),
       DataCell(Row(
         children: [

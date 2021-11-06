@@ -5,11 +5,12 @@ import 'package:nanti_flutter_web/constants.dart';
 import 'package:nanti_flutter_web/models/dispatch_note.dart';
 
 class DispatchNoteService {
-  static String baseUrl = kBaseUrl + 'dispatch_note';
+  static String baseUrl = kBaseUrl2 + '/dispatch-note';
 
-  static Future<List<DispatchNote>> allNote() async {
-    var url = Uri.parse(baseUrl + '/index.php');
-    var response = await http.get(url, headers: kHeaders);
+  static Future<List<DispatchNote>> index() async {
+    var url = Uri.parse(baseUrl);
+
+    var response = await http.get(url);
     List<DispatchNote> temp = [];
     if (response.statusCode == 200) {
       List<dynamic> body = jsonDecode(response.body);
@@ -17,6 +18,8 @@ class DispatchNoteService {
         temp.add(DispatchNote.fromJson(element));
       });
     }
+    print('temp: $temp');
+
     return temp;
   }
 

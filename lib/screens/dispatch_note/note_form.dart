@@ -7,14 +7,14 @@ import 'package:nanti_flutter_web/services/dispatch_note_service.dart';
 
 import '../../constants.dart';
 
-class AddNoteForm extends StatefulWidget {
-  const AddNoteForm({Key? key}) : super(key: key);
+class NoteForm extends StatefulWidget {
+  const NoteForm({Key? key}) : super(key: key);
 
   @override
-  _AddNoteFormState createState() => _AddNoteFormState();
+  _NoteFormState createState() => _NoteFormState();
 }
 
-class _AddNoteFormState extends State<AddNoteForm> {
+class _NoteFormState extends State<NoteForm> {
   var _formKey = GlobalKey<FormState>();
   var chosenDate = DateFormat.yMd().format(DateTime.now());
   var _chosenValue;
