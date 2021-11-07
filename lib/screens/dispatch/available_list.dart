@@ -1,7 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/models/device.dart';
+import 'package:nanti_flutter_web/models/dispatch.dart';
 import 'package:nanti_flutter_web/models/select_item.dart';
 import 'package:nanti_flutter_web/screens/responsive/responsive.dart';
 import 'package:nanti_flutter_web/services/client_service.dart';
@@ -18,9 +17,10 @@ class AvailableDispatch extends StatefulWidget {
 
 class _AvailableDispatchState extends State<AvailableDispatch> {
   final _formKey = GlobalKey<FormState>();
+  final _dateController = TextEditingController();
 
   var _chosenValue;
-  var _selectedCompany;
+  int? _selectedClient;
   var _dispatchedNote;
 
   List<SelectItem> clientItems = [];
@@ -148,6 +148,8 @@ class _AvailableDispatchState extends State<AvailableDispatch> {
           kDivider(),
           buildDropDown(clientItems),
           SizedBox(height: 10),
+          buildDateField(),
+          SizedBox(height: 10),
           TextFormField(
             validator: (value) {
               return value == null || value.isEmpty
@@ -181,20 +183,16 @@ class _AvailableDispatchState extends State<AvailableDispatch> {
                         actions: [
                           MaterialButton(
                             onPressed: () async {
-                              var res = await DispatchService.store({
-                                'deviceId': '${item.id}',
-                                'companyId': _selectedCompany,
-                                'dispatchNote': _dispatchedNote,
-                              });
+                              var res = await DispatchService.store(
+                                Dispatch(
+                                    clientId: _selectedClient!,
+                                    date: _dateController.text,
+                                    deviceId: item.id!,
+                                    note: _dispatchedNote),
+                              );
 
-                              if (res.statusCode == 200) {
-                                var body = jsonDecode(res.body)
-                                    as Map<String, dynamic>;
-                                if (body['success']) {
-                                  Navigator.pop(context, true);
-                                  // setState(
-                                  //     () {});
-                                }
+                              if (res) {
+                                Navigator.pop(context, true);
                               }
                             },
                             child: Text('Yes'),
@@ -209,8 +207,11 @@ class _AvailableDispatchState extends State<AvailableDispatch> {
                       );
                     });
 
-                if (res) {
+                if (res != null && res) {
                   Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text('Device dispatched successfully'),
+                  ));
                   setState(() {
                     _chosenValue = null;
                     clientItems = [];
@@ -224,20 +225,43 @@ class _AvailableDispatchState extends State<AvailableDispatch> {
     );
   }
 
+  buildDateField() {
+    return TextFormField(
+      controller: _dateController,
+      onTap: () async {
+        var date = await showDatePicker(
+          context: context,
+          initialDate: DateTime.now(),
+          firstDate: DateTime(DateTime.now().year - 1),
+          lastDate: DateTime(DateTime.now().year + 1),
+        );
+
+        if (date != null) {
+          _dateController.text = kFormatDate(date);
+          // '${date.day}-${date.month}-${date.year}';
+        }
+      },
+      decoration: kInputDecoration('Note Date'),
+      validator: (value) {
+        return value == null || value.isEmpty ? 'Date is required' : null;
+      },
+    );
+  }
+
   buildDropDown(List<SelectItem> items) {
-    return DropdownButtonFormField<String>(
+    return DropdownButtonFormField<int>(
       decoration: kInputDecoration('Select Company'),
       value: _chosenValue,
       style: TextStyle(color: Colors.black),
       items: clientItems
           .map(
-            (selectItem) => DropdownMenuItem<String>(
-              value: '${selectItem.id}',
+            (selectItem) => DropdownMenuItem<int>(
+              value: int.parse(selectItem.id!),
               child: Text('${selectItem.name}'),
             ),
           )
           .toList(),
-      onChanged: (String? value) {
+      onChanged: (int? value) {
         setState(() {
           _chosenValue = value!;
           clientItems = [];
@@ -247,7 +271,7 @@ class _AvailableDispatchState extends State<AvailableDispatch> {
         if (value == null) {
           return 'Please select company';
         } else {
-          _selectedCompany = value;
+          _selectedClient = value;
         }
         return null;
       },

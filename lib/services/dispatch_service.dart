@@ -18,9 +18,11 @@ class DispatchService {
     List<Dispatch> temp = [];
     if (response.statusCode == 200) {
       List<dynamic> body = jsonDecode(response.body);
-
       body.forEach((element) {
-        temp.add(Dispatch.fromJson(element));
+        Dispatch dispatch = Dispatch.fromJson(element);
+        if (dispatch.device!.isAvailable == 0 && dispatch.deletedAt == null) {
+          temp.add(Dispatch.fromJson(element));
+        }
       });
     }
 
@@ -48,10 +50,17 @@ class DispatchService {
     return temp;
   }
 
-  static Future<http.Response> store(Map<String, String> dispatch) async {
-    var url = Uri.parse(baseUrl + '/store.php');
-    var response = await http.post(url, body: dispatch);
-    return response;
+  static Future<bool> store(Dispatch dispatch) async {
+    var url = Uri.parse(baseUrl);
+
+    var response = await http.post(url, body: {
+      'client_id': dispatch.clientId.toString(),
+      'device_id': dispatch.deviceId.toString(),
+      'note': dispatch.note,
+      'date': dispatch.date,
+    });
+
+    return response.statusCode == 201;
   }
 
   static Future<List<Device>> available() async {
@@ -62,5 +71,12 @@ class DispatchService {
       if (element.isAvailable == 1) temp.add(element);
     });
     return temp;
+  }
+
+  static Future<bool> retrieve(id) async {
+    var url = Uri.parse(baseUrl + '/retrieve/$id');
+    var response = await http.post(url);
+    print(response.body);
+    return response.statusCode == 200;
   }
 }

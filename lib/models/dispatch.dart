@@ -5,18 +5,20 @@ class Dispatch {
   int? id;
   int deviceId;
   int clientId;
-  String? date;
-  String? note;
+  String date;
+  String note;
   Client? client;
   Device? device;
+  DateTime? deletedAt;
 
   Dispatch(
       {this.id,
       required this.deviceId,
       required this.clientId,
       required this.note,
-      this.date,
+      required this.date,
       this.client,
+      this.deletedAt,
       this.device});
 
   factory Dispatch.fromJson(Map<String, dynamic> json) {
@@ -26,6 +28,9 @@ class Dispatch {
       clientId: json['client_id'],
       date: json['date'],
       note: json['note'],
+      deletedAt: json['deleted_at'] != null
+          ? DateTime.parse(json['deleted_at'])
+          : null,
       client: json['client'] != null ? Client.fromJson(json['client']) : null,
       device: json['device'] != null ? Device.fromJson(json['device']) : null,
     );

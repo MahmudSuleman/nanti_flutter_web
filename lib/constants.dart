@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 final kPageHeaderTextStyle =
     TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
@@ -75,5 +76,9 @@ kPageHeaderTitle(String title, double size) => Text(
       style: kCalculatePageHeaderTextStyle(size),
       textAlign: TextAlign.center,
     );
+
+kFormatDate(DateTime date) {
+  return DateFormat('yyyy/MM/dd').format(date);
+}
 
 // kAddItemButton(String title) =>

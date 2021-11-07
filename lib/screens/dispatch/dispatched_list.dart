@@ -78,23 +78,46 @@ class _DispatchedListState extends State<DispatchedList> {
                                             actions: [
                                               ElevatedButton(
                                                 style: kElevatedButtonStyle(
-                                                    color: Colors.red.shade300),
-                                                onPressed: () {
-                                                  // TODO: make request to server
-                                                  Navigator.pop(context, true);
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(
-                                                    SnackBar(
-                                                      backgroundColor:
-                                                          Colors.green,
-                                                      content: Text(
-                                                        'Device retrieved successfully',
-                                                        style: TextStyle(
-                                                          color: Colors.white,
+                                                  color: Colors.red.shade300,
+                                                ),
+                                                onPressed: () async {
+                                                  var res =
+                                                      await DispatchService
+                                                          .retrieve(
+                                                              item.device!.id);
+                                                  if (res) {
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                      SnackBar(
+                                                        backgroundColor:
+                                                            Colors.green,
+                                                        content: Text(
+                                                          'Device retrieved successfully',
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                          ),
                                                         ),
                                                       ),
-                                                    ),
-                                                  );
+                                                    );
+                                                    Navigator.pop(
+                                                        context, true);
+                                                  } else {
+                                                    Navigator.pop(
+                                                        context, false);
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                      SnackBar(
+                                                        content: Text(
+                                                          'Failed to retrieve device',
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }
                                                 },
                                                 child: Text('Confirm'),
                                               ),
