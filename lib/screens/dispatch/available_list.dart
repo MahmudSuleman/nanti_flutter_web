@@ -21,6 +21,7 @@ class _AvailableDispatchState extends State<AvailableDispatch> {
 
   var _chosenValue;
   var _selectedCompany;
+  var _dispatchedNote;
 
   List<SelectItem> clientItems = [];
 
@@ -98,7 +99,8 @@ class _AvailableDispatchState extends State<AvailableDispatch> {
                                                   context: context,
                                                   builder: (context) {
                                                     return AlertDialog(
-                                                      content: Text('helo'),
+                                                      content:
+                                                          dispatchForm(device),
                                                     );
                                                   });
 
@@ -145,6 +147,18 @@ class _AvailableDispatchState extends State<AvailableDispatch> {
           ),
           kDivider(),
           buildDropDown(clientItems),
+          SizedBox(height: 10),
+          TextFormField(
+            validator: (value) {
+              return value == null || value.isEmpty
+                  ? 'Dispatch note is required'
+                  : null;
+            },
+            onSaved: (value) {
+              _dispatchedNote = value;
+            },
+            decoration: kInputDecoration('Dispatch note'),
+          ),
           kDivider(),
           ElevatedButton(
             style: kElevatedButtonStyle(),
@@ -169,7 +183,8 @@ class _AvailableDispatchState extends State<AvailableDispatch> {
                             onPressed: () async {
                               var res = await DispatchService.store({
                                 'deviceId': '${item.id}',
-                                'companyId': _selectedCompany
+                                'companyId': _selectedCompany,
+                                'dispatchNote': _dispatchedNote,
                               });
 
                               if (res.statusCode == 200) {

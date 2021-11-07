@@ -118,6 +118,7 @@ class _DispatchedListState extends State<DispatchedList> {
                       ),
                     );
                   } else {
+                    // TODO: show empty table when no data
                     return Center(
                       child: Column(
                         children: [
