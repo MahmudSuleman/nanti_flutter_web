@@ -11,7 +11,7 @@ class DeviceService {
   static Future<List<Device>> allDevices() async {
     List<Device> temp = [];
     var url = Uri.parse(baseUrl);
-    var response = await http.get(url, headers: kHeaders);
+    var response = await http.get(url);
 
     if (response.statusCode == 200) {
       List<dynamic> body = jsonDecode(response.body);
