@@ -14,8 +14,6 @@ class Device {
     required this.serialNumber,
     this.isAvailable,
     required this.manufacturerId,
-    this.createdAt,
-    this.updatedAt,
     this.manufacturer,
   });
 
@@ -25,8 +23,6 @@ class Device {
   String serialNumber;
   int? isAvailable;
   int manufacturerId;
-  DateTime? createdAt;
-  DateTime? updatedAt;
   Manufacturer? manufacturer;
 
   factory Device.fromJson(Map<String, dynamic> json) => Device(
@@ -36,8 +32,6 @@ class Device {
         serialNumber: json["serial_number"],
         isAvailable: json["is_available"],
         manufacturerId: json["manufacturer_id"],
-        createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
         manufacturer: Manufacturer.fromJson(json["manufacturer"]),
       );
 
@@ -48,8 +42,6 @@ class Device {
         "serial_number": serialNumber,
         "is_available": isAvailable,
         "manufacturer_id": manufacturerId,
-        "created_at": createdAt!.toIso8601String(),
-        "updated_at": updatedAt!.toIso8601String(),
         "manufacturer": manufacturer!.toJson(),
       };
 }
