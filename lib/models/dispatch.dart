@@ -1,26 +1,41 @@
+import 'client.dart';
+import 'device.dart';
+
 class Dispatch {
-  String id;
-  String deviceId;
-  String? deviceName;
-  String clientId;
-  String? clientName;
-  String dispatchDate;
-  String? isAvailable;
+  int? id;
+  int deviceId;
+  int clientId;
+  String? date;
+  String? note;
+  Client? client;
+  Device? device;
 
-  Dispatch({
-    required this.id,
-    required this.deviceId,
-    required this.clientId,
-    required this.dispatchDate,
-    this.isAvailable,
-  });
+  Dispatch(
+      {this.id,
+      required this.deviceId,
+      required this.clientId,
+      required this.note,
+      this.date,
+      this.client,
+      this.device});
 
-  Dispatch.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        deviceId = json['device_id'],
-        deviceName = json['device_name'],
-        clientId = json['client_id'],
-        clientName = json['client_name'],
-        dispatchDate = json['dispatch_date'],
-        isAvailable = json['isAvailable'];
+  factory Dispatch.fromJson(Map<String, dynamic> json) {
+    return Dispatch(
+      id: json['id'],
+      deviceId: json['device_id'],
+      clientId: json['client_id'],
+      date: json['date'],
+      note: json['note'],
+      client: json['client'] != null ? Client.fromJson(json['client']) : null,
+      device: json['device'] != null ? Device.fromJson(json['device']) : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'device_id': deviceId,
+        'client_id': clientId,
+        'date': date,
+        'note': note,
+      };
 }

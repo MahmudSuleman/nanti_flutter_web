@@ -6,7 +6,6 @@ import 'package:nanti_flutter_web/models/select_item.dart';
 import 'package:nanti_flutter_web/screens/responsive/responsive.dart';
 import 'package:nanti_flutter_web/services/client_service.dart';
 import 'package:nanti_flutter_web/services/dispatch_service.dart';
-import 'package:nanti_flutter_web/widgets/data_table_widget.dart';
 
 import '../../constants.dart';
 
@@ -23,14 +22,14 @@ class _AvailableDispatchState extends State<AvailableDispatch> {
   var _chosenValue;
   var _selectedCompany;
 
-  List<SelectItem> companyItems = [];
+  List<SelectItem> clientItems = [];
 
   @override
   void initState() {
     super.initState();
 
     ClientService.index().then((clients) {
-      companyItems = clients
+      clientItems = clients
           .map((e) => SelectItem(id: e.id.toString(), name: e.name))
           .toList();
     });
@@ -73,43 +72,45 @@ class _AvailableDispatchState extends State<AvailableDispatch> {
                                   ),
                                 ),
                               )
-                            : Container(
-                                width: 1000,
-                                child: DataTableWidget(
-                                  header: _tableHeader,
-                                  data: [
-                                    for (Device item in data)
-                                      DataRow(
-                                        cells: [
-                                          DataCell(Text(item.serialNumber)),
-                                          DataCell(Text(item.name)),
-                                          DataCell(
-                                              Text(item.manufacturer!.name)),
-                                          DataCell(
-                                            ElevatedButton(
-                                              style: kElevatedButtonStyle(),
-                                              child: Icon(Icons.send),
-                                              onPressed: () async {
-                                                var res = await showDialog(
-                                                    context: context,
-                                                    builder: (context) {
-                                                      return AlertDialog(
-                                                        content: dispatchForm(
-                                                            context, item),
-                                                      );
-                                                    });
+                            : DataTable(
+                                columns: _tableHeader
+                                    .map((e) => DataColumn(label: Text(e)))
+                                    .toList(),
+                                rows: [
+                                  for (Device device in data)
+                                    DataRow(
+                                      cells: [
+                                        DataCell(
+                                          Text(device.serialNumber),
+                                        ),
+                                        DataCell(
+                                          Text(device.name),
+                                        ),
+                                        DataCell(
+                                          Text(device.manufacturer!.name),
+                                        ),
+                                        DataCell(
+                                          ElevatedButton(
+                                            style: kElevatedButtonStyle(),
+                                            child: Icon(Icons.send),
+                                            onPressed: () async {
+                                              var res = await showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return AlertDialog(
+                                                      content: Text('helo'),
+                                                    );
+                                                  });
 
-                                                if (res != null) {
-                                                  Navigator.pop(context);
-                                                  // setState(() {});
-                                                }
-                                              },
-                                            ),
+                                              if (res != null) {
+                                                Navigator.pop(context);
+                                              }
+                                            },
                                           ),
-                                        ],
-                                      )
-                                  ],
-                                ),
+                                        ),
+                                      ],
+                                    )
+                                ],
                               ),
                       );
                     } else {
@@ -129,7 +130,7 @@ class _AvailableDispatchState extends State<AvailableDispatch> {
         ));
   }
 
-  Widget dispatchForm(BuildContext context, Device item) {
+  Widget dispatchForm(Device item) {
     return Form(
       key: _formKey,
       child: Column(
@@ -143,38 +144,17 @@ class _AvailableDispatchState extends State<AvailableDispatch> {
             ),
           ),
           kDivider(),
-          DropdownButtonFormField<String>(
-            decoration: kInputDecoration('Select Company'),
-            value: _chosenValue,
-            //elevation: 5,
-            style: TextStyle(color: Colors.black),
-            items: companyItems
-                .map(
-                  (selectItem) => DropdownMenuItem<String>(
-                    value: '${selectItem.id}',
-                    child: Text('${selectItem.name}'),
-                  ),
-                )
-                .toList(),
-
-            onChanged: (String? value) {
-              setState(() {
-                _chosenValue = value!;
-                companyItems = [];
-              });
-            },
-            validator: (value) {
-              if (value == null) {
-                return 'Please select company';
-              } else {
-                _selectedCompany = value;
-              }
-              return null;
-            },
-          ),
+          buildDropDown(clientItems),
           kDivider(),
           ElevatedButton(
             style: kElevatedButtonStyle(),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+              child: Text(
+                'Dispatch',
+                style: TextStyle(fontSize: 20),
+              ),
+            ),
             onPressed: () async {
               if (_formKey.currentState!.validate()) {
                 _formKey.currentState!.save();
@@ -218,21 +198,44 @@ class _AvailableDispatchState extends State<AvailableDispatch> {
                   Navigator.pop(context);
                   setState(() {
                     _chosenValue = null;
-                    companyItems = [];
+                    clientItems = [];
                   });
                 }
               }
             },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-              child: Text(
-                'Dispatch',
-                style: TextStyle(fontSize: 20),
-              ),
-            ),
           )
         ],
       ),
+    );
+  }
+
+  buildDropDown(List<SelectItem> items) {
+    return DropdownButtonFormField<String>(
+      decoration: kInputDecoration('Select Company'),
+      value: _chosenValue,
+      style: TextStyle(color: Colors.black),
+      items: clientItems
+          .map(
+            (selectItem) => DropdownMenuItem<String>(
+              value: '${selectItem.id}',
+              child: Text('${selectItem.name}'),
+            ),
+          )
+          .toList(),
+      onChanged: (String? value) {
+        setState(() {
+          _chosenValue = value!;
+          clientItems = [];
+        });
+      },
+      validator: (value) {
+        if (value == null) {
+          return 'Please select company';
+        } else {
+          _selectedCompany = value;
+        }
+        return null;
+      },
     );
   }
 }

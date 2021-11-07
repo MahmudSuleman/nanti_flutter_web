@@ -17,18 +17,6 @@ class DispatchedList extends StatefulWidget {
 class _DispatchedListState extends State<DispatchedList> {
   List<SelectItem> companyItems = [];
 
-  Future<List<Dispatch>> _dispatchedDevices() async {
-    List<Dispatch> allDispatches = await DispatchService.allDispatches();
-    List<Dispatch> data = [];
-    if (allDispatches.isNotEmpty) {
-      for (var item in allDispatches) {
-        data.add(item);
-      }
-    }
-
-    return data;
-  }
-
   @override
   void initState() {
     super.initState();
@@ -53,7 +41,7 @@ class _DispatchedListState extends State<DispatchedList> {
             Divider(),
             SizedBox(height: 20),
             FutureBuilder(
-              future: _dispatchedDevices(),
+              future: DispatchService.allDispatches(),
               builder: (context, snapShot) {
                 if (snapShot.connectionState == ConnectionState.done) {
                   if (snapShot.hasData) {
@@ -73,8 +61,8 @@ class _DispatchedListState extends State<DispatchedList> {
                           data: [
                             for (Dispatch item in data)
                               DataRow(cells: [
-                                DataCell(Text(item.clientName!)),
-                                DataCell(Text(item.deviceName!)),
+                                DataCell(Text(item.client!.name)),
+                                DataCell(Text(item.device!.name)),
                                 DataCell(ElevatedButton(
                                   style: kElevatedButtonStyle(),
                                   child: Icon(

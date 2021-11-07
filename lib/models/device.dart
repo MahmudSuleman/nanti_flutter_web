@@ -32,7 +32,9 @@ class Device {
         serialNumber: json["serial_number"],
         isAvailable: json["is_available"],
         manufacturerId: json["manufacturer_id"],
-        manufacturer: Manufacturer.fromJson(json["manufacturer"]),
+        manufacturer: json["manufacturer"] == null
+            ? null
+            : Manufacturer.fromJson(json["manufacturer"]),
       );
 
   Map<String, dynamic> toJson() => {
