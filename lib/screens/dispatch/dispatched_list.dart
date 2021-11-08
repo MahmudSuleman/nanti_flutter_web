@@ -52,10 +52,10 @@ class _DispatchedListState extends State<DispatchedList> {
                       'Action'
                     ];
 
-                    return Container(
-                      width: 1000,
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.vertical,
+                    return SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: Container(
+                        width: 1000,
                         child: DataTableWidget(
                           header: _tableHeader,
                           data: [
@@ -63,78 +63,7 @@ class _DispatchedListState extends State<DispatchedList> {
                               DataRow(cells: [
                                 DataCell(Text(item.client!.name)),
                                 DataCell(Text(item.device!.name)),
-                                DataCell(ElevatedButton(
-                                  style: kElevatedButtonStyle(),
-                                  child: Icon(
-                                    Icons.cancel_schedule_send_outlined,
-                                  ),
-                                  onPressed: () {
-                                    showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return AlertDialog(
-                                            content: Text(
-                                                'You are about to retrieve device!!'),
-                                            actions: [
-                                              ElevatedButton(
-                                                style: kElevatedButtonStyle(
-                                                  color: Colors.red.shade300,
-                                                ),
-                                                onPressed: () async {
-                                                  var res =
-                                                      await DispatchService
-                                                          .retrieve(
-                                                              item.device!.id);
-                                                  if (res) {
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(
-                                                      SnackBar(
-                                                        backgroundColor:
-                                                            Colors.green,
-                                                        content: Text(
-                                                          'Device retrieved successfully',
-                                                          style: TextStyle(
-                                                            color: Colors.white,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    );
-                                                    Navigator.pop(
-                                                        context, true);
-                                                  } else {
-                                                    Navigator.pop(
-                                                        context, false);
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(
-                                                      SnackBar(
-                                                        content: Text(
-                                                          'Failed to retrieve device',
-                                                          style: TextStyle(
-                                                            color: Colors.white,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    );
-                                                  }
-                                                },
-                                                child: Text('Confirm'),
-                                              ),
-                                              ElevatedButton(
-                                                style: kElevatedButtonStyle(
-                                                  color: Colors.green.shade300,
-                                                ),
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                },
-                                                child: Text('Cancel'),
-                                              )
-                                            ],
-                                          );
-                                        });
-                                  },
-                                )),
+                                DataCell(_builActionButton(item)),
                               ])
                           ],
                         ),
@@ -163,4 +92,44 @@ class _DispatchedListState extends State<DispatchedList> {
       ),
     );
   }
+
+  ElevatedButton _builActionButton(item) => ElevatedButton(
+        style: kElevatedButtonStyle(),
+        child: Icon(
+          Icons.cancel_schedule_send_outlined,
+        ),
+        onPressed: () async {
+          await showDialog<bool?>(
+            context: context,
+            builder: (_) => _buildDialog(item),
+          );
+        },
+      );
+
+  AlertDialog _buildDialog(item) => AlertDialog(
+        content: Text('You are about to retrieve device!!'),
+        actions: [
+          TextButton(
+            onPressed: () async {
+              var res = await DispatchService.retrieve(item.device!.id);
+              if (res) {
+                kSuccessSnackBar(context, 'Device Retrieved Successfully');
+                kPopTrue(context);
+                setState(() {});
+              } else {
+                kFailureSnackBar(context, 'Failed to retrieve device');
+                kPopFalse(context);
+              }
+            },
+            child: Text('Confirm'),
+          ),
+          TextButton(
+            onPressed: () {
+              kPopFalse(context);
+              kFailureSnackBar(context, 'Cancelled');
+            },
+            child: Text('Cancel'),
+          )
+        ],
+      );
 }

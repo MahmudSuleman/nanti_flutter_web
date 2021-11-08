@@ -81,4 +81,36 @@ kFormatDate(DateTime date) {
   return DateFormat('yyyy/MM/dd').format(date);
 }
 
+kSuccessSnackBar(BuildContext context, String message) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(
+        message,
+        style: TextStyle(color: Colors.white),
+      ),
+      backgroundColor: Colors.green,
+    ),
+  );
+}
+
+kFailureSnackBar(BuildContext context, String message) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(
+        message,
+        style: TextStyle(color: Colors.white),
+      ),
+      backgroundColor: Colors.red,
+    ),
+  );
+}
+
+kPopTrue(BuildContext context) {
+  Navigator.pop(context, true);
+}
+
+kPopFalse(BuildContext context) {
+  Navigator.pop(context, false);
+}
+
 // kAddItemButton(String title) =>
