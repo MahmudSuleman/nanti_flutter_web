@@ -248,13 +248,11 @@ class _ClientListState extends State<ClientList> {
               ),
               MaterialButton(
                 child: Text('No'),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
+                onPressed: () => Navigator.pop(context),
               )
             ],
           ),
-        ).then((value) {
+        ).then((_) {
           setState(() {});
         });
       },
@@ -279,7 +277,7 @@ class _ClientListState extends State<ClientList> {
                   ),
                 ),
               );
-            }).then((value) => setState(() {}));
+            }).then((_) => setState(() {}));
       },
     );
   }
