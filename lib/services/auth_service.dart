@@ -41,14 +41,12 @@ class AuthService {
     return user != null;
   }
 
-  static Future<bool> isAdmin() async {
-    var res = await isLoggedIn();
-    if (res) {
-      var user = await UserPrefs.getUserPrefs();
-      if (user?.companyId == '0') {
-        return true;
-      }
-    }
-    return false;
-  }
+  // static Future<bool> isAdmin() async {
+  //   var res = await isLoggedIn();
+  //   if (res) {
+  //     var user = await UserPrefs.getCompany();
+  //     return user == 0;
+  //   }
+  //   return false;
+  // }
 }
