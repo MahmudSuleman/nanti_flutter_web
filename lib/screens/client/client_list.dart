@@ -53,7 +53,7 @@ class _ClientListState extends State<ClientList> {
                 children: [
                   kPageHeaderTitle('Clients List', size),
                   Divider(),
-                  buildAddButton(types),
+                  buildAddButton(),
                   Divider(),
                   SizedBox(height: 20),
                   _buildTable(data: snapShot.data)
@@ -65,14 +65,6 @@ class _ClientListState extends State<ClientList> {
             );
           },
         ),
-      ),
-    );
-  }
-
-  buildSnackbar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
       ),
     );
   }
@@ -151,13 +143,13 @@ class _ClientListState extends State<ClientList> {
                     ? 'Client updated successfully'
                     : 'Client added successfully';
                 if (response.statusCode == 200 || response.statusCode == 201) {
-                  buildSnackbar(
+                  kSuccessSnackBar(
                     context,
                     successMessage,
                   );
                   Navigator.pop(context, true);
                 } else {
-                  buildSnackbar(
+                  kFailureSnackBar(
                     context,
                     'Something went wrong',
                   );
@@ -178,7 +170,7 @@ class _ClientListState extends State<ClientList> {
         ],
       ));
 
-  Align buildAddButton(List<ClientType> types) {
+  Align buildAddButton() {
     return Align(
       alignment: Alignment.bottomLeft,
       child: AddItemButton(
@@ -245,13 +237,12 @@ class _ClientListState extends State<ClientList> {
                 child: Text('Yes'),
                 onPressed: () async {
                   var res = await ClientService.destroy(item.id);
-
                   if (res) {
                     Navigator.pop(context);
-                    buildSnackbar(context, 'Client deleted successfully');
+                    kSuccessSnackBar(context, 'Client deleted successfully');
                   } else {
                     Navigator.pop(context);
-                    buildSnackbar(context, 'Something went wrong');
+                    kFailureSnackBar(context, 'Something went wrong');
                   }
                 },
               ),

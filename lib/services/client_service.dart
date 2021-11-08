@@ -10,7 +10,7 @@ class ClientService extends ChangeNotifier {
 
   static Future<List<Client>> index() async {
     var url = Uri.parse(baseUrl);
-    List<Client> temp = [];
+    late List<Client> temp = [];
     var response = await http.get(url);
     if (response.statusCode == 200) {
       List<dynamic> body = jsonDecode(response.body);
