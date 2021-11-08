@@ -52,25 +52,26 @@ class _DispatchedListState extends State<DispatchedList> {
                       'Action'
                     ];
 
-                    return SingleChildScrollView(
-                      scrollDirection: Axis.vertical,
-                      child: Container(
-                        width: 1000,
-                        child: DataTableWidget(
-                          header: _tableHeader,
-                          data: [
-                            for (Dispatch item in data)
-                              DataRow(cells: [
-                                DataCell(Text(item.client!.name)),
-                                DataCell(Text(item.device!.name)),
-                                DataCell(_builActionButton(item)),
-                              ])
-                          ],
+                    if (data.length > 0) {
+                      return SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: Container(
+                          width: 1000,
+                          child: DataTableWidget(
+                            header: _tableHeader,
+                            data: [
+                              for (Dispatch item in data)
+                                DataRow(cells: [
+                                  DataCell(Text(item.client!.name)),
+                                  DataCell(Text(item.device!.name)),
+                                  DataCell(_builActionButton(item)),
+                                ])
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  } else {
-                    // TODO: show empty table when no data
+                      );
+                    }
+
                     return Center(
                       child: Column(
                         children: [
