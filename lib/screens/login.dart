@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/constants.dart';
-import 'package:nanti_flutter_web/models/user.dart';
 import 'package:nanti_flutter_web/services/auth_service.dart';
 import 'package:nanti_flutter_web/user_prefs.dart';
 
@@ -124,7 +123,13 @@ class _LoginState extends State<Login> {
             var res = await AuthService.login(username, password);
             if (res.statusCode == 200) {
               var body = jsonDecode(res.body);
-              print(body);
+              UserPrefs.setUserPrefs(body);
+              Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+            } else {
+              setState(() {
+                isLoading = false;
+              });
+              kFailureSnackBar(context, 'Failed to login');
             }
           }
         },

@@ -30,8 +30,8 @@ class DashboardSummaryService {
     try {
       var user = await UserPrefs.getUserPrefs();
 
-      var url =
-          Uri.parse(baseUrl + 'user_dashboard_summary.php?id=${user!.id}');
+// TODO: Change this to get the user id from the user prefs
+      var url = Uri.parse(baseUrl + 'user_dashboard_summary.php?id=1');
       var response = await http.get(url, headers: kHeaders);
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body) as Map<String, dynamic>;

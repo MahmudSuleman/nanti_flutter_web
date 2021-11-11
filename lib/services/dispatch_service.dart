@@ -41,7 +41,9 @@ class DispatchService {
         var pref = await UserPrefs.getUserPrefs();
         if (pref != null) {
           for (Map<String, dynamic> dispatch in body) {
-            if (pref.companyId == dispatch['companyId']) temp.add(dispatch);
+            // TODO: check if dispatch is available
+            // if (pref.companyId == dispatch['companyId'])
+            temp.add(dispatch);
           }
         }
       }

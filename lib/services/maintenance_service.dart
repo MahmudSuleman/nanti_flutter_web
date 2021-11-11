@@ -40,8 +40,9 @@ class MaintenanceService {
           var pref = await UserPrefs.getUserPrefs();
           if (pref != null) {
             for (var maintenance in body) {
-              if (pref.companyId == maintenance['companyId'])
-                temp.add(Maintenance.fromJson(maintenance));
+              // TODO: fix company id filtering
+              // if (pref.companyId == maintenance['companyId'])
+              temp.add(Maintenance.fromJson(maintenance));
             }
           }
         }

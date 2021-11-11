@@ -1,41 +1,28 @@
 import 'dart:convert';
 
-import 'package:nanti_flutter_web/models/user.dart';
 import 'package:nanti_flutter_web/services/auth_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserPrefs {
-  static void setCompany(String company) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('company', company);
-  }
-
-  static Future<String?> getCompany() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('company');
-  }
-
-  static void setUserPrefs(User user) async {
+  static void setUserPrefs(Map<String, dynamic> data) async {
     var pref = await SharedPreferences.getInstance();
     var userData = jsonEncode({
-      'id': user.id,
-      'username': user.username,
-      'companyId': user.companyId,
+      'token': data['token'],
+      'company': data['company'],
     });
     pref.setString('user', userData);
   }
 
-  static Future<User?> getUserPrefs() async {
+  static Future<Map<String, dynamic>?> getUserPrefs() async {
     var pref = await SharedPreferences.getInstance();
     var logged = await AuthService.isLoggedIn();
     if (logged) {
       var user = pref.getString('user');
       if (user != null) {
-        return User.fromJson(jsonDecode(user));
+        return jsonDecode(user);
       }
-    } else {
-      return null;
     }
+    return null;
   }
 
   static Future<void> clearUser() async {
