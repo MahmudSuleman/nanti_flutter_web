@@ -25,17 +25,19 @@ class Device {
   int manufacturerId;
   Manufacturer? manufacturer;
 
-  factory Device.fromJson(Map<String, dynamic> json) => Device(
-        id: json["id"],
-        name: json["name"],
-        model: json["model"],
-        serialNumber: json["serial_number"],
-        isAvailable: json["is_available"],
-        manufacturerId: json["manufacturer_id"],
-        manufacturer: json["manufacturer"] == null
-            ? null
-            : Manufacturer.fromJson(json["manufacturer"]),
-      );
+  factory Device.fromJson(Map<String, dynamic> json) {
+    return Device(
+      id: json["id"],
+      name: json["name"],
+      model: json["model"],
+      serialNumber: json["serial_number"],
+      isAvailable: int.parse(json["is_available"]),
+      manufacturerId: int.parse(json["manufacturer_id"]),
+      manufacturer: json["manufacturer"] == null
+          ? null
+          : Manufacturer.fromJson(json["manufacturer"]),
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "id": id,

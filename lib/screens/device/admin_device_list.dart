@@ -361,12 +361,11 @@ class _AdminDeviceListState extends State<AdminDeviceList> {
         ),
       ).then((value) {
         if (value.statusCode == 200) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text('Data Updated')));
+          kSuccessSnackBar(context, 'Data updated');
           Navigator.pop(context, true);
+          setState(() {});
         } else {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text('Data not Updated')));
+          kFailureSnackBar(context, 'Data not Updated');
         }
       });
     }
