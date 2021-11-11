@@ -24,8 +24,8 @@ class Dispatch {
   factory Dispatch.fromJson(Map<String, dynamic> json) {
     return Dispatch(
       id: json['id'],
-      deviceId: json['device_id'],
-      clientId: json['client_id'],
+      deviceId: int.parse(json['device_id']),
+      clientId: int.parse(json['client_id']),
       date: json['date'],
       note: json['note'],
       deletedAt: json['deleted_at'] != null
