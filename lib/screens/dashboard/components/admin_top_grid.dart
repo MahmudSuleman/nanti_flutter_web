@@ -30,7 +30,7 @@ class AdminTopGrid extends StatelessWidget {
                     color: Colors.green.shade200,
                     title: 'Maintenance',
                     icon: Icons.settings,
-                    summary: '${dashboardData['maintenances']}',
+                    summary: '${dashboardData['maintenances'] ?? 0}',
                   ),
                   DashboardChip(
                     color: Color.fromRGBO(20, 20, 20, 1),
