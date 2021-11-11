@@ -31,32 +31,34 @@ class _NoteFormState extends State<NoteForm> {
         clientId = widget.note!.clientId;
       });
     }
-    return Form(
-      key: _formKey,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Align(alignment: Alignment.bottomLeft, child: Text('Add New Note')),
-          kDivider(),
-          buildNoteDetailInput(),
-          SizedBox(height: 20),
-          buildClientDropDown(),
-          SizedBox(height: 20),
-          Row(
-            children: [
-              TextButton(
-                  onPressed: () {
-                    buildShowDatePicker(context);
-                  },
-                  child: Text('Choose Date')),
-              SizedBox(width: 20),
-              Text(chosenDate),
-            ],
-          ),
-          SizedBox(height: 20),
-          buildSubmitButton(),
-        ],
+    return SingleChildScrollView(
+      child: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Align(alignment: Alignment.bottomLeft, child: Text('Add New Note')),
+            kDivider(),
+            buildNoteDetailInput(),
+            SizedBox(height: 20),
+            buildClientDropDown(),
+            SizedBox(height: 20),
+            Row(
+              children: [
+                TextButton(
+                    onPressed: () {
+                      buildShowDatePicker(context);
+                    },
+                    child: Text('Choose Date')),
+                SizedBox(width: 20),
+                Text(chosenDate),
+              ],
+            ),
+            SizedBox(height: 20),
+            buildSubmitButton(),
+          ],
+        ),
       ),
     );
   }

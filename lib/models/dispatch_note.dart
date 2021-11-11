@@ -19,7 +19,7 @@ class DispatchNote {
       id: json['id'],
       note: json['note'],
       noteDate: json['note_date'],
-      clientId: json['client_id'],
+      clientId: int.parse(json['client_id']),
       client: json['client'] != null ? Client.fromJson(json['client']) : null,
     );
 

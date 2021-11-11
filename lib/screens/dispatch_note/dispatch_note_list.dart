@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/models/client.dart';
 import 'package:nanti_flutter_web/models/dispatch_note.dart';
-import 'package:nanti_flutter_web/screens/dispatch_note/edit_note_form.dart';
 import 'package:nanti_flutter_web/screens/responsive/responsive.dart';
 import 'package:nanti_flutter_web/services/client_service.dart';
 import 'package:nanti_flutter_web/services/dispatch_note_service.dart';
@@ -62,6 +61,7 @@ class _DispatchNoteListState extends State<DispatchNoteList> {
                   Container(
                     width: 1000,
                     child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
                       child: buildTable(
                           snapShot.data as List<DispatchNote>?, clientItems),
                     ),
