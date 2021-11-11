@@ -31,8 +31,12 @@ class Device {
       name: json["name"],
       model: json["model"],
       serialNumber: json["serial_number"],
-      isAvailable: int.parse(json["is_available"]),
-      manufacturerId: int.parse(json["manufacturer_id"]),
+      isAvailable: json['is_available'].runtimeType == int
+          ? json['is_available']
+          : int.parse(json["is_available"]),
+      manufacturerId: json['manufacturer_id'].runtimeType == int
+          ? json['manufacturer_id']
+          : int.parse(json["manufacturer_id"]),
       manufacturer: json["manufacturer"] == null
           ? null
           : Manufacturer.fromJson(json["manufacturer"]),

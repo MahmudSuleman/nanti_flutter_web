@@ -19,7 +19,9 @@ class DispatchNote {
       id: json['id'],
       note: json['note'],
       noteDate: json['note_date'],
-      clientId: int.parse(json['client_id']),
+      clientId: json['client_id'].runtimeType == int
+          ? json['client_id']
+          : int.parse(json['client_id']),
       client: json['client'] != null ? Client.fromJson(json['client']) : null,
     );
 
