@@ -5,6 +5,16 @@ import 'package:nanti_flutter_web/services/auth_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserPrefs {
+  static void setCompany(String company) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('company', company);
+  }
+
+  static Future<String?> getCompany() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('company');
+  }
+
   static void setUserPrefs(User user) async {
     var pref = await SharedPreferences.getInstance();
     var userData = jsonEncode({

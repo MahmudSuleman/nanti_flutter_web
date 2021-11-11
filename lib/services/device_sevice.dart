@@ -6,7 +6,7 @@ import 'package:nanti_flutter_web/constants.dart';
 import 'package:nanti_flutter_web/models/device.dart';
 
 class DeviceService {
-  static String baseUrl = kBaseUrl2 + '/device';
+  static String baseUrl = kBaseUrl + '/device';
 
   static Future<List<Device>> allDevices() async {
     List<Device> temp = [];

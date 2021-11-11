@@ -112,7 +112,7 @@ class _LoginState extends State<Login> {
         ),
         minWidth: double.infinity,
         color: kAppBarBackground,
-        onPressed: () {
+        onPressed: () async {
           if (_formKey.currentState!.validate()) {
             _formKey.currentState!.save();
             setState(() {
@@ -121,38 +121,11 @@ class _LoginState extends State<Login> {
             var username = _usernameController.text;
             var password = _passwordController.text;
 
-            AuthService.login(username, password).then((value) {
-              setState(() {
-                isLoading = false;
-              });
-              if (value.statusCode == 200) {
-                var body = jsonDecode(value.body) as Map<String, dynamic>;
-
-                if (body['success']) {
-                  UserPrefs.setUserPrefs(User.fromJson(body['data']));
-
-                  Navigator.pushReplacementNamed(context, '/');
-                } else {
-                  // setState(() {
-                  //   isLoading = false;
-                  // });
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text('Failed to login, please try again.')));
-                }
-              } else {
-                setState(() {
-                  isLoading = false;
-                });
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text('Failed to login, please try again.')));
-              }
-            }).catchError((error) {
-              setState(() {
-                isLoading = false;
-              });
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text('Failed to login, please try again.')));
-            });
+            var res = await AuthService.login(username, password);
+            if (res.statusCode == 200) {
+              var body = jsonDecode(res.body);
+              print(body);
+            }
           }
         },
       );

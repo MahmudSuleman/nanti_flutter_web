@@ -5,7 +5,7 @@ import 'package:nanti_flutter_web/constants.dart';
 import 'package:nanti_flutter_web/models/dispatch_note.dart';
 
 class DispatchNoteService {
-  static String baseUrl = kBaseUrl2 + '/dispatch-note';
+  static String baseUrl = kBaseUrl + '/dispatch-note';
 
   static Future<List<DispatchNote>> index() async {
     var url = Uri.parse(baseUrl);

@@ -6,7 +6,7 @@ import 'package:nanti_flutter_web/constants.dart';
 import 'package:nanti_flutter_web/models/client.dart';
 
 class ClientService extends ChangeNotifier {
-  static String baseUrl = kBaseUrl2 + '/client';
+  static String baseUrl = kBaseUrl + '/client';
 
   static Future<List<Client>> index() async {
     var url = Uri.parse(baseUrl);

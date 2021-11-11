@@ -5,7 +5,7 @@ import 'package:nanti_flutter_web/constants.dart';
 import 'package:nanti_flutter_web/models/client_type.dart';
 
 class ClientTypeService {
-  static String baseUrl = kBaseUrl2 + '/client-type';
+  static String baseUrl = kBaseUrl + '/client-type';
 
   static Future<List<ClientType>> allClientTypes() async {
     var url = Uri.parse(baseUrl);

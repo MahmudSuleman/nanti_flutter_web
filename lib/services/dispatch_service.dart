@@ -10,7 +10,7 @@ import '../user_prefs.dart';
 import 'auth_service.dart';
 
 class DispatchService {
-  static String baseUrl = kBaseUrl2 + '/dispatch';
+  static String baseUrl = kBaseUrl + '/dispatch';
 
   static Future<List<Dispatch>> allDispatches() async {
     var url = Uri.parse(baseUrl);
