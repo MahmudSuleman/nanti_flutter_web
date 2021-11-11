@@ -78,7 +78,6 @@ class DispatchService {
   static Future<bool> retrieve(id) async {
     var url = Uri.parse(baseUrl + '/retrieve/$id');
     var response = await http.post(url);
-    print(response.body);
     return response.statusCode == 200;
   }
 }
