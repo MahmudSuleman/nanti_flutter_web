@@ -40,7 +40,7 @@ class AuthService {
     if (res) {
       var user = await UserPrefs.getUserPrefs();
       if (user != null) {
-        return user['company'] == '0';
+        return user['company'] == '1';
       }
     }
     return false;
