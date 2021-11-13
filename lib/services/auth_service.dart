@@ -5,6 +5,7 @@ import 'package:nanti_flutter_web/screens/login.dart';
 import 'package:nanti_flutter_web/user_prefs.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+// TODO: setup guards for all pages
 class AuthService {
   static String baseUrl = kBaseUrl;
 
@@ -40,7 +41,7 @@ class AuthService {
     if (res) {
       var user = await UserPrefs.getUserPrefs();
       if (user != null) {
-        return user['company'] == '1';
+        return user['company'] == '1' || user['company'] == 1;
       }
     }
     return false;
