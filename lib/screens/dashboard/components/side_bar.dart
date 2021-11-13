@@ -5,6 +5,7 @@ import 'package:nanti_flutter_web/screens/dispatch/available_list.dart';
 import 'package:nanti_flutter_web/screens/dispatch/dispatched_list.dart';
 import 'package:nanti_flutter_web/screens/dispatch_note/dispatch_note_list.dart';
 import 'package:nanti_flutter_web/screens/maintenance/maintenance_list.dart';
+import 'package:nanti_flutter_web/screens/user/user_list.dart';
 import 'package:nanti_flutter_web/services/auth_service.dart';
 
 import '../../../user_prefs.dart';
@@ -61,6 +62,16 @@ class _SideBarState extends State<SideBar> {
                     },
                     iconName: Icons.home,
                     iconLabel: 'Home',
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  MenuItem(
+                    onTap: () {
+                      Navigator.of(context).pushNamed(UserList.routeName);
+                    },
+                    iconName: Icons.person_add,
+                    iconLabel: 'Users',
                   ),
                   SizedBox(
                     height: 10,
