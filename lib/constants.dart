@@ -9,8 +9,8 @@ final kPageHeaderTextStyle =
 TextStyle kCalculatePageHeaderTextStyle(double size) => TextStyle(
     fontSize: kCalculateFont(size) * 1.5, fontWeight: FontWeight.bold);
 
-final kBaseUrl = 'https://nanti-flutter-web-laravel-api.herokuapp.com/api';
-// final kBaseUrl = 'http://localhost:8000/api';
+// final kBaseUrl = 'https://nanti-flutter-web-laravel-api.herokuapp.com/api';
+final kBaseUrl = 'http://localhost:8000/api';
 final kHeaders = {HttpHeaders.contentTypeHeader: 'application/json'};
 
 final kScaffoldBackground = Color.fromRGBO(96, 96, 96, .8);
