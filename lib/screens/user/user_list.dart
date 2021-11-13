@@ -7,6 +7,7 @@ import 'package:nanti_flutter_web/screens/responsive/responsive.dart';
 import 'package:nanti_flutter_web/services/auth_service.dart';
 import 'package:nanti_flutter_web/services/client_service.dart';
 import 'package:nanti_flutter_web/services/user_service.dart';
+import 'package:nanti_flutter_web/widgets/add_item_button.dart';
 
 class UserList extends StatefulWidget {
   static final String routeName = '/user-list';
@@ -19,6 +20,7 @@ class _UserListState extends State<UserList> {
   final _formKey = GlobalKey<FormState>();
   List<SelectItem> companyItems = [];
   String? _currentCompany;
+  bool isLoading = false;
 
   //controllers
   final _usernameController = TextEditingController();
@@ -57,23 +59,17 @@ class _UserListState extends State<UserList> {
                       Divider(),
                       Align(
                         alignment: Alignment.bottomLeft,
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 20),
-                          child: ElevatedButton(
-                            child: Text('Add User'),
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  title: Text('Add User'),
-                                  content: userForm(),
-                                ),
-                              );
+                        child: AddItemButton(onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: Text('Add User'),
+                              content: userForm(),
+                            ),
+                          );
 
-                              /// show add user popup
-                            },
-                          ),
-                        ),
+                          /// show add user popup
+                        }),
                       ),
                       SizedBox(
                         height: 20,
@@ -112,25 +108,31 @@ class _UserListState extends State<UserList> {
     );
   }
 
-  void _saveData([username, company, password]) {
+  void _saveData([username, email, clientId, password]) {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-
-      UserService.store(username, company, password).then((value) {
+      setState(() {
+        isLoading = true;
+      });
+      UserService.store(
+        username: username,
+        email: email,
+        password: password,
+        clientId: clientId,
+      ).then((value) {
+        setState(() {
+          isLoading = false;
+        });
         if (value) {
           setState(() {
             _usernameController.text = '';
             _passwordController.text = '';
             _currentCompany = null;
           });
-          Navigator.of(context).pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('User added Successfully'),
-          ));
+          kSuccessSnackBar(context, 'User added successfully');
+          kPopTrue(context);
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Failed to add User'),
-          ));
+          kFailureSnackBar(context, 'Failed to add user');
         }
       });
     }
@@ -154,13 +156,13 @@ class _UserListState extends State<UserList> {
           SizedBox(
             height: 20,
           ),
-          //TODO: use email validation package
           TextFormField(
             controller: _emailController,
             decoration: kInputDecoration('Enter email'),
             validator: (value) {
               bool valid = EmailValidator.validate(value!);
-              return  !valid ? 'Email is required' : null;
+
+              return !valid ? 'Email is invalid' : null;
             },
           ),
           SizedBox(
@@ -178,7 +180,11 @@ class _UserListState extends State<UserList> {
                 _currentCompany = value!;
               });
             },
-            validator: (value) {},
+            validator: (value) {
+              return value == null || value.isEmpty
+                  ? 'Company is required'
+                  : null;
+            },
           ),
           SizedBox(
             height: 20,
@@ -186,6 +192,11 @@ class _UserListState extends State<UserList> {
           TextFormField(
             controller: _passwordController,
             decoration: kInputDecoration('Enter password'),
+            validator: (value) {
+              return value == null || value.isEmpty
+                  ? 'Password is required'
+                  : null;
+            },
           ),
           SizedBox(
             height: 20,
@@ -209,7 +220,8 @@ class _UserListState extends State<UserList> {
 
                   var username = _usernameController.text;
                   var password = _passwordController.text;
-                  _saveData(username, _currentCompany, password);
+                  var email = _emailController.text;
+                  _saveData(username, email, _currentCompany, password);
                 }),
           )
         ],

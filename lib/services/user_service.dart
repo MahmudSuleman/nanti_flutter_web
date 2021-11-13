@@ -28,20 +28,35 @@ class UserService {
     return null;
   }
 
-  static Future<bool> store(username, company, password) async {
-    var url = Uri.parse(baseUrl + 'store.php');
-    var response = await http.post(url, body: {
-      'username': username,
-      'company_id': company,
-      'password': password
-    });
-
-    if (response.statusCode == 200) {
-      var data = jsonDecode(response.body) as Map<String, dynamic>;
-      if (data['success']) {
-        return true;
-      }
+  static Future<bool> store({username, email, clientId, password}) async {
+    try {
+      var url = Uri.parse(baseUrl);
+      var response = await http.post(url, body: {
+        'name': username,
+        'client_id': clientId,
+        'password': password,
+        'email': email,
+      });
+      return response.statusCode == 200;
+    } catch (error) {
+      print(StackTrace.current);
+      return false;
     }
-    return false;
+  }
+
+  static Future<bool> update({username, email, clientId, password}) async {
+    try {
+      var url = Uri.parse(baseUrl);
+      var response = await http.put(url, body: {
+        'name': username,
+        'client_id': clientId,
+        'password': password,
+        'email': email,
+      });
+      return response.statusCode == 200;
+    } catch (error) {
+      print(StackTrace.current);
+      return false;
+    }
   }
 }
