@@ -7,6 +7,7 @@ import 'package:nanti_flutter_web/screens/dispatch/dispatched_list.dart';
 import 'package:nanti_flutter_web/screens/dispatch_note/dispatch_note_list.dart';
 import 'package:nanti_flutter_web/screens/login.dart';
 import 'package:nanti_flutter_web/screens/maintenance/maintenance_list.dart';
+import 'package:nanti_flutter_web/screens/user/user_list.dart';
 
 final Map<String, WidgetBuilder> routes = {
   // list pages
@@ -16,6 +17,8 @@ final Map<String, WidgetBuilder> routes = {
   AvailableDispatch.routeName: (_) => AvailableDispatch(),
   DispatchedList.routeName: (_) => DispatchedList(),
   DispatchNoteList.routeName: (_) => DispatchNoteList(),
+  UserList.routeName: (_) => UserList(),
+
   '/': (_) => Dashboard(),
 
   // auth routes
