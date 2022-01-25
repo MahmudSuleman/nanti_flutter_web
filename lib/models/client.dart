@@ -29,9 +29,7 @@ class Client extends ChangeNotifier {
       id: json["id"] ?? null,
       name: json["name"] ?? "",
       contact: json["contact"] ?? "",
-      clientTypeId: json["client_type_id"].runtimeType == int
-          ? json["client_type_id"]
-          : int.parse(json["client_type_id"]),
+      clientTypeId:  json["client_type_id"],
       clientType: json["client_type"] != null
           ? ClientType.fromJson(json["client_type"])
           : null,

@@ -9,7 +9,9 @@ class ClientTypeService {
 
   static Future<List<ClientType>> allClientTypes() async {
     var url = Uri.parse(baseUrl);
+
     List<ClientType> clientTypes = [];
+
     var response = await http.get(url);
     if (response.statusCode == 200) {
       var body = jsonDecode(response.body) as List<dynamic>;

@@ -44,9 +44,10 @@ class UserService {
     }
   }
 
-  static Future<bool> update({username, email, clientId, password}) async {
+  static Future<bool> update(
+      {required id, username, email, clientId, password}) async {
     try {
-      var url = Uri.parse(baseUrl);
+      var url = Uri.parse('$baseUrl/$id');
       var response = await http.put(url, body: {
         'name': username,
         'client_id': clientId,

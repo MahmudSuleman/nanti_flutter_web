@@ -40,6 +40,8 @@ class _UserListState extends State<UserList> {
   @override
   Widget build(BuildContext context) {
     AuthService.autoLogout(context);
+
+    double width = MediaQuery.of(context).size.width;
     return Responsive(
       appBarTitle: 'User List',
       child: SingleChildScrollView(
@@ -59,17 +61,17 @@ class _UserListState extends State<UserList> {
                       Divider(),
                       Align(
                         alignment: Alignment.bottomLeft,
-                        child: AddItemButton(onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: Text('Add User'),
-                              content: userForm(),
-                            ),
-                          );
-
-                          /// show add user popup
-                        }),
+                        child: AddItemButton(
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: Text('Add User'),
+                                content: userForm(),
+                              ),
+                            );
+                          },
+                        ),
                       ),
                       SizedBox(
                         height: 20,
@@ -82,6 +84,7 @@ class _UserListState extends State<UserList> {
                               'Email',
                               'Client',
                               'Contact',
+                              'Actions',
                             ].map((e) => DataColumn(label: Text(e))).toList(),
                             rows: users!
                                 .map(
@@ -91,6 +94,37 @@ class _UserListState extends State<UserList> {
                                       DataCell(Text(user.email)),
                                       DataCell(Text(user.client!.name)),
                                       DataCell(Text(user.client!.contact)),
+                                      DataCell(Row(
+                                        children: [
+                                          ElevatedButton(
+                                            style: kElevatedButtonStyle(),
+                                            onPressed: () {
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) =>
+                                                    AlertDialog(
+                                                  scrollable: true,
+                                                  title: Text('Edit User'),
+                                                  content: userForm({
+                                                    'id': user.id.toString(),
+                                                    'username': user.name,
+                                                    'email': user.email,
+                                                    'clientId': user.client!.id
+                                                  }),
+                                                ),
+                                              );
+                                            },
+                                            child: Icon(Icons.edit),
+                                          ),
+                                          SizedBox(width: 10),
+                                          ElevatedButton(
+                                            style: kElevatedButtonStyle(
+                                                color: Colors.red),
+                                            onPressed: () {},
+                                            child: Icon(Icons.delete),
+                                          )
+                                        ],
+                                      )),
                                     ],
                                   ),
                                 )
@@ -108,123 +142,156 @@ class _UserListState extends State<UserList> {
     );
   }
 
-  void _saveData([username, email, clientId, password]) {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      setState(() {
-        isLoading = true;
-      });
-      UserService.store(
-        username: username,
-        email: email,
-        password: password,
-        clientId: clientId,
-      ).then((value) {
-        setState(() {
-          isLoading = false;
-        });
-        if (value) {
-          setState(() {
-            _usernameController.text = '';
-            _passwordController.text = '';
-            _currentCompany = null;
-          });
-          kSuccessSnackBar(context, 'User added successfully');
-          kPopTrue(context);
-        } else {
-          kFailureSnackBar(context, 'Failed to add user');
-        }
-      });
+  Widget userForm([Map<String, dynamic>? data]) {
+    if (data != null) {
+      _emailController.text = data['email'];
+      _usernameController.text = data['username'];
+      _currentCompany = data['clientId'].toString();
     }
-  }
+    return Container(
+      constraints: BoxConstraints(minWidth: 500),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            kDivider(),
+            TextFormField(
+              controller: _usernameController,
+              decoration: kInputDecoration('Enter Username'),
+              validator: (value) {
+                return value == null || value.isEmpty
+                    ? 'Username is required'
+                    : null;
+              },
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            TextFormField(
+              controller: _emailController,
+              decoration: kInputDecoration('Enter email'),
+              validator: (value) {
+                bool valid = EmailValidator.validate(value!);
 
-  Form userForm() {
-    return Form(
-      key: _formKey,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextFormField(
-            controller: _usernameController,
-            decoration: kInputDecoration('Enter Username'),
-            validator: (value) {
-              return value == null || value.isEmpty
-                  ? 'Username is required'
-                  : null;
-            },
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          TextFormField(
-            controller: _emailController,
-            decoration: kInputDecoration('Enter email'),
-            validator: (value) {
-              bool valid = EmailValidator.validate(value!);
-
-              return !valid ? 'Email is invalid' : null;
-            },
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          DropdownButtonFormField<String>(
-            value: _currentCompany,
-            decoration: kInputDecoration('Select Company'),
-            items: companyItems
-                .map((item) => DropdownMenuItem(
-                    value: '${item.id}', child: Text('${item.name}')))
-                .toList(),
-            onChanged: (String? value) {
-              setState(() {
-                _currentCompany = value!;
-              });
-            },
-            validator: (value) {
-              return value == null || value.isEmpty
-                  ? 'Company is required'
-                  : null;
-            },
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          TextFormField(
-            controller: _passwordController,
-            decoration: kInputDecoration('Enter password'),
-            validator: (value) {
-              return value == null || value.isEmpty
-                  ? 'Password is required'
-                  : null;
-            },
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: ElevatedButton(
-                style: kElevatedButtonStyle(),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 10.0,
-                    horizontal: 5.0,
+                return !valid ? 'Email is invalid' : null;
+              },
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            DropdownButtonFormField<String>(
+              value:
+                  data != null ? data['clientId'].toString() : _currentCompany,
+              decoration: kInputDecoration('Select Company'),
+              items: companyItems
+                  .map((item) => DropdownMenuItem(
+                      value: '${item.id}', child: Text('${item.name}')))
+                  .toList(),
+              onChanged: (String? value) {
+                setState(() {
+                  _currentCompany = value!;
+                });
+              },
+              validator: (value) {
+                return value == null || value.isEmpty
+                    ? 'Company is required'
+                    : null;
+              },
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            TextFormField(
+              controller: _passwordController,
+              decoration: kInputDecoration('Enter password'),
+              validator: data != null
+                  ? (value) {}
+                  : (value) {
+                      return value == null || value.isEmpty
+                          ? 'Password is required'
+                          : null;
+                    },
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: ElevatedButton(
+                  style: kElevatedButtonStyle(),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10.0,
+                      horizontal: 5.0,
+                    ),
+                    child: Text(
+                      'Submit',
+                      style: TextStyle(fontSize: 20),
+                    ),
                   ),
-                  child: Text(
-                    'Submit',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                ),
-                onPressed: () {
-                  //get the form data
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      _formKey.currentState!.save();
+                      setState(() {
+                        isLoading = true;
+                      });
 
-                  var username = _usernameController.text;
-                  var password = _passwordController.text;
-                  var email = _emailController.text;
-                  _saveData(username, email, _currentCompany, password);
-                }),
-          )
-        ],
+                      var username = _usernameController.text;
+                      var password = _passwordController.text;
+                      var email = _emailController.text;
+                      data == null
+                          ? UserService.store(
+                              username: username,
+                              email: email,
+                              password: password,
+                              clientId: _currentCompany,
+                            ).then((value) {
+                              setState(() {
+                                isLoading = false;
+                              });
+                              if (value) {
+                                setState(() {
+                                  _usernameController.text = '';
+                                  _passwordController.text = '';
+                                  _currentCompany = null;
+                                });
+                                kSuccessSnackBar(
+                                    context, 'User added successfully');
+                                kPopTrue(context);
+                              } else {
+                                kFailureSnackBar(context, 'Failed to add user');
+                              }
+                            })
+                          : UserService.update(
+                              id: data['id'],
+                              username: username,
+                              email: email,
+                              password: password,
+                              clientId: _currentCompany,
+                            ).then((value) {
+                              setState(() {
+                                isLoading = false;
+                              });
+                              if (value) {
+                                setState(() {
+                                  _usernameController.text = '';
+                                  _passwordController.text = '';
+                                  _currentCompany = null;
+                                });
+                                kSuccessSnackBar(
+                                    context, 'User updated successfully');
+                                kPopTrue(context);
+                              } else {
+                                kFailureSnackBar(
+                                    context, 'Failed to update user');
+                              }
+                            });
+                    }
+                  }),
+            )
+          ],
+        ),
       ),
     );
   }

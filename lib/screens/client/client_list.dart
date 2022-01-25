@@ -69,106 +69,109 @@ class _ClientListState extends State<ClientList> {
     );
   }
 
-  buildClientForm({Client? client}) => Form(
-      key: _formKey,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(client != null ? 'Edit Client' : 'Add Client'),
-          kDivider(),
-          TextFormField(
-            initialValue: client != null ? client.name : '',
-            decoration: kInputDecoration('Name'),
-            validator: (value) {
-              return value == null || value.isEmpty ? 'Name is required' : null;
-            },
-            onSaved: (value) {
-              _client.name = value!;
-            },
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          DropdownButtonFormField<int>(
-            value: client != null ? client.clientTypeId : selectedClientType,
-            decoration: kInputDecoration('Client Type'),
-            onChanged: (value) {
-              setState(() {
-                selectedClientType = value;
-              });
-            },
-            onSaved: (value) {
-              _client.clientTypeId = value!;
-            },
-            items: types
-                .map(
-                  (clientType) => DropdownMenuItem<int>(
-                    value: clientType.id,
-                    child: Text(clientType.name),
-                  ),
-                )
-                .toList(),
-            validator: (value) {
-              return value == null ? 'Client Type is required' : null;
-            },
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          TextFormField(
-            initialValue: client != null ? client.contact : '',
-            decoration: kInputDecoration('Contact'),
-            validator: (value) {
-              return value == null || value.isEmpty
-                  ? 'Contact is required'
-                  : null;
-            },
-            onSaved: (value) {
-              _client.contact = value!;
-            },
-          ),
-          kDivider(),
-          ElevatedButton(
-            style: kElevatedButtonStyle(),
-            onPressed: () async {
-              if (_formKey.currentState!.validate()) {
-                _formKey.currentState!.save();
-                _client.id = client != null ? client.id : null;
-                var response = client != null
-                    ? await ClientService.update(_client)
-                    : await ClientService.store(_client);
-
-                String successMessage = client != null
-                    ? 'Client updated successfully'
-                    : 'Client added successfully';
-                if (response.statusCode == 200 || response.statusCode == 201) {
-                  kSuccessSnackBar(
-                    context,
-                    successMessage,
-                  );
-                  Navigator.pop(context, true);
-                } else {
-                  kFailureSnackBar(
-                    context,
-                    'Something went wrong',
-                  );
-                }
-              }
-            },
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 8,
-                vertical: 12,
-              ),
-              child: Text(
-                'Submit',
-                style: TextStyle(fontSize: 20),
-              ),
+  buildClientForm({Client? client}) => Container(
+    constraints: BoxConstraints(minWidth: 500),
+    child: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(client != null ? 'Edit Client' : 'Add Client'),
+            kDivider(),
+            TextFormField(
+              initialValue: client != null ? client.name : '',
+              decoration: kInputDecoration('Name'),
+              validator: (value) {
+                return value == null || value.isEmpty ? 'Name is required' : null;
+              },
+              onSaved: (value) {
+                _client.name = value!;
+              },
             ),
-          )
-        ],
-      ));
+            SizedBox(
+              height: 20,
+            ),
+            DropdownButtonFormField<int>(
+              value: client != null ? client.clientTypeId : selectedClientType,
+              decoration: kInputDecoration('Client Type'),
+              onChanged: (value) {
+                setState(() {
+                  selectedClientType = value;
+                });
+              },
+              onSaved: (value) {
+                _client.clientTypeId = value!;
+              },
+              items: types
+                  .map(
+                    (clientType) => DropdownMenuItem<int>(
+                      value: clientType.id,
+                      child: Text(clientType.name),
+                    ),
+                  )
+                  .toList(),
+              validator: (value) {
+                return value == null ? 'Client Type is required' : null;
+              },
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            TextFormField(
+              initialValue: client != null ? client.contact : '',
+              decoration: kInputDecoration('Contact'),
+              validator: (value) {
+                return value == null || value.isEmpty
+                    ? 'Contact is required'
+                    : null;
+              },
+              onSaved: (value) {
+                _client.contact = value!;
+              },
+            ),
+            kDivider(),
+            ElevatedButton(
+              style: kElevatedButtonStyle(),
+              onPressed: () async {
+                if (_formKey.currentState!.validate()) {
+                  _formKey.currentState!.save();
+                  _client.id = client != null ? client.id : null;
+                  var response = client != null
+                      ? await ClientService.update(_client)
+                      : await ClientService.store(_client);
+
+                  String successMessage = client != null
+                      ? 'Client updated successfully'
+                      : 'Client added successfully';
+                  if (response.statusCode == 200 || response.statusCode == 201) {
+                    kSuccessSnackBar(
+                      context,
+                      successMessage,
+                    );
+                    Navigator.pop(context, true);
+                  } else {
+                    kFailureSnackBar(
+                      context,
+                      'Something went wrong',
+                    );
+                  }
+                }
+              },
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 8,
+                  vertical: 12,
+                ),
+                child: Text(
+                  'Submit',
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+            )
+          ],
+        )),
+  );
 
   Align buildAddButton() {
     return Align(
