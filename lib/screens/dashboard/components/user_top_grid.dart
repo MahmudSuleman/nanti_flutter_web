@@ -36,7 +36,7 @@ class UserTopGrid extends StatelessWidget {
                     color: Colors.green,
                     title: 'Users',
                     icon: Icons.person,
-                    summary: '${dashboardData['users']}',
+                    summary: '${dashboardData['clients']}',
                   ),
                 ]);
           }

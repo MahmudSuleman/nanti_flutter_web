@@ -29,8 +29,26 @@ class DispatchService {
     return temp;
   }
 
+  static Future<List<Dispatch>> index() async {
+    var data = await UserPrefs.getUserPrefs();
+    var url = Uri.parse(baseUrl + '?id=${data!['company']}');
+    var response = await http.get(url);
+    List<Dispatch> temp = [];
+    if (response.statusCode == 200) {
+      List<dynamic> body = jsonDecode(response.body);
+      body.forEach((element) {
+        Dispatch dispatch = Dispatch.fromJson(element);
+        if (dispatch.device!.isAvailable == 0 && dispatch.deletedAt == null) {
+          temp.add(Dispatch.fromJson(element));
+        }
+      });
+    }
+
+    return temp;
+  }
+
   static Future<List<Map<String, dynamic>>> userDispatches() async {
-    var url = Uri.parse(baseUrl + '/index.php');
+    var url = Uri.parse(baseUrl);
     var response = await http.get(url);
     List<Map<String, dynamic>> temp = [];
     var isAdmin = await AuthService.isAdmin();

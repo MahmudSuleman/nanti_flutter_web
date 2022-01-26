@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:nanti_flutter_web/constants.dart';
 import 'package:nanti_flutter_web/models/user.dart';
+import 'package:nanti_flutter_web/user_prefs.dart';
 
 class UserService {
   static String baseUrl = kBaseUrl + '/user';
@@ -10,7 +11,9 @@ class UserService {
   static Future<List<User>?> index() async {
     try {
       List<User> temp = [];
-      var url = Uri.parse(baseUrl);
+      var data = await UserPrefs.getUserPrefs();
+      var url = Uri.parse(baseUrl + '?id=${data!['company']}');
+
       var response = await http.get(url);
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body) as List<dynamic>;

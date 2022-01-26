@@ -27,15 +27,12 @@ class DashboardSummaryService {
     late Map<String, dynamic> temp = {};
     try {
       var user = await UserPrefs.getUserPrefs();
+      var url = Uri.parse(baseUrl + '?id=${user!['company']}');
 
-// TODO: Change this to get the user id from the user prefs
-      var url = Uri.parse(baseUrl + 'user_dashboard_summary.php?id=1');
-      var response = await http.get(url, headers: kHeaders);
+      var response = await http.get(url);
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body) as Map<String, dynamic>;
-        if (data['success']) {
-          temp = data['data'];
-        }
+        temp = data;
       }
     } catch (e) {
       print(e);

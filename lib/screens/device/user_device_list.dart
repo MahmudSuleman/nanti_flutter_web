@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nanti_flutter_web/constants.dart';
+import 'package:nanti_flutter_web/models/dispatch.dart';
 import 'package:nanti_flutter_web/screens/responsive/responsive.dart';
 import 'package:nanti_flutter_web/services/auth_service.dart';
 import 'package:nanti_flutter_web/services/dispatch_service.dart';
@@ -26,12 +27,12 @@ class _UserDeviceListState extends State<UserDeviceList> {
     return Responsive(
       appBarTitle: 'Devices List',
       child: FutureBuilder(
-          future: DispatchService.userDispatches(),
+          future: DispatchService.index(),
           builder: (context, snapShot) {
             if (snapShot.connectionState == ConnectionState.done) {
-              late List<Map<String, dynamic>> data;
+              late List<Dispatch> data;
               if (snapShot.hasData) {
-                data = snapShot.data as List<Map<String, dynamic>>;
+                data = snapShot.data as List<Dispatch>;
               }
               return SingleChildScrollView(
                 child: Column(
@@ -51,11 +52,18 @@ class _UserDeviceListState extends State<UserDeviceList> {
                                 header: _tableHeader,
                                 data: data
                                     .map(
-                                      (Map<String, dynamic> item) => DataRow(
+                                      (item) => DataRow(
                                         cells: [
-                                          DataCell(Text(item['serialNumber'])),
-                                          DataCell(Text(item['deviceName'])),
-                                          DataCell(Text(item['manufacturer'])),
+                                          DataCell(
+                                            Text(item.device!.serialNumber),
+                                          ),
+                                          DataCell(
+                                            Text(item.device!.name),
+                                          ),
+                                          DataCell(
+                                            Text(item
+                                                .device!.manufacturer!.name),
+                                          ),
                                           DataCell(
                                             sendDeviceButton(context, item),
                                           ),
@@ -77,8 +85,7 @@ class _UserDeviceListState extends State<UserDeviceList> {
     );
   }
 
-  ElevatedButton sendDeviceButton(
-      BuildContext context, Map<String, dynamic> item) {
+  ElevatedButton sendDeviceButton(BuildContext context, Dispatch item) {
     return ElevatedButton(
       style: kElevatedButtonStyle(),
       child: Icon(Icons.send),
@@ -88,7 +95,7 @@ class _UserDeviceListState extends State<UserDeviceList> {
           builder: (context) {
             return AlertDialog(
               title: Text('Send Device'),
-              content: _popUpForm(item['companyId'], item['deviceId']),
+              content: _popUpForm(item.clientId, item.deviceId),
             );
           },
         );
@@ -123,9 +130,11 @@ class _UserDeviceListState extends State<UserDeviceList> {
                   _formKey.currentState!.save();
                   final problemDescription = _problemDescCtrl.text;
                   MaintenanceService.store(
-                          companyId, deviceId, problemDescription)
-                      .then((value) {
-                    if (value['success']) {
+                    companyId,
+                    deviceId,
+                    problemDescription,
+                  ).then((value) {
+                    if (value) {
                       Navigator.pop(context);
                       _problemDescCtrl.text = '';
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -134,10 +143,9 @@ class _UserDeviceListState extends State<UserDeviceList> {
                       _problemDescCtrl.text = '';
                       Navigator.pop(context);
                       ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(value['message'])));
+                          SnackBar(content: Text('Failed to send device')));
                     }
-                  }).catchError((onError) {
-                    print(onError.toString());
+                    setState(() {});
                   });
                 }
               },

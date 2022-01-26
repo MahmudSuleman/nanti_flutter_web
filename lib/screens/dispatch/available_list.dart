@@ -30,9 +30,9 @@ class _AvailableDispatchState extends State<AvailableDispatch> {
     super.initState();
 
     ClientService.index().then((clients) {
-      clientItems = clients
-          .map((e) => SelectItem(id: e.id.toString(), name: e.name))
-          .toList();
+      clientItems = clients.where((element) => element.id != 1).map((e) {
+        return SelectItem(id: e.id.toString(), name: e.name);
+      }).toList();
     });
   }
 

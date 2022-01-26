@@ -7,7 +7,6 @@ import 'package:nanti_flutter_web/screens/responsive/responsive.dart';
 import 'package:nanti_flutter_web/services/auth_service.dart';
 import 'package:nanti_flutter_web/services/client_service.dart';
 import 'package:nanti_flutter_web/services/user_service.dart';
-import 'package:nanti_flutter_web/widgets/add_item_button.dart';
 
 class UserList extends StatefulWidget {
   static final String routeName = '/user-list';
@@ -21,9 +20,6 @@ class _UserListState extends State<UserList> {
   List<SelectItem> companyItems = [];
   String? _currentCompany;
   bool isLoading = false;
-  int? userCompany;
-
-  bool isAdmin = false;
 
   //controllers
   final _usernameController = TextEditingController();
@@ -38,8 +34,6 @@ class _UserListState extends State<UserList> {
           .map((e) => SelectItem(id: e.id.toString(), name: e.name))
           .toList();
     });
-
-    AuthService.isAdmin().then((data) => isAdmin = data);
   }
 
   @override
@@ -63,22 +57,6 @@ class _UserListState extends State<UserList> {
                         textAlign: TextAlign.center,
                       ),
                       Divider(),
-                      isAdmin
-                          ? Align(
-                              alignment: Alignment.bottomLeft,
-                              child: AddItemButton(
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                      title: Text('Add User'),
-                                      content: userForm(),
-                                    ),
-                                  );
-                                },
-                              ),
-                            )
-                          : SizedBox(),
                       SizedBox(
                         height: 20,
                       ),
@@ -90,7 +68,7 @@ class _UserListState extends State<UserList> {
                               'Email',
                               'Client',
                               'Contact',
-                              isAdmin ? 'Actions' : '',
+                              'Actions',
                             ].map((e) => DataColumn(label: Text(e))).toList(),
                             rows: users!
                                 .map(
@@ -100,42 +78,37 @@ class _UserListState extends State<UserList> {
                                       DataCell(Text(user.email)),
                                       DataCell(Text(user.client!.name)),
                                       DataCell(Text(user.client!.contact)),
-                                      DataCell(isAdmin
-                                          ? Row(
-                                              children: [
-                                                ElevatedButton(
-                                                  style: kElevatedButtonStyle(),
-                                                  onPressed: () {
-                                                    showDialog(
-                                                      context: context,
-                                                      builder: (context) =>
-                                                          AlertDialog(
-                                                        scrollable: true,
-                                                        title:
-                                                            Text('Edit User'),
-                                                        content: userForm({
-                                                          'id': user.id
-                                                              .toString(),
-                                                          'username': user.name,
-                                                          'email': user.email,
-                                                          'clientId':
-                                                              user.client!.id
-                                                        }),
-                                                      ),
-                                                    );
-                                                  },
-                                                  child: Icon(Icons.edit),
+                                      DataCell(Row(
+                                        children: [
+                                          ElevatedButton(
+                                            style: kElevatedButtonStyle(),
+                                            onPressed: () {
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) =>
+                                                    AlertDialog(
+                                                  scrollable: true,
+                                                  title: Text('Edit User'),
+                                                  content: userForm({
+                                                    'id': user.id.toString(),
+                                                    'username': user.name,
+                                                    'email': user.email,
+                                                    'clientId': user.client!.id
+                                                  }),
                                                 ),
-                                                SizedBox(width: 10),
-                                                ElevatedButton(
-                                                  style: kElevatedButtonStyle(
-                                                      color: Colors.red),
-                                                  onPressed: () {},
-                                                  child: Icon(Icons.delete),
-                                                )
-                                              ],
-                                            )
-                                          : SizedBox()),
+                                              );
+                                            },
+                                            child: Icon(Icons.edit),
+                                          ),
+                                          SizedBox(width: 10),
+                                          ElevatedButton(
+                                            style: kElevatedButtonStyle(
+                                                color: Colors.red),
+                                            onPressed: () {},
+                                            child: Icon(Icons.delete),
+                                          )
+                                        ],
+                                      )),
                                     ],
                                   ),
                                 )

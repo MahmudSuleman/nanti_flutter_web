@@ -9,7 +9,7 @@ import '../common.dart';
 import '../user_prefs.dart';
 
 class MaintenanceService {
-  static String baseUrl = kBaseUrl + 'maintenances/';
+  static String baseUrl = kBaseUrl + '/maintenance';
 
   static Future<List<Maintenance>> allMaintenance() async {
     var url = Uri.parse(baseUrl + 'index.php');
@@ -53,33 +53,20 @@ class MaintenanceService {
     return temp;
   }
 
-  static Future<Map<String, dynamic>> store(
-    companyId,
-    deviceId,
-    problemDescription,
-  ) async {
-    late Map<String, dynamic> temp;
-    try {
-      var url = Uri.parse(baseUrl + 'store.php');
-      var response = await http.post(url, body: {
-        'companyId': companyId,
-        'deviceId': deviceId,
-        'problemDescription': problemDescription
-      });
+  static Future<bool> store(companyId, deviceId, problemDescription) async {
+    var url = Uri.parse(baseUrl);
 
-      if (response.statusCode == 200) {
-        var body = jsonDecode(response.body) as Map<String, dynamic>;
-        if (body['success']) {
-          temp = body;
-        } else {
-          temp = body;
-        }
-      }
-    } catch (e) {
-      print(StackTrace.current);
-    }
-
-    return temp;
+    var bodyData = {
+      'client_id': companyId.toString(),
+      'device_id': deviceId.toString(),
+      'problem': problemDescription
+    };
+    return http.post(url, body: bodyData).then((value) {
+      return value.statusCode == 200;
+    }).catchError((onError) {
+      // print(onError);
+      return false;
+    });
   }
 
   static Future<bool> markAsDone(maintenanceId) async {
