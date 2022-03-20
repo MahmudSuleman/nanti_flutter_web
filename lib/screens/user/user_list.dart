@@ -17,29 +17,18 @@ class UserList extends StatefulWidget {
 }
 
 class _UserListState extends State<UserList> {
-  final _formKey = GlobalKey<FormState>();
-  List<SelectItem> companyItems = [];
-  String? _currentCompany;
   bool isLoading = false;
-  int? userCompany;
 
   bool isAdmin = false;
-
-  //controllers
-  final _usernameController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _emailController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    ClientService.index().then((clients) {
-      companyItems = clients
-          .map((e) => SelectItem(id: e.id.toString(), name: e.name))
-          .toList();
-    });
-
     AuthService.isAdmin().then((data) => isAdmin = data);
+  }
+
+  void refresh() {
+    setState(() {});
   }
 
   @override
@@ -64,83 +53,14 @@ class _UserListState extends State<UserList> {
                       ),
                       Divider(),
                       isAdmin
-                          ? Align(
-                              alignment: Alignment.bottomLeft,
-                              child: AddItemButton(
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                      title: Text('Add User'),
-                                      content: userForm(),
-                                    ),
-                                  );
-                                },
-                              ),
+                          ? AdminAddButton(
+                              refresh: refresh,
                             )
                           : SizedBox(),
                       SizedBox(
                         height: 20,
                       ),
-                      Container(
-                        width: 1000,
-                        child: DataTable(
-                            columns: [
-                              'Username',
-                              'Email',
-                              'Client',
-                              'Contact',
-                              isAdmin ? 'Actions' : '',
-                            ].map((e) => DataColumn(label: Text(e))).toList(),
-                            rows: users!
-                                .map(
-                                  (user) => DataRow(
-                                    cells: [
-                                      DataCell(Text(user.name)),
-                                      DataCell(Text(user.email)),
-                                      DataCell(Text(user.client!.name)),
-                                      DataCell(Text(user.client!.contact)),
-                                      DataCell(isAdmin
-                                          ? Row(
-                                              children: [
-                                                ElevatedButton(
-                                                  style: kElevatedButtonStyle(),
-                                                  onPressed: () {
-                                                    showDialog(
-                                                      context: context,
-                                                      builder: (context) =>
-                                                          AlertDialog(
-                                                        scrollable: true,
-                                                        title:
-                                                            Text('Edit User'),
-                                                        content: userForm({
-                                                          'id': user.id
-                                                              .toString(),
-                                                          'username': user.name,
-                                                          'email': user.email,
-                                                          'clientId':
-                                                              user.client!.id
-                                                        }),
-                                                      ),
-                                                    );
-                                                  },
-                                                  child: Icon(Icons.edit),
-                                                ),
-                                                SizedBox(width: 10),
-                                                ElevatedButton(
-                                                  style: kElevatedButtonStyle(
-                                                      color: Colors.red),
-                                                  onPressed: () {},
-                                                  child: Icon(Icons.delete),
-                                                )
-                                              ],
-                                            )
-                                          : SizedBox()),
-                                    ],
-                                  ),
-                                )
-                                .toList()),
-                      )
+                      UserTable(isAdmin: isAdmin, users: users)
                     ],
                   );
                 }
@@ -152,13 +72,140 @@ class _UserListState extends State<UserList> {
       ),
     );
   }
+}
 
-  Widget userForm([Map<String, dynamic>? data]) {
-    if (data != null) {
-      _emailController.text = data['email'];
-      _usernameController.text = data['username'];
-      _currentCompany = data['clientId'].toString();
-    }
+class UserTable extends StatelessWidget {
+  const UserTable({
+    Key? key,
+    required this.isAdmin,
+    required this.users,
+  }) : super(key: key);
+
+  final bool isAdmin;
+  final List<User>? users;
+
+  @override
+  Widget build(BuildContext context) {
+    return DataTable(
+        columns: [
+          'Username',
+          'Email',
+          'Client',
+          'Contact',
+          isAdmin ? 'Actions' : ''
+        ].map((e) => DataColumn(label: Text(e))).toList(),
+        rows: users!
+            .map(
+              (user) => DataRow(
+                cells: [
+                  DataCell(Text(user.name)),
+                  DataCell(Text(user.email)),
+                  DataCell(Text(user.client!.name)),
+                  DataCell(Text(user.client!.contact)),
+                  DataCell(isAdmin
+                      ? Row(
+                          children: [
+                            ElevatedButton(
+                              style: kElevatedButtonStyle(),
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    scrollable: true,
+                                    title: Text('Edit User'),
+                                    content: UserForm(data: {
+                                      'id': user.id.toString(),
+                                      'username': user.name,
+                                      'email': user.email,
+                                      'clientId': user.client!.id
+                                    }),
+                                  ),
+                                );
+                              },
+                              child: Icon(Icons.edit),
+                            ),
+                            SizedBox(width: 10),
+                            ElevatedButton(
+                              style: kElevatedButtonStyle(color: Colors.red),
+                              onPressed: () {},
+                              child: Icon(Icons.delete),
+                            )
+                          ],
+                        )
+                      : SizedBox()),
+                ],
+              ),
+            )
+            .toList());
+  }
+}
+
+class AdminAddButton extends StatelessWidget {
+  const AdminAddButton({Key? key, required this.refresh}) : super(key: key);
+  final VoidCallback refresh;
+
+  @override
+  Widget build(
+    BuildContext context,
+  ) {
+    return Align(
+      alignment: Alignment.bottomLeft,
+      child: AddItemButton(
+        onPressed: () async {
+          await showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('Add User'),
+              content: UserForm(),
+            ),
+          );
+
+          refresh();
+        },
+      ),
+    );
+  }
+}
+
+class UserForm extends StatefulWidget {
+  UserForm({Key? key, this.data}) : super(key: key);
+
+  final Map<String, dynamic>? data;
+
+  @override
+  State<UserForm> createState() => _UserFormState();
+}
+
+class _UserFormState extends State<UserForm> {
+  final _formKey = GlobalKey<FormState>();
+
+  List<SelectItem> companyItems = [];
+
+  String? _currentCompany;
+
+  bool isLoading = false;
+
+  int? userCompany;
+
+  final _usernameController = TextEditingController();
+
+  final _passwordController = TextEditingController();
+
+  final _emailController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    ClientService.index().then((clients) {
+      companyItems = clients
+          .map((e) => SelectItem(id: e.id.toString(), name: e.name))
+          .toList();
+      setState(() {});
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       constraints: BoxConstraints(minWidth: 500),
       child: Form(
@@ -192,8 +239,9 @@ class _UserListState extends State<UserList> {
               height: 20,
             ),
             DropdownButtonFormField<String>(
-              value:
-                  data != null ? data['clientId'].toString() : _currentCompany,
+              value: widget.data != null
+                  ? widget.data!['clientId'].toString()
+                  : _currentCompany,
               decoration: kInputDecoration('Select Company'),
               items: companyItems
                   .map((item) => DropdownMenuItem(
@@ -216,7 +264,7 @@ class _UserListState extends State<UserList> {
             TextFormField(
               controller: _passwordController,
               decoration: kInputDecoration('Enter password'),
-              validator: data != null
+              validator: widget.data != null
                   ? (value) {}
                   : (value) {
                       return value == null || value.isEmpty
@@ -251,7 +299,7 @@ class _UserListState extends State<UserList> {
                       var username = _usernameController.text;
                       var password = _passwordController.text;
                       var email = _emailController.text;
-                      data == null
+                      widget.data == null
                           ? UserService.store(
                               username: username,
                               email: email,
@@ -275,7 +323,7 @@ class _UserListState extends State<UserList> {
                               }
                             })
                           : UserService.update(
-                              id: data['id'],
+                              id: widget.data!['id'],
                               username: username,
                               email: email,
                               password: password,

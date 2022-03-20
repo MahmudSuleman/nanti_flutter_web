@@ -11,7 +11,6 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     AuthService.autoLogout(context);
-    double size = MediaQuery.of(context).size.width;
     return FutureBuilder(
         future: AuthService.isAdmin(),
         builder: (context, snapShot) {
