@@ -102,41 +102,45 @@ class UserTable extends StatelessWidget {
                   DataCell(Text(user.email)),
                   DataCell(Text(user.client!.name)),
                   DataCell(Text(user.client!.contact)),
-                  DataCell(isAdmin
-                      ? Row(
-                          children: [
-                            ElevatedButton(
-                              style: kElevatedButtonStyle(),
-                              onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                    scrollable: true,
-                                    title: Text('Edit User'),
-                                    content: UserForm(data: {
-                                      'id': user.id.toString(),
-                                      'username': user.name,
-                                      'email': user.email,
-                                      'clientId': user.client!.id
-                                    }),
-                                  ),
-                                );
-                              },
-                              child: Icon(Icons.edit),
-                            ),
-                            SizedBox(width: 10),
-                            ElevatedButton(
-                              style: kElevatedButtonStyle(color: Colors.red),
-                              onPressed: () {},
-                              child: Icon(Icons.delete),
-                            )
-                          ],
-                        )
-                      : SizedBox()),
+                  DataCell(
+                    isAdmin ? adminActionRow(context, user) : SizedBox(),
+                  ),
                 ],
               ),
             )
             .toList());
+  }
+
+  Row adminActionRow(BuildContext context, User user) {
+    return Row(
+      children: [
+        ElevatedButton(
+          style: kElevatedButtonStyle(),
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                scrollable: true,
+                title: Text('Edit User'),
+                content: UserForm(data: {
+                  'id': user.id.toString(),
+                  'username': user.name,
+                  'email': user.email,
+                  'clientId': user.client!.id
+                }),
+              ),
+            );
+          },
+          child: Icon(Icons.edit),
+        ),
+        SizedBox(width: 10),
+        ElevatedButton(
+          style: kElevatedButtonStyle(color: Colors.red),
+          onPressed: () {},
+          child: Icon(Icons.delete),
+        )
+      ],
+    );
   }
 }
 
